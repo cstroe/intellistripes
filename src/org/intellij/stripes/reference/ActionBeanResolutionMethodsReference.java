@@ -1,0 +1,96 @@
+/*
+ * Copyright 2000-2007 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.intellij.stripes.reference;
+
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.util.IncorrectOperationException;
+import com.intellij.codeInsight.lookup.LookupValueFactory;
+import org.jetbrains.annotations.Nullable;
+import org.intellij.stripes.util.StripesConstants;
+
+/**
+ * Created by IntelliJ IDEA. User: Mario Arias Date: 21/09/2007 Time: 01:28:16 AM
+ */
+public class ActionBeanResolutionMethodsReference extends StripesJspAttributeReference
+{
+    private PsiClass actionBeanPsiClass;
+
+    public ActionBeanResolutionMethodsReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass)
+    {
+        super(xmlAttributeValue);
+        this.actionBeanPsiClass = actionBeanPsiClass;
+    }
+
+    /**
+     * Ctrl + Click in the attribute name will be resolved
+     *
+     * @return Element
+     */
+    @Nullable
+    @Override
+    public PsiElement resolve()
+    {
+        PsiMethod[] psiMethods = actionBeanPsiClass.findMethodsByName(getCanonicalText(), true);
+        try
+        {
+            return psiMethods[0];
+        }
+        catch (ArrayIndexOutOfBoundsException e)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * When Method will renamed
+     *
+     * @param newElementName the new methodName
+     *
+     * @return Element
+     *
+     * @throws com.intellij.util.IncorrectOperationException
+     *
+     */
+    @Override
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
+    {
+        ((XmlAttribute) xmlAttributeValue.getParent()).setValue(newElementName);
+        return resolve();
+    }
+
+    /**
+     * Get all Posible Resolution Methods for an ActionBean Class
+     *
+     * @return an Array with References to Resolution Methods
+     */
+    @Override
+    public Object[] getVariants()
+    {
+        String[] names = getResolutionMethodsNames(actionBeanPsiClass);
+        Object[] variants = new Object[names.length];
+        for (int i = 0; i < variants.length; i++)
+        {
+            variants[i] = LookupValueFactory.createLookupValue(names[i], StripesConstants.RESOLUTION_ICON);
+        }
+        return variants;
+    }
+}
