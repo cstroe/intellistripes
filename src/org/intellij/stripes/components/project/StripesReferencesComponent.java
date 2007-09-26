@@ -19,6 +19,7 @@ package org.intellij.stripes.components.project;
 
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.filters.*;
 import com.intellij.psi.filters.position.NamespaceFilter;
 import com.intellij.psi.filters.position.ParentElementFilter;
@@ -26,9 +27,14 @@ import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReferenceProvider;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
+import org.intellij.stripes.reference.filters.SpringBeanAnnotationFilter;
+import org.intellij.stripes.reference.providers.ActionBeanResolutionMethodsReferenceProvider;
+import org.intellij.stripes.reference.providers.ActionBeanSetterMethodsReferenceProvider;
+import org.intellij.stripes.reference.providers.LinkParamSetterMethodsReferenceProvider;
+import org.intellij.stripes.reference.providers.TagResolutionMethodsReferenceProvider;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
-import org.intellij.stripes.reference.providers.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -80,7 +86,17 @@ public class StripesReferencesComponent implements ProjectComponent
         registerTags(new ActionBeanResolutionMethodsReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.RESOLUTION_TAGS);
         //all stripes special tags with event parameter add Reference Provider for Event(Resolution Method)
         registerTags(new TagResolutionMethodsReferenceProvider(),stripesNamespaceFilter, StripesConstants.EVENT, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
+        registerSpringBeanReference();
         
+    }
+
+    private void registerSpringBeanReference()
+    {
+        //Register Provider
+        registry.registerReferenceProvider(new ParentElementFilter(new SpringBeanAnnotationFilter()),//Our Filter
+                                           PsiLiteralExpression.class,// Only in Strings
+                                           new SpringBeanNamesReferenceProvider()//Add <IDEA_HOME>/plugins/Spring/lib/spring.jar to your IDEA JDK
+        );
     }
 
     public void disposeComponent()
