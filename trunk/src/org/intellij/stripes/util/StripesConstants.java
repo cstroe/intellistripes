@@ -80,4 +80,5 @@ public interface StripesConstants
     String LOG4J_PROPERTIES_TEMPLATE = "log4j properties configuration.properties";
     String LOG4J_XML = "log4j.xml";
     String LOG4J_PROPERTIES = "log4j.properties";
+    String SPRING_BEAN = "net.sourceforge.stripes.integration.spring.SpringBean";
 }

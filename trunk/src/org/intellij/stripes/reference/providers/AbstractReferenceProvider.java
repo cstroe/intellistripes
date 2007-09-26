@@ -172,7 +172,7 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
      * @param className className
      * @return a PsiClass
      */
-    protected static PsiClass getPsiClass(PsiElement psiElement, String className)
+    public static PsiClass getPsiClass(PsiElement psiElement, String className)
     {
         Project project = psiElement.getProject();
         PsiManager psiManager = PsiManager.getInstance(project);
