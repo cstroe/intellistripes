@@ -1,0 +1,71 @@
+=History=
+
+
+===Version 0.1.0.097 (2007-07-29)===
+
+Initial Version
+ * Basic web.xml configuration
+  * StripesDispatcher
+  * StripesFilter
+  * Stripes - Spring Integration
+ * Auto completion in JSP Stripes tags
+  * beanclass attribute on:
+   * form
+   * errors
+   * link
+   * url
+   * useActionBean
+  * name attribute (*setter* methods) on :
+   * checkox
+   * file
+   * hidden
+   * password
+   * radio
+   * select
+   * text
+   * textarea
+  * name attribute (*event* methods) on
+   * button
+   * image
+   * submit
+ * Icons for
+  * Action Bean Classes
+  * JSP pages with Stripes taglib
+
+===Version 0.1.1.111 (2007-08-04)===
+
+ * File Templates
+  * commons-logging.properties
+  * log4j.properties
+  * StripesResources.properties
+ * Add Configuration options to Logging and Stripes Resource
+
+===Version 0.1.2.241 (2007-08-27)===
+
+_Deleted from repository_
+ * File Templates
+  * log4j.xml
+ * Add Configuration option to chose between lo4j.properties and lo4gj.xml (*Thanks to Evgeny Shepelyuk for the idea*)
+
+===Version 0.1.3.241 (2007-08-28)===
+
+ * Bug Fix NPE When Stripes Facet is Added to a module
+
+===Version 0.3.1.294 (2007-09-23)===
+
+ * Open Source with Apache license
+ * Auto Completion in Stripes JSP tags
+  * field attribute on
+   * errors
+  * name attribute (*setter* methods) on
+   * link-param
+  * event attribute on
+   * link
+   * url
+   * useActionBean
+
+===Version 0.4.1.294 (2007-09-26)===
+
+ * Auto Completion in ActionBean Class on
+  * @SpringBean Annotation (Only works when the module have a Spring Facet configured)
+ * IntelliStripes code available on [http://intellistripes.googlecode.com]
