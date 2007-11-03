@@ -47,6 +47,7 @@ public interface StripesConstants
     String STRIPES_FILTER_NAME = "StripesFilter";
     String SPRING_CONTEXT_PARAM = "contextConfigLocation";
     String INTERCEPTOR_CLASSES = "Interceptor.Classes";
+    String ACTION_RESOLVER_URL_FILTER = "ActionResolver.UrlFilters";
     String STRIPES_FILTER_MAPPING = "*.jsp";
     String REQUEST = "REQUEST";
     String STRIPES_TLD = "http://stripes.sourceforge.net/stripes.tld";
@@ -57,6 +58,7 @@ public interface StripesConstants
     String ERRORS_TAG = "errors";
     String LINK_PARAM_TAG = "link-param";
     String BEAN_CLASS_ATTRIBUTE = "beanclass";
+    String LAYOUT_RENDER_TAG = "layout-render";
     String FIELD_ATTRIBUTE = "field";
     String[] ACTION_BEAN_TAGS = {"form","errors","link","url","useActionBean"};
     String[] ACTION_BEAN_TAGS_WITH_EVENT = {"link","url","useActionBean"};
@@ -64,7 +66,14 @@ public interface StripesConstants
     String[] RESOLUTION_TAGS = {"button","image","submit"};    
     String[] INPUT_TAGS = {"checkbox","file","hidden","password","radio","select","text","textarea"};
     String NAME_ATTRIBUTE = "name";
+
+    //facet configuration
     String SPRING_INTEGRATION = "springIntegration";
+    String LOGGING = "logging";
+    String STRIPES_RESOURCES = "stripesResources";
+    String LOG4J_FILE = "log4jFile";
+    String URL_FILTER = "urlFilter";
+    String FILTER_VALUE = "filterValue";
     //Integers
 
     Integer LOAD_ON_STARTUP = 1;
@@ -73,9 +82,9 @@ public interface StripesConstants
     String COMMONS_LOGGING_PROPERTIES = "commons-logging.properties";
 
     String STRIPES_RESOURCES_PROPERTIES = "StripesResources.properties";
-    String LOGGING = "logging";
-    String STRIPES_RESOURCES = "stripesResources";
-    String LOG4J_FILE = "log4jFile";
+
+
+
     String LOG4J_XML_TEMPLATE = "log4j xml configuration.xml";
     String LOG4J_PROPERTIES_TEMPLATE = "log4j properties configuration.properties";
     String LOG4J_XML = "log4j.xml";

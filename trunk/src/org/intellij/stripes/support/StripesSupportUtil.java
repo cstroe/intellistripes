@@ -71,6 +71,11 @@ public class StripesSupportUtil
             {
                 installLogging(app, stripesFacetConfiguration);
             }
+            if(stripesFacetConfiguration.isActionResolverUrlFilters())
+            {
+                addActionResolverUrlFilter(app, stripesFacetConfiguration);                
+            }
+
         }
         catch (Throwable throwable)
         {
@@ -265,7 +270,7 @@ public class StripesSupportUtil
      */
     private static void addSpringInterceptor(Filter filter)
     {
-        if (isInterceptorClassesConfigured(filter))
+        if (isFilterInitParamConfigured(filter, StripesConstants.INTERCEPTOR_CLASSES))
         {
             //get the init-param
             ParamValue initParam = getFilterInitParam(filter, StripesConstants.INTERCEPTOR_CLASSES);
@@ -306,6 +311,27 @@ public class StripesSupportUtil
         else
         {
             addSpringInterceptorValue(filter);
+        }
+    }
+
+    /**Add ActionResolver.UrlFilter to Stripes Filter
+     *
+     * @param webApp Web Application
+     * @param configuration Facet Configuration
+     */
+    private static void addActionResolverUrlFilter(WebApp webApp,StripesFacetConfiguration configuration)
+    {
+        Filter filter = getStripesFilter(webApp);
+        if(isFilterInitParamConfigured(filter, StripesConstants.ACTION_RESOLVER_URL_FILTER))
+        {
+            ParamValue initParam = getFilterInitParam(filter, StripesConstants.ACTION_RESOLVER_URL_FILTER);
+            initParam.getParamValue().setValue(configuration.getUrlFiltersValue());
+        }
+        else
+        {
+            ParamValue paramValue = filter.addInitParam();
+            paramValue.getParamName().setValue(StripesConstants.ACTION_RESOLVER_URL_FILTER);
+            paramValue.getParamValue().setValue(configuration.getUrlFiltersValue());
         }
     }
 
@@ -492,12 +518,13 @@ public class StripesSupportUtil
         return false;
     }
 
-    /**Is Interceptor clasess configured
+    /**Is Param Configured configured
      *
      * @param filter Stripes Filter
+     * @param paramName Parameter name
      * @return boolean, do'h
      */
-    public static boolean isInterceptorClassesConfigured(Filter filter)
+    public static boolean isFilterInitParamConfigured(Filter filter, String paramName)
     {
         List<ParamValue> initParams = filter.getInitParams();
         for (ParamValue initParam : initParams)
@@ -505,7 +532,7 @@ public class StripesSupportUtil
             boolean b = false;
             try
             {
-                b = initParam.getParamName().getValue().equals(StripesConstants.INTERCEPTOR_CLASSES);
+                b = initParam.getParamName().getValue().equals(paramName);
             }
             catch (NullPointerException e)
             {

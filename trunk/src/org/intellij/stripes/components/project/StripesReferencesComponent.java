@@ -26,6 +26,7 @@ import com.intellij.psi.filters.position.ParentElementFilter;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReferenceProvider;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.WebPathReferenceProvider;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
 import org.intellij.stripes.reference.filters.SpringBeanAnnotationFilter;
@@ -86,6 +87,8 @@ public class StripesReferencesComponent implements ProjectComponent
         registerTags(new ActionBeanResolutionMethodsReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.RESOLUTION_TAGS);
         //all stripes special tags with event parameter add Reference Provider for Event(Resolution Method)
         registerTags(new TagResolutionMethodsReferenceProvider(),stripesNamespaceFilter, StripesConstants.EVENT, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
+        //layout-render
+        registerTags(new WebPathReferenceProvider(),stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_RENDER_TAG);
         registerSpringBeanReference();
         
     }

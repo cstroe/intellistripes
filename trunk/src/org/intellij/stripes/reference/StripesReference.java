@@ -95,6 +95,13 @@ public abstract class StripesReference implements PsiReference
             }
         }
         methodNames.remove("context");
+        //to recover the super class methods
+        PsiClass superClass = psiClass.getSuperClass();
+        assert superClass != null;
+        if(!(superClass.getQualifiedName().equals("java.lang.Object")))
+        {
+            methodNames.addAll(getWritableProperties(superClass));    
+        }
         return methodNames;
     }
 
