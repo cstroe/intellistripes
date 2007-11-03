@@ -56,6 +56,8 @@ public class StripesConfigurationTab extends FacetEditorTab
     private JCheckBox addStripesResourcesCheckBox;
     private JComboBox log4jComboBox;
     private JPanel messagePanel;
+    private JCheckBox configureActionResolverUrlFiltersCheckBox;
+    private JTextField actionResolverUrlFiltersTextField;
 
     public StripesConfigurationTab(FacetEditorContext editorContext, final StripesFacetConfiguration configuration)
     {
@@ -63,7 +65,6 @@ public class StripesConfigurationTab extends FacetEditorTab
         this.configuration = configuration;
         messagePanel.setLayout(new VerticalFlowLayout());
         messagePanel.add(createLink("More about Stripes", "http://mc4j.org/confluence/display/stripes/"), 1);
-        fillData();
         addLoggingCheckBox.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
@@ -71,6 +72,14 @@ public class StripesConfigurationTab extends FacetEditorTab
                 log4jComboBox.setEnabled(addLoggingCheckBox.isSelected());
             }
         });
+        configureActionResolverUrlFiltersCheckBox.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                actionResolverUrlFiltersTextField.setEnabled(configureActionResolverUrlFiltersCheckBox.isSelected());
+            }
+        });
+        fillData();
     }
 
     private static HyperlinkLabel createLink(final String text, final @NonNls String url)
@@ -87,7 +96,7 @@ public class StripesConfigurationTab extends FacetEditorTab
     }
 
     private void fillData()
-    {                
+    {
         addSpringIntegrationCheckBox.setSelected(configuration.isSpringIntegration());
         addLoggingCheckBox.setSelected(configuration.isLogging());
         addStripesResourcesCheckBox.setSelected(configuration.isStripesResources());
@@ -100,6 +109,19 @@ public class StripesConfigurationTab extends FacetEditorTab
             log4jComboBox.setSelectedItem(configuration.getLog4jFile());
         }
         log4jComboBox.setEnabled(addLoggingCheckBox.isSelected());
+        configureActionResolverUrlFiltersCheckBox.setSelected(configuration.isActionResolverUrlFilters());
+        actionResolverUrlFiltersTextField.setEnabled(configuration.isActionResolverUrlFilters());
+        if (configuration.getUrlFiltersValue() != null)
+        {
+            if (!(configuration.getUrlFiltersValue().length() == 0))
+            {
+                actionResolverUrlFiltersTextField.setText(configuration.getUrlFiltersValue());
+            }
+            else
+            {
+                actionResolverUrlFiltersTextField.setText("WEB-INF/classes");
+            }
+        }
     }
 
     @Nls
@@ -124,6 +146,8 @@ public class StripesConfigurationTab extends FacetEditorTab
         configuration.setLogging(addLoggingCheckBox.isSelected());
         configuration.setStripesResources(addStripesResourcesCheckBox.isSelected());
         configuration.setLog4jFile(log4jComboBox.getSelectedItem().toString());
+        configuration.setActionResolverUrlFilters(configureActionResolverUrlFiltersCheckBox.isSelected());
+        configuration.setUrlFiltersValue(actionResolverUrlFiltersTextField.getText());
         final StripesFacet stripesFacet = (StripesFacet) editorContext.getFacet();
         assert stripesFacet != null;
         new WriteCommandAction.Simple(editorContext.getProject(), stripesFacet.getWebXmlPsiFile())
@@ -137,7 +161,7 @@ public class StripesConfigurationTab extends FacetEditorTab
 
     public void reset()
     {
-
+        
     }
 
     public void disposeUIResources()
@@ -161,7 +185,7 @@ public class StripesConfigurationTab extends FacetEditorTab
     private void $$$setupUI$$$()
     {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(5, 3, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
         final Spacer spacer1 = new Spacer();
         mainPanel.add(spacer1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         addSpringIntegrationCheckBox = new JCheckBox();
@@ -177,7 +201,7 @@ public class StripesConfigurationTab extends FacetEditorTab
         addStripesResourcesCheckBox.setToolTipText("Add StripesResources.properties ");
         mainPanel.add(addStripesResourcesCheckBox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        mainPanel.add(spacer2, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mainPanel.add(spacer2, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         log4jComboBox = new JComboBox();
         log4jComboBox.setEnabled(false);
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
@@ -194,6 +218,15 @@ public class StripesConfigurationTab extends FacetEditorTab
         final JLabel label1 = new JLabel();
         label1.setText("Stripes is a presentation framework for building web applications using the latest Java technologies.");
         messagePanel.add(label1);
+        configureActionResolverUrlFiltersCheckBox = new JCheckBox();
+        configureActionResolverUrlFiltersCheckBox.setEnabled(true);
+        configureActionResolverUrlFiltersCheckBox.setText("Configure ActionResolver UrlFilters");
+        configureActionResolverUrlFiltersCheckBox.setToolTipText("Add ActionResolver.UrlFilter to Stripes Filter");
+        mainPanel.add(configureActionResolverUrlFiltersCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        actionResolverUrlFiltersTextField = new JTextField();
+        actionResolverUrlFiltersTextField.setEnabled(false);
+        actionResolverUrlFiltersTextField.setText("WEB-INF/classes");
+        mainPanel.add(actionResolverUrlFiltersTextField, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
     }
 
     /**

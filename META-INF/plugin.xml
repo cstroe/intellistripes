@@ -19,12 +19,19 @@
 <idea-plugin url="http://www.jroller.com/neuronica/">
     <name>IntelliStripes</name>
     <description>Stripes even more easy!!!</description>
-    <version>0.4.1.294</version>
+    <version>0.4.3.364</version>
     <vendor email="mario.arias.c@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">
         Mario Arias
     </vendor>
-    <idea-version since-build="7123"/>
+    <change-notes>
+        <![CDATA[
+            Recent Changes : <a href="http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes">
+                http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes
+                </a>
+        ]]>
+    </change-notes>
+    <idea-version since-build="7361"/>
     <depends>com.intellij.javaee</depends>
     <depends>com.intellij.spring</depends>
     <extensions xmlns="com.intellij">
@@ -41,5 +48,5 @@
             <implementation-class>org.intellij.stripes.components.project.StripesReferencesComponent
             </implementation-class>
         </component>
-    </project-components>    
+    </project-components>
 </idea-plugin>

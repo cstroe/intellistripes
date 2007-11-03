@@ -22,6 +22,7 @@ import com.intellij.ide.IconProvider;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.jsp.JspDirectiveKind;
 import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.xml.XmlTag;
@@ -100,8 +101,15 @@ public class StripesApplicationComponent implements ApplicationComponent, IconPr
             boolean isActionBean = false;
             try
             {
-                //Is an implementation of ActionBean?
-                isActionBean = StripesUtil.isSubclass(clazz, StripesConstants.STRIPES_ACTION_BEAN_CLASS);
+
+                PsiModifierList list = clazz.getModifierList();
+                boolean isAbstract = list.hasExplicitModifier("abstract");
+                //is abstract?
+                if (!isAbstract)
+                {
+                    //Is an implementation of ActionBean?
+                    isActionBean = StripesUtil.isSubclass(clazz, StripesConstants.STRIPES_ACTION_BEAN_CLASS);
+                }
             }
             catch (Exception e)
             {

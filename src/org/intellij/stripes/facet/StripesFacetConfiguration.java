@@ -37,6 +37,8 @@ public class StripesFacetConfiguration implements FacetConfiguration
     private boolean logging;
     private boolean stripesResources;
     private String log4jFile;
+    private boolean actionResolverUrlFilters;
+    private String urlFiltersValue;
 
     public String getLog4jFile()
     {
@@ -89,6 +91,8 @@ public class StripesFacetConfiguration implements FacetConfiguration
         logging = JDOMExternalizer.readBoolean(element, StripesConstants.LOGGING);
         stripesResources = JDOMExternalizer.readBoolean(element, StripesConstants.STRIPES_RESOURCES);
         log4jFile = JDOMExternalizer.readString(element, StripesConstants.LOG4J_FILE);
+        actionResolverUrlFilters = JDOMExternalizer.readBoolean(element, StripesConstants.URL_FILTER);
+        urlFiltersValue = JDOMExternalizer.readString(element, StripesConstants.FILTER_VALUE);
 
     }
 
@@ -98,5 +102,41 @@ public class StripesFacetConfiguration implements FacetConfiguration
         JDOMExternalizer.write(element, StripesConstants.LOGGING,logging);
         JDOMExternalizer.write(element, StripesConstants.STRIPES_RESOURCES,stripesResources);
         JDOMExternalizer.write(element, StripesConstants.LOG4J_FILE,log4jFile);
+        JDOMExternalizer.write(element, StripesConstants.URL_FILTER,actionResolverUrlFilters);
+        JDOMExternalizer.write(element, StripesConstants.FILTER_VALUE, urlFiltersValue);
+    }
+
+    public void setActionResolverUrlFilters(boolean actionResolverUrlFilters)
+    {
+        this.actionResolverUrlFilters = actionResolverUrlFilters;
+    }
+
+    public boolean isActionResolverUrlFilters()
+    {
+        return actionResolverUrlFilters;
+    }
+
+    public String getUrlFiltersValue()
+    {
+        return urlFiltersValue;
+    }
+
+    public void setUrlFiltersValue(String urlFiltersValue)
+    {
+        this.urlFiltersValue = urlFiltersValue;
+    }
+
+
+    @Override
+    public String toString()
+    {
+        return "StripesFacetConfiguration{" +
+                "actionResolverUrlFilters=" + actionResolverUrlFilters +
+                ", springIntegration=" + springIntegration +
+                ", logging=" + logging +
+                ", stripesResources=" + stripesResources +
+                ", log4jFile='" + log4jFile + '\'' +
+                ", urlFiltersValue='" + urlFiltersValue + '\'' +
+                '}';
     }
 }
