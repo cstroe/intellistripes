@@ -18,10 +18,7 @@
 package org.intellij.stripes.reference;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiReference;
+import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -167,10 +164,21 @@ public abstract class StripesReference implements PsiReference
         for (PsiMethod method : methods)
         {
             //method return Resolution and have 0 parameters
-            if(method.getReturnType().equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS) && method.getParameterList().getParametersCount() == 0)
+            PsiType returnType = method.getReturnType();
+            if (returnType != null)
             {
-                psiMethods.add(method);
+                if(returnType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS) && method.getParameterList().getParametersCount() == 0)
+                {
+                    psiMethods.add(method);
+                }
             }
+        }
+        //Add Resultion methods for super classes
+        PsiClass superClass = psiClass.getSuperClass();
+        assert superClass != null;
+        if(!(superClass.getQualifiedName().equals("java.lang.Object")))
+        {
+            psiMethods.addAll(Arrays.asList(getResolutionMethods(superClass)));    
         }
         return psiMethods.toArray(PsiMethod.EMPTY_ARRAY);
     }
