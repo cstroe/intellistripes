@@ -23,9 +23,8 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifierList;
-import com.intellij.psi.jsp.JspDirectiveKind;
 import com.intellij.psi.jsp.JspFile;
-import com.intellij.psi.xml.XmlTag;
+import org.intellij.stripes.facet.StripesFacet;
 import org.intellij.stripes.facet.StripesFacetType;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
@@ -62,72 +61,61 @@ public class StripesApplicationComponent implements ApplicationComponent, IconPr
     public Icon getIcon(@NotNull PsiElement element, int flags)
     {
 
-        //is JSP's?
-        if (element instanceof JspFile)
+
+        StripesFacet facet = StripesUtil.getStripesFacet(StripesUtil.getModule(element));
+        if (facet == null)
         {
-            JspFile jspFile = (JspFile) element;
-            //get tags like page, taglib...
-            XmlTag[] tags = jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true);
-            boolean[] isStripesPageList = new boolean[tags.length];
-            for (int i = 0; i < tags.length; i++)
+            return null;
+        }
+        //Change Icons?        
+        if (facet.getConfiguration().isChangeIcons())
+        {
+            //is JSP's?
+            if (element instanceof JspFile)
             {
-                XmlTag tag = tags[i];
-                String uri = tag.getAttributeValue("uri");
+                JspFile jspFile = (JspFile) element;
+                //get tags like page, taglib...
+                if(StripesUtil.isStripesPage(jspFile))
+                {
+                    return StripesConstants.STRIPES_JSP_ICON;
+                }                
+            }
+            //is class?
+            else if (element instanceof PsiClass)
+            {
+                PsiClass clazz = (PsiClass) element;
+
+                boolean isActionBean = false;
                 try
                 {
-                    //this tag is a Stripes declaration taglib?
-                    isStripesPageList[i] = uri.equals(StripesConstants.STRIPES_DYNAMIC_TLD) || uri.equals(StripesConstants.STRIPES_TLD);
+
+                    PsiModifierList list = clazz.getModifierList();
+                    boolean isAbstract = list.hasExplicitModifier("abstract");
+                    //is abstract?
+                    if (!isAbstract)
+                    {
+                        //Is an implementation of ActionBean?
+                        isActionBean = StripesUtil.isSubclass(clazz, StripesConstants.STRIPES_ACTION_BEAN_CLASS);
+                    }
                 }
                 catch (Exception e)
                 {
                     //
                 }
-            }
 
-            for (boolean isStripes : isStripesPageList)
-            {
-                //if anyone return Stripes Jsp Icon
-                if (isStripes)
+                if (isActionBean)
                 {
-                    return StripesConstants.STRIPES_JSP_ICON;
+                    return StripesConstants.ACTION_BEAN_ICON;
                 }
-            }
-        }
-        //is class?
-        else if (element instanceof PsiClass)
-        {
-            PsiClass clazz = (PsiClass) element;
-
-            boolean isActionBean = false;
-            try
-            {
-
-                PsiModifierList list = clazz.getModifierList();
-                boolean isAbstract = list.hasExplicitModifier("abstract");
-                //is abstract?
-                if (!isAbstract)
+                else
                 {
-                    //Is an implementation of ActionBean?
-                    isActionBean = StripesUtil.isSubclass(clazz, StripesConstants.STRIPES_ACTION_BEAN_CLASS);
+                    return null;
                 }
-            }
-            catch (Exception e)
-            {
-                //
-            }
-
-            if (isActionBean)
-            {
-                return StripesConstants.ACTION_BEAN_ICON;
             }
             else
             {
                 return null;
             }
-        }
-        else
-        {
-            return null;
         }
 
         return null;

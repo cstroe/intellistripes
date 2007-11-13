@@ -19,15 +19,20 @@ package org.intellij.stripes.reference;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
+import com.intellij.psi.jsp.JspFile;
+import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.psi.xml.XmlDocument;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.IncorrectOperationException;
+import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.intellij.stripes.util.StripesConstants;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.text.MessageFormat;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 4/07/2007 Time: 12:57:24 AM
@@ -181,5 +186,72 @@ public abstract class StripesReference implements PsiReference
             psiMethods.addAll(Arrays.asList(getResolutionMethods(superClass)));    
         }
         return psiMethods.toArray(PsiMethod.EMPTY_ARRAY);
+    }
+
+    /**Get all the tags layout-component in a JspFIle
+     *
+     * @param jspFile JspFile
+     * @return a bunch of tags
+     */
+    protected static XmlTag[] getLayoutComponents(JspFile jspFile)
+    {
+        // get the stripes namespace in the jspFile
+        String stripesNamespace = StripesUtil.getStripesNamespace(jspFile);
+        //yes this page have a stripes taglib
+        if (stripesNamespace != null)
+        {
+            XmlDocument document = jspFile.getDocument();
+            assert document != null;
+            XmlTag rootTag = document.getRootTag();
+            String layoutDefinition = stripesNamespace + ':' + StripesConstants.LAYOUT_DEFINITION;
+            String layoutComponent = stripesNamespace + ':' + StripesConstants.LAYOUT_COMPONENT;
+            assert rootTag != null;
+            //this tag is the layout-definition?
+            if(rootTag.getName().equals(layoutDefinition))
+            {
+                // get all layout-component tags inside
+                return getStripesTags(rootTag, layoutComponent);
+            }
+            else
+            {
+                //get the layout-definition tag
+                XmlTag[] tags = getStripesTags(rootTag, layoutDefinition);
+                try
+                {
+                    // get all layout-component tags inside
+                    return getStripesTags(tags[0],layoutComponent);
+                }
+                catch (ArrayIndexOutOfBoundsException e)
+                {
+                    return null;
+                }
+            }
+        }
+        //Nop, this pages don't have a Stripes taglib, bad luck
+        else
+        {
+            return null;
+        }
+    }
+
+    /**Get the Subtags
+     *
+     * @param xmlTag the parent tag
+     * @param name tag name
+     * @return a lot of tags
+     */
+    protected static XmlTag[] getStripesTags(XmlTag xmlTag,String name)
+    {
+        return xmlTag.findSubTags(name);
+    }
+
+    /** Get a XmlTag from a XmlAttribute
+     *
+     * @param xmlAttribute XmlAttribute
+     * @return Xmltag
+     */
+    public static XmlTag getXmlTag(XmlAttribute xmlAttribute)
+    {
+        return (XmlTag) xmlAttribute.getParent().getParent();
     }
 }

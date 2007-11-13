@@ -30,10 +30,7 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.WebPathRefe
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
 import org.intellij.stripes.reference.filters.SpringBeanAnnotationFilter;
-import org.intellij.stripes.reference.providers.ActionBeanResolutionMethodsReferenceProvider;
-import org.intellij.stripes.reference.providers.ActionBeanSetterMethodsReferenceProvider;
-import org.intellij.stripes.reference.providers.LinkParamSetterMethodsReferenceProvider;
-import org.intellij.stripes.reference.providers.TagResolutionMethodsReferenceProvider;
+import org.intellij.stripes.reference.providers.*;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
@@ -89,6 +86,8 @@ public class StripesReferencesComponent implements ProjectComponent
         registerTags(new TagResolutionMethodsReferenceProvider(),stripesNamespaceFilter, StripesConstants.EVENT, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
         //layout-render
         registerTags(new WebPathReferenceProvider(),stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_RENDER_TAG);
+        //layout-component
+        registerTags(new LayoutComponentReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_COMPONENT);
         registerSpringBeanReference();
         
     }

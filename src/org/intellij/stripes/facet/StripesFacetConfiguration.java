@@ -26,6 +26,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.JDOMExternalizer;
 import org.jdom.Element;
 import org.intellij.stripes.facet.tabs.StripesConfigurationTab;
+import org.intellij.stripes.facet.tabs.FacetConfigurationTab;
 import org.intellij.stripes.util.StripesConstants;
 
 /**
@@ -33,12 +34,14 @@ import org.intellij.stripes.util.StripesConstants;
  */
 public class StripesFacetConfiguration implements FacetConfiguration
 {
+    
     private boolean springIntegration;
     private boolean logging;
     private boolean stripesResources;
     private String log4jFile;
     private boolean actionResolverUrlFilters;
     private String urlFiltersValue;
+    private boolean changeIcons = true;
 
     public String getLog4jFile()
     {
@@ -82,7 +85,7 @@ public class StripesFacetConfiguration implements FacetConfiguration
 
     public FacetEditorTab[] createEditorTabs(final FacetEditorContext editorContext, final FacetValidatorsManager validatorsManager)
     {
-        return new FacetEditorTab[]{new StripesConfigurationTab(editorContext, this)};        
+        return new FacetEditorTab[]{new StripesConfigurationTab(editorContext, this),new FacetConfigurationTab(editorContext, this)};        
     }
 
     public void readExternal(Element element) throws InvalidDataException
@@ -93,6 +96,7 @@ public class StripesFacetConfiguration implements FacetConfiguration
         log4jFile = JDOMExternalizer.readString(element, StripesConstants.LOG4J_FILE);
         actionResolverUrlFilters = JDOMExternalizer.readBoolean(element, StripesConstants.URL_FILTER);
         urlFiltersValue = JDOMExternalizer.readString(element, StripesConstants.FILTER_VALUE);
+        changeIcons = JDOMExternalizer.readBoolean(element,StripesConstants.CHANGE_ICONS);
 
     }
 
@@ -104,6 +108,7 @@ public class StripesFacetConfiguration implements FacetConfiguration
         JDOMExternalizer.write(element, StripesConstants.LOG4J_FILE,log4jFile);
         JDOMExternalizer.write(element, StripesConstants.URL_FILTER,actionResolverUrlFilters);
         JDOMExternalizer.write(element, StripesConstants.FILTER_VALUE, urlFiltersValue);
+        JDOMExternalizer.write(element, StripesConstants.CHANGE_ICONS, changeIcons);
     }
 
     public void setActionResolverUrlFilters(boolean actionResolverUrlFilters)
@@ -137,6 +142,19 @@ public class StripesFacetConfiguration implements FacetConfiguration
                 ", stripesResources=" + stripesResources +
                 ", log4jFile='" + log4jFile + '\'' +
                 ", urlFiltersValue='" + urlFiltersValue + '\'' +
+                ", changeIcons=" + changeIcons +
                 '}';
     }
+
+    public boolean isChangeIcons()
+    {
+        return changeIcons;
+    }
+
+    public void setChangeIcons(boolean changeIcons)
+    {
+        this.changeIcons = changeIcons;
+    }
+
+    
 }

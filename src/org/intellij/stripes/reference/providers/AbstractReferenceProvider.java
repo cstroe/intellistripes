@@ -17,6 +17,8 @@
 
 package org.intellij.stripes.reference.providers;
 
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
@@ -24,10 +26,15 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceType;
+import com.intellij.psi.impl.source.jsp.WebDirectoryUtil;
+import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.facet.FacetManager;
+import com.intellij.javaee.web.facet.WebFacet;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.facet.StripesFacet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,9 +67,11 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
 
     }
 
-    /**Get an ActionBean PsiClass from tag &lt;stripes:form beanclass="com.foo.bar"&gt;
+    /**
+     * Get an ActionBean PsiClass from tag &lt;stripes:form beanclass="com.foo.bar"&gt;
      *
      * @param xmlTag a stripes:[input] tag
+     *
      * @return An ActionBean PsiClass
      */
     @Nullable
@@ -71,9 +80,11 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
         return getBeanClassFromParentTag(xmlTag, StripesConstants.FORM_TAG);
     }
 
-    /**Get an ActionBean PsiClass from tag &lt;stripes:link beanclass="com.foo.bar"&gt;
+    /**
+     * Get an ActionBean PsiClass from tag &lt;stripes:link beanclass="com.foo.bar"&gt;
      *
      * @param xmlTag a stripes:link-param tag
+     *
      * @return An ActionBean PsiClass
      */
     @Nullable
@@ -83,61 +94,68 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
     }
 
 
-    /**Get an ActionBean PsiClass from a given tag parent
+    /**
+     * Get an ActionBean PsiClass from a given tag parent
      *
      * @param xmlTag xml tag
      * @param parent parent's name
+     *
      * @return An ActionBean PsiClass
      */
-    protected static PsiClass getBeanClassFromParentTag(XmlTag xmlTag,String parent)
+    protected static PsiClass getBeanClassFromParentTag(XmlTag xmlTag, String parent)
     {
-         if (xmlTag == null)
+        while (true)
         {
-            return null;
-        }
-        //Maybe this tag is the stripes:form, maybe not
-        XmlTag parentTag = xmlTag.getParentTag();
-        // the namespace ini this case stripes
-        String namespace = xmlTag.getNamespace();
-        boolean isNamespacesEquals = false;
-        if (parentTag != null)
-        {
-            isNamespacesEquals = parentTag.getNamespace().equals(namespace);
-        }
-        //is the same namespace??
-        if (isNamespacesEquals)
-        {
-            //is stripes:form tag?
-            if (parentTag.getName().equals(parentTag.getNamespacePrefix() + ':' + parent))
+            if (xmlTag == null)
             {
-                try
+                return null;
+            }
+            //Maybe this tag is the stripes:<parent>, maybe not
+            XmlTag parentTag = xmlTag.getParentTag();
+            // the namespace ini this case stripes
+            String namespace = xmlTag.getNamespace();
+            boolean isNamespaceEquals = false;
+            if (parentTag != null)
+            {
+                isNamespaceEquals = parentTag.getNamespace().equals(namespace);
+            }
+            //is the same namespace??
+            if (isNamespaceEquals)
+            {
+                //is stripes:<parent> tag?
+                if (parentTag.getName().equals(parentTag.getNamespacePrefix() + ':' + parent))
                 {
-                    //try to get the PsiClass for the beanclass parameter
-                    return getPsiClass(parentTag, parentTag.getAttribute(StripesConstants.BEAN_CLASS_ATTRIBUTE).getValue());
+                    try
+                    {
+                        //try to get the PsiClass for the beanclass parameter
+                        return getPsiClass(parentTag, parentTag.getAttributeValue(StripesConstants.BEAN_CLASS_ATTRIBUTE));
+                    }
+                    catch (NullPointerException e)
+                    {
+                        //form tag don't have beanclass parameter
+                        return null;
+                    }
                 }
-                catch (NullPointerException e)
+                else
                 {
-                    //form tag don't have beanclass parameter
-                    return null;
+                    //recursively
+                    xmlTag = parentTag;
                 }
             }
             else
             {
                 //recursively
-                return getBeanClassFromParentTag(parentTag,parent);
+                xmlTag = parentTag;
             }
-        }
-        else
-        {
-            //recursively
-            return getBeanClassFromParentTag(parentTag,parent);
         }
     }
 
 
-    /**get PsiClass for stripes:link,useActionBean or Url with beanclass parameter
+    /**
+     * get PsiClass for stripes:link,useActionBean or Url with beanclass parameter
      *
      * @param xmlTag stripes:link,useActionBean or Url tag
+     *
      * @return An ActionBean PsiClass
      */
     protected static PsiClass getActionBeanClassFromTag(XmlTag xmlTag)
@@ -146,7 +164,7 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
         {
             return null;
         }
-        String beanclass = null;
+        String beanclass;
         try
         {
             beanclass = xmlTag.getAttribute(StripesConstants.BEAN_CLASS_ATTRIBUTE).getValue();
@@ -165,15 +183,70 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
         }
     }
 
+    /**Get JspFile from a given Tag and parent
+     *
+     * @param xmlTag XmlTag
+     * @param parent Parent
+     * @return JspFile
+     */
+    protected static JspFile getJspFileFromParentTag(XmlTag xmlTag, String parent)
+    {
+        while (true)
+        {
 
-    /**Get PsiClass from a String
+            if (xmlTag == null)
+            {
+                return null;
+            }
+            XmlTag parentTag = xmlTag.getParentTag();
+            String namespace = xmlTag.getNamespace();
+            boolean isNamespaceEquals = false;
+            if (parentTag != null)
+            {
+                isNamespaceEquals = parentTag.getNamespace().equals(namespace);
+            }
+            if (isNamespaceEquals)
+            {
+                if (parentTag.getName().equals(parentTag.getNamespacePrefix() + ':' + parent))
+                {
+                    try
+                    {
+                        return getJspFile(parentTag, parentTag.getAttributeValue(StripesConstants.NAME_ATTRIBUTE));
+                    }
+                    catch (NullPointerException e)
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    xmlTag = parentTag;
+                }
+            }
+            else
+            {
+                xmlTag = parentTag;
+            }
+
+        }
+    }
+
+
+
+    /**
+     * Get PsiClass from a String
      *
      * @param psiElement For Obtain the project
-     * @param className className
+     * @param className  className
+     *
      * @return a PsiClass
      */
     public static PsiClass getPsiClass(PsiElement psiElement, String className)
     {
+        if(className == null)
+        {
+            return null;           
+        }
         Project project = psiElement.getProject();
         PsiManager psiManager = PsiManager.getInstance(project);
         //Cache
@@ -187,5 +260,26 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
             cacheActionBeanMap.put(className, psiClass);
             return psiClass;
         }
+    }
+
+    /**Get a JspFile from a String
+     *
+     * @param psiElement PsiElement
+     * @param url String whit the URL
+     * @return JspFile
+     */
+    public static JspFile getJspFile(PsiElement psiElement, String url)
+    {
+
+        WebDirectoryUtil webDirectoryUtil = WebDirectoryUtil.getWebDirectoryUtil(psiElement.getProject());
+        Module module = ModuleUtil.findModuleForPsiElement(psiElement);
+        FacetManager facetManager = FacetManager.getInstance(module);
+        StripesFacet stripesFacet = facetManager.findFacet(StripesFacet.FACET_TYPE_ID, "Stripes");
+        if (stripesFacet == null)
+        {
+            return null;
+        }
+        WebFacet webFacet = stripesFacet.getWebFacet();
+        return (JspFile) webDirectoryUtil.findFileByPath(url, webFacet);
     }
 }
