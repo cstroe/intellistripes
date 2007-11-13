@@ -32,6 +32,7 @@ public interface StripesConstants
     Icon STRIPES_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/StripesIcon.png");    
     Icon FIELD_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/Field.png");
     Icon RESOLUTION_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/Resolution.png");
+    Icon LAYOUT_COMPONENT_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/LayoutComponent.png");
     //Strings
     //Class Name
     String STRIPES_SERVLET_CLASS = "net.sourceforge.stripes.controller.DispatcherServlet";
@@ -74,20 +75,25 @@ public interface StripesConstants
     String LOG4J_FILE = "log4jFile";
     String URL_FILTER = "urlFilter";
     String FILTER_VALUE = "filterValue";
+    String CHANGE_ICONS = "changeIcons";
     //Integers
 
     Integer LOAD_ON_STARTUP = 1;
 
     String STRIPES_TEMPLATES = "Stripes Templates";
     String COMMONS_LOGGING_PROPERTIES = "commons-logging.properties";
-
     String STRIPES_RESOURCES_PROPERTIES = "StripesResources.properties";
-
-
-
+    String ACTION_BEAN_TEMPLATE = "ActionBean.java";
     String LOG4J_XML_TEMPLATE = "log4j xml configuration.xml";
     String LOG4J_PROPERTIES_TEMPLATE = "log4j properties configuration.properties";
     String LOG4J_XML = "log4j.xml";
     String LOG4J_PROPERTIES = "log4j.properties";
+
     String SPRING_BEAN = "net.sourceforge.stripes.integration.spring.SpringBean";
+
+    String STRIPES = "Stripes";
+    //layouts
+    String LAYOUT_RENDER = "layout-render";
+    String LAYOUT_COMPONENT = "layout-component";
+    String LAYOUT_DEFINITION = "layout-definition";
 }

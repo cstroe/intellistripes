@@ -19,11 +19,9 @@ package org.intellij.stripes.facet.tabs;
 
 import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;
-import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.ui.HyperlinkLabel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -31,12 +29,10 @@ import org.intellij.stripes.facet.StripesFacet;
 import org.intellij.stripes.facet.StripesFacetConfiguration;
 import org.intellij.stripes.support.StripesSupportUtil;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,7 +60,7 @@ public class StripesConfigurationTab extends FacetEditorTab
         this.editorContext = editorContext;
         this.configuration = configuration;
         messagePanel.setLayout(new VerticalFlowLayout());
-        messagePanel.add(createLink("More about Stripes", "http://mc4j.org/confluence/display/stripes/"), 1);
+        messagePanel.add(StripesUtil.createLink("More about Stripes", "http://mc4j.org/confluence/display/stripes/"), 1);
         addLoggingCheckBox.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
@@ -82,18 +78,7 @@ public class StripesConfigurationTab extends FacetEditorTab
         fillData();
     }
 
-    private static HyperlinkLabel createLink(final String text, final @NonNls String url)
-    {
-        final HyperlinkLabel link = new HyperlinkLabel(text);
-        link.addHyperlinkListener(new HyperlinkListener()
-        {
-            public void hyperlinkUpdate(HyperlinkEvent e)
-            {
-                BrowserUtil.launchBrowser(url);
-            }
-        });
-        return link;
-    }
+
 
     private void fillData()
     {
@@ -127,7 +112,7 @@ public class StripesConfigurationTab extends FacetEditorTab
     @Nls
     public String getDisplayName()
     {
-        return "Configuration";
+        return "Stripes Configuration";
     }
 
     public JComponent createComponent()

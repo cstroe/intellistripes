@@ -19,7 +19,7 @@
 <idea-plugin url="http://www.jroller.com/neuronica/">
     <name>IntelliStripes</name>
     <description>Stripes even more easy!!!</description>
-    <version>0.4.4.364</version>
+    <version>0.6.1.364</version>
     <vendor email="mario.arias.c@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">
         Mario Arias
@@ -49,4 +49,10 @@
             </implementation-class>
         </component>
     </project-components>
+    <actions>
+        <group id="Stripes" class="org.intellij.stripes.actions.StripesGroup" text="Stripes">
+            <action class="org.intellij.stripes.actions.StripesNewActionBeanAction" text="Stripes ActionBean" id="Stripes.NewActionBean"/>
+            <add-to-group anchor="last" group-id="NewGroup"/>
+        </group>
+    </actions>
 </idea-plugin>

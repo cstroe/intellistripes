@@ -34,6 +34,7 @@ public class StripesFileTemplateGroupFactory implements FileTemplateGroupDescrip
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.COMMONS_LOGGING_PROPERTIES));        
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.STRIPES_RESOURCES_PROPERTIES));
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.LOG4J_XML_TEMPLATE));
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.ACTION_BEAN_TEMPLATE, StripesConstants.ACTION_BEAN_ICON));
         return descriptor;
     }
 }
