@@ -29,7 +29,6 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.ui.HyperlinkLabel;
 import org.intellij.stripes.facet.StripesFacet;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -106,8 +105,12 @@ public class StripesUtil
      *
      * @return true or false (D'oh)
      */
-    public static boolean isStripesFacetConfigured(@NotNull Module module)
+    public static boolean isStripesFacetConfigured(Module module)
     {
+        if(module == null)
+        {
+            return false;           
+        }
         StripesFacet stripesFacet = getStripesFacet(module);
         return stripesFacet != null;
     }
