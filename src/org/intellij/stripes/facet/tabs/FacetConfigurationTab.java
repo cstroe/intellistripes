@@ -18,13 +18,12 @@
 package org.intellij.stripes.facet.tabs;
 
 import com.intellij.facet.ui.FacetEditorTab;
-import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import org.jetbrains.annotations.Nls;
 import org.intellij.stripes.facet.StripesFacetConfiguration;
+import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,14 +33,12 @@ import java.awt.*;
  */
 public class FacetConfigurationTab extends FacetEditorTab
 {
-    private FacetEditorContext context;
     private StripesFacetConfiguration configuration;
     private JPanel mainPanel;
     private JCheckBox changeIconsCheckBox;
 
-    public FacetConfigurationTab(FacetEditorContext context, StripesFacetConfiguration configuration)
+    public FacetConfigurationTab(StripesFacetConfiguration configuration)
     {
-        this.context = context;
         this.configuration = configuration;
         fillData();
     }
@@ -101,7 +98,7 @@ public class FacetConfigurationTab extends FacetEditorTab
         mainPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         changeIconsCheckBox = new JCheckBox();
         changeIconsCheckBox.setSelected(true);
-        changeIconsCheckBox.setText("Chage Icons");
+        changeIconsCheckBox.setText("Change Icons");
         changeIconsCheckBox.setToolTipText("Change Icons, Could Improve Performance in Very Large Proyects");
         mainPanel.add(changeIconsCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();

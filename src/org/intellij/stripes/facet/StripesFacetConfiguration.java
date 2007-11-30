@@ -18,23 +18,23 @@
 package org.intellij.stripes.facet;
 
 import com.intellij.facet.FacetConfiguration;
-import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.facet.ui.FacetEditorContext;
+import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.facet.ui.FacetValidatorsManager;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.JDOMExternalizer;
-import org.jdom.Element;
-import org.intellij.stripes.facet.tabs.StripesConfigurationTab;
+import com.intellij.openapi.util.WriteExternalException;
 import org.intellij.stripes.facet.tabs.FacetConfigurationTab;
+import org.intellij.stripes.facet.tabs.StripesConfigurationTab;
 import org.intellij.stripes.util.StripesConstants;
+import org.jdom.Element;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 10:53:00 PM
  */
 public class StripesFacetConfiguration implements FacetConfiguration
 {
-    
+
     private boolean springIntegration;
     private boolean logging;
     private boolean stripesResources;
@@ -85,7 +85,8 @@ public class StripesFacetConfiguration implements FacetConfiguration
 
     public FacetEditorTab[] createEditorTabs(final FacetEditorContext editorContext, final FacetValidatorsManager validatorsManager)
     {
-        return new FacetEditorTab[]{new StripesConfigurationTab(editorContext, this),new FacetConfigurationTab(editorContext, this)};        
+        return new FacetEditorTab[]{new StripesConfigurationTab(editorContext, this, validatorsManager),
+                new FacetConfigurationTab(this)};
     }
 
     public void readExternal(Element element) throws InvalidDataException
@@ -96,17 +97,17 @@ public class StripesFacetConfiguration implements FacetConfiguration
         log4jFile = JDOMExternalizer.readString(element, StripesConstants.LOG4J_FILE);
         actionResolverUrlFilters = JDOMExternalizer.readBoolean(element, StripesConstants.URL_FILTER);
         urlFiltersValue = JDOMExternalizer.readString(element, StripesConstants.FILTER_VALUE);
-        changeIcons = JDOMExternalizer.readBoolean(element,StripesConstants.CHANGE_ICONS);
+        changeIcons = JDOMExternalizer.readBoolean(element, StripesConstants.CHANGE_ICONS);
 
     }
 
     public void writeExternal(Element element) throws WriteExternalException
     {
-        JDOMExternalizer.write(element, StripesConstants.SPRING_INTEGRATION,springIntegration);
-        JDOMExternalizer.write(element, StripesConstants.LOGGING,logging);
-        JDOMExternalizer.write(element, StripesConstants.STRIPES_RESOURCES,stripesResources);
-        JDOMExternalizer.write(element, StripesConstants.LOG4J_FILE,log4jFile);
-        JDOMExternalizer.write(element, StripesConstants.URL_FILTER,actionResolverUrlFilters);
+        JDOMExternalizer.write(element, StripesConstants.SPRING_INTEGRATION, springIntegration);
+        JDOMExternalizer.write(element, StripesConstants.LOGGING, logging);
+        JDOMExternalizer.write(element, StripesConstants.STRIPES_RESOURCES, stripesResources);
+        JDOMExternalizer.write(element, StripesConstants.LOG4J_FILE, log4jFile);
+        JDOMExternalizer.write(element, StripesConstants.URL_FILTER, actionResolverUrlFilters);
         JDOMExternalizer.write(element, StripesConstants.FILTER_VALUE, urlFiltersValue);
         JDOMExternalizer.write(element, StripesConstants.CHANGE_ICONS, changeIcons);
     }
@@ -156,5 +157,5 @@ public class StripesFacetConfiguration implements FacetConfiguration
         this.changeIcons = changeIcons;
     }
 
-    
+
 }
