@@ -14,7 +14,7 @@
         </constraints>
         <properties>
           <selected value="true"/>
-          <text value="Chage Icons"/>
+          <text value="Change Icons"/>
           <toolTipText value="Change Icons, Could Improve Performance in Very Large Proyects"/>
         </properties>
       </component>

@@ -75,6 +75,7 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
      * @throws com.intellij.util.IncorrectOperationException
      *
      */
+    @Override
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
     {
         ((XmlAttribute) xmlAttributeValue.getParent()).setValue(StringUtil.decapitalize(newElementName.replace("set", "")));

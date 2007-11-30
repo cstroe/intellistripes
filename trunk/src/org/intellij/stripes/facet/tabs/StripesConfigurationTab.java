@@ -17,8 +17,13 @@
 
 package org.intellij.stripes.facet.tabs;
 
+import com.intellij.facet.Facet;
 import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;
+import com.intellij.facet.ui.FacetEditorsFactory;
+import com.intellij.facet.ui.FacetValidatorsManager;
+import com.intellij.facet.ui.libraries.FacetLibrariesValidator;
+import com.intellij.facet.ui.libraries.FacetLibrariesValidatorDescription;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -31,6 +36,8 @@ import org.intellij.stripes.support.StripesSupportUtil;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,6 +51,7 @@ public class StripesConfigurationTab extends FacetEditorTab
 {
     private FacetEditorContext editorContext;
     private StripesFacetConfiguration configuration;
+    private FacetLibrariesValidator validator;
 
 
     private JPanel mainPanel;
@@ -55,8 +63,13 @@ public class StripesConfigurationTab extends FacetEditorTab
     private JCheckBox configureActionResolverUrlFiltersCheckBox;
     private JTextField actionResolverUrlFiltersTextField;
 
-    public StripesConfigurationTab(FacetEditorContext editorContext, final StripesFacetConfiguration configuration)
+    public StripesConfigurationTab(FacetEditorContext editorContext, final StripesFacetConfiguration configuration, FacetValidatorsManager validatorsManager)
     {
+        validator = FacetEditorsFactory.getInstance().createLibrariesValidator(StripesConstants.STRIPES_LIBRARY_INFO,
+                                                                               new FacetLibrariesValidatorDescription(StripesConstants.STRIPES),
+                                                                               editorContext,
+                                                                               validatorsManager);
+        validatorsManager.registerValidator(validator);
         this.editorContext = editorContext;
         this.configuration = configuration;
         messagePanel.setLayout(new VerticalFlowLayout());
@@ -77,7 +90,6 @@ public class StripesConfigurationTab extends FacetEditorTab
         });
         fillData();
     }
-
 
 
     private void fillData()
@@ -137,6 +149,7 @@ public class StripesConfigurationTab extends FacetEditorTab
         assert stripesFacet != null;
         new WriteCommandAction.Simple(editorContext.getProject(), stripesFacet.getWebXmlPsiFile())
         {
+            @Override
             protected void run() throws Throwable
             {
                 StripesSupportUtil.addSupport(stripesFacet);
@@ -146,12 +159,25 @@ public class StripesConfigurationTab extends FacetEditorTab
 
     public void reset()
     {
-        
+
+    }
+
+    @Override
+    @Nullable
+    public Icon getIcon()
+    {
+        return StripesConstants.STRIPES_ICON;
     }
 
     public void disposeUIResources()
     {
 
+    }
+
+    @Override
+    public void onFacetInitialized(@NotNull Facet facet)
+    {
+        validator.onFacetInitialized(facet);
     }
 
     {

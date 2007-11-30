@@ -52,6 +52,7 @@ public class StripesNewActionBeanAction extends CreateElementActionBase
     }
 
     @NotNull
+    @Override
     protected PsiElement[] invokeDialog(Project project, PsiDirectory directory)
     {
         MyInputValidator validator = new MyInputValidator(project, directory);
@@ -69,7 +70,7 @@ public class StripesNewActionBeanAction extends CreateElementActionBase
     {
         Presentation presentation = anActionEvent.getPresentation();
 
-        if(!StripesUtil.isStripesFacetConfigured((Module) anActionEvent.getDataContext().getData(DataConstants.MODULE)))
+        if (!StripesUtil.isStripesFacetConfigured((Module) anActionEvent.getDataContext().getData(DataConstants.MODULE)))
         {
             presentation.setEnabled(false);
             presentation.setVisible(false);
