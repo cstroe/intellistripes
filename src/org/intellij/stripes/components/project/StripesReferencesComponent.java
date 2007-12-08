@@ -72,24 +72,26 @@ public class StripesReferencesComponent implements ProjectComponent
         for (String tag : tags)
         {
             //all stripes tags with beanclass parameter add Reference provider for implementations od Stripes ActionBean
-            registerSubclass(stripesNamespaceFilter,tag,StripesConstants.BEAN_CLASS_ATTRIBUTE,StripesConstants.STRIPES_ACTION_BEAN_CLASS);    
+            registerSubclass(stripesNamespaceFilter, tag, StripesConstants.BEAN_CLASS_ATTRIBUTE, StripesConstants.STRIPES_ACTION_BEAN_CLASS);
         }
         //errors tag add Reference Provider for Setters Method on parameter field
-        registerTags(new ActionBeanSetterMethodsReferenceProvider(), stripesNamespaceFilter, StripesConstants.FIELD_ATTRIBUTE,StripesConstants.ERRORS_TAG );
+        registerTags(new ActionBeanSetterMethodsReferenceProvider(), stripesNamespaceFilter, StripesConstants.FIELD_ATTRIBUTE, StripesConstants.ERRORS_TAG);
         //all stripes tags for input form add Reference Provider for Setters Method
         registerTags(new ActionBeanSetterMethodsReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.INPUT_TAGS);
-        //link-param tag add Reference Provider for Setters Method
+        //link-param tag add Reference Provider for Setters Methods
         registerTags(new LinkParamSetterMethodsReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LINK_PARAM_TAG);
+        //param tag add Reference Provider for Setter Methods
+        registerTags(new ParamSetterMethodsReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.PARAMS_TAGS);
         //all stripes tags for submit form add Reference Provider for Event(Resolution Method)
         registerTags(new ActionBeanResolutionMethodsReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.RESOLUTION_TAGS);
         //all stripes special tags with event parameter add Reference Provider for Event(Resolution Method)
-        registerTags(new TagResolutionMethodsReferenceProvider(),stripesNamespaceFilter, StripesConstants.EVENT, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
+        registerTags(new TagResolutionMethodsReferenceProvider(), stripesNamespaceFilter, StripesConstants.EVENT, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
         //layout-render
-        registerTags(new WebPathReferenceProvider(),stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_RENDER_TAG);
+        registerTags(new WebPathReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_RENDER_TAG);
         //layout-component
         registerTags(new LayoutComponentReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_COMPONENT);
         registerSpringBeanReference();
-        
+
     }
 
     private void registerSpringBeanReference()
@@ -103,24 +105,24 @@ public class StripesReferencesComponent implements ProjectComponent
 
     public void disposeComponent()
     {
-    
+
     }
 
-    private void registerTags(PsiReferenceProvider provider,NamespaceFilter namespaceFilter,String attributeName,String... tagNames)
+    private void registerTags(PsiReferenceProvider provider, NamespaceFilter namespaceFilter, String attributeName, String... tagNames)
     {
-        registry.registerXmlAttributeValueReferenceProvider(StripesUtil.makeArray(attributeName),getTagsFilter(namespaceFilter,tagNames),provider);
+        registry.registerXmlAttributeValueReferenceProvider(StripesUtil.makeArray(attributeName), getTagsFilter(namespaceFilter, tagNames), provider);
     }
 
-    private void registerSubclass(NamespaceFilter namespaceFilter,String tagName,String attributName,String... classes)
+    private void registerSubclass(NamespaceFilter namespaceFilter, String tagName, String attributName, String... classes)
     {
         JavaClassReferenceProvider provider = new JavaClassReferenceProvider();
-        provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES,classes);
-        provider.setOption(JavaClassReferenceProvider.INSTANTIATABLE,true);
-        registerTags(provider,namespaceFilter,attributName,tagName);
+        provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, classes);
+        provider.setOption(JavaClassReferenceProvider.INSTANTIATABLE, true);
+        registerTags(provider, namespaceFilter, attributName, tagName);
     }
-    
-    private static ScopeFilter getTagsFilter(ElementFilter elementFilter,String... tagsNames)
+
+    private static ScopeFilter getTagsFilter(ElementFilter elementFilter, String... tagsNames)
     {
-        return new ScopeFilter(new ParentElementFilter(new AndFilter(elementFilter,new ClassFilter(XmlTag.class),new TextFilter(tagsNames)),2));
+        return new ScopeFilter(new ParentElementFilter(new AndFilter(elementFilter, new ClassFilter(XmlTag.class), new TextFilter(tagsNames)), 2));
     }
 }
