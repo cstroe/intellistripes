@@ -60,11 +60,14 @@ public interface StripesConstants
     String LINK_TAG = "link";
     String ERRORS_TAG = "errors";
     String LINK_PARAM_TAG = "link-param";
+    String PARAM_TAG = "param";
     String BEAN_CLASS_ATTRIBUTE = "beanclass";
     String LAYOUT_RENDER_TAG = "layout-render";
+    String URL_TAG = "url";
     String FIELD_ATTRIBUTE = "field";
     String[] ACTION_BEAN_TAGS = {"form", "errors", "link", "url", "useActionBean"};
     String[] ACTION_BEAN_TAGS_WITH_EVENT = {"link", "url", "useActionBean"};
+    String[] PARAMS_TAGS = {"param", "link-param"};
     String EVENT = "event";
     String[] RESOLUTION_TAGS = {"button", "image", "submit"};
     String[] INPUT_TAGS = {"checkbox", "file", "hidden", "password", "radio", "select", "text", "textarea"};

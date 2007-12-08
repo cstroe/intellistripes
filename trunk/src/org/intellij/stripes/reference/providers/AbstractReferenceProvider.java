@@ -17,6 +17,8 @@
 
 package org.intellij.stripes.reference.providers;
 
+import com.intellij.facet.FacetManager;
+import com.intellij.javaee.web.facet.WebFacet;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -24,17 +26,15 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.jsp.WebDirectoryUtil;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceType;
-import com.intellij.psi.impl.source.jsp.WebDirectoryUtil;
 import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.facet.FacetManager;
-import com.intellij.javaee.web.facet.WebFacet;
-import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.facet.StripesFacet;
+import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,6 +91,19 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
     protected static PsiClass getLinkBeanClass(XmlTag xmlTag)
     {
         return getBeanClassFromParentTag(xmlTag, StripesConstants.LINK_TAG);
+    }
+
+    /**
+     * Get an ActionBean PsiClass from tag &lt;stripes:url beanclass="com.foo.bar"&gt;
+     *
+     * @param xmlTag a stripes:url tag
+     *
+     * @return An Action Bean Class
+     */
+    @Nullable
+    protected static PsiClass getUrlBeanClass(XmlTag xmlTag)
+    {
+        return getBeanClassFromParentTag(xmlTag, StripesConstants.URL_TAG);
     }
 
 
@@ -183,10 +196,12 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
         }
     }
 
-    /**Get JspFile from a given Tag and parent
+    /**
+     * Get JspFile from a given Tag and parent
      *
      * @param xmlTag XmlTag
      * @param parent Parent
+     *
      * @return JspFile
      */
     protected static JspFile getJspFileFromParentTag(XmlTag xmlTag, String parent)
@@ -232,7 +247,6 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
     }
 
 
-
     /**
      * Get PsiClass from a String
      *
@@ -243,9 +257,9 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
      */
     public static PsiClass getPsiClass(PsiElement psiElement, String className)
     {
-        if(className == null)
+        if (className == null)
         {
-            return null;           
+            return null;
         }
         Project project = psiElement.getProject();
         PsiManager psiManager = PsiManager.getInstance(project);
@@ -262,10 +276,12 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider
         }
     }
 
-    /**Get a JspFile from a String
+    /**
+     * Get a JspFile from a String
      *
      * @param psiElement PsiElement
-     * @param url String whit the URL
+     * @param url        String whit the URL
+     *
      * @return JspFile
      */
     public static JspFile getJspFile(PsiElement psiElement, String url)

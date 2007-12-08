@@ -52,7 +52,7 @@
       <entry name="?*.html" />
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
-      <entry name="?*.ft" />
+      <entry name="?*.*.ft" />
     </wildcardResourcePatterns>
   </component>
   <component name="Cvs2Configuration">

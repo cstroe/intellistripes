@@ -25,24 +25,27 @@ import com.intellij.psi.xml.XmlTag;
 import org.intellij.stripes.reference.ActionBeanSetterMethodsReference;
 import org.jetbrains.annotations.NotNull;
 
-/**This Class provide References for Setter methods in stripes:errors tag on field parameter 
- *
- * Created by IntelliJ IDEA. User: Mario Arias Date: 22/09/2007 Time: 11:04:12 PM
+/**
+ * This Class provide References for Setter methods in stripes:param tag on name parameter
+ * <p/>
+ * Created by IntelliJ IDEA. User: Mario Arias Date: 22/09/2007 Time: 10:43:04 PM
  */
-@Deprecated //Maybe I Use in the future, maybe
-public class ErrorFieldSetterMethodsReferenceProvider extends AbstractReferenceProvider
+public class ParamSetterMethodsReferenceProvider extends AbstractReferenceProvider
 {
     @NotNull
     public PsiReference[] getReferencesByElement(PsiElement psiElement)
     {
         XmlAttributeValue value = (XmlAttributeValue) psiElement;
         XmlTag tag = (XmlTag) value.getParent().getParent();
-        final PsiClass actionBeanPsiClass = getActionBeanClassFromTag(tag);
-        final PsiClass actionBeanPsiClassFromParent = getFormBeanClass(tag);
+        PsiClass actionBeanPsiClass = getLinkBeanClass(tag);
+        if (actionBeanPsiClass == null)
+        {
+            actionBeanPsiClass = getUrlBeanClass(tag);
+        }
         if (actionBeanPsiClass == null)
         {
             return PsiReference.EMPTY_ARRAY;
         }
-        return new PsiReference[]{new ActionBeanSetterMethodsReference(value, actionBeanPsiClass), new ActionBeanSetterMethodsReference(value, actionBeanPsiClassFromParent)};
+        return new PsiReference[]{new ActionBeanSetterMethodsReference(value, actionBeanPsiClass)};
     }
 }
