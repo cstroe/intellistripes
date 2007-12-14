@@ -107,9 +107,9 @@ public class StripesUtil
      */
     public static boolean isStripesFacetConfigured(Module module)
     {
-        if(module == null)
+        if (module == null)
         {
-            return false;           
+            return false;
         }
         StripesFacet stripesFacet = getStripesFacet(module);
         return stripesFacet != null;
@@ -144,14 +144,21 @@ public class StripesUtil
      */
     public static Module getModule(PsiElement psiElement)
     {
-        return ModuleUtil.findModuleForPsiElement(psiElement);
+        try
+        {
+            return ModuleUtil.findModuleForPsiElement(psiElement);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 
     /**
      * Create a HyperLink
      *
      * @param text Text
-     * @param url Url
+     * @param url  Url
      *
      * @return a HyperLinkLaber, when the user Click on it IntelliJ Open a Navigator with the URL
      */
@@ -168,9 +175,11 @@ public class StripesUtil
         return link;
     }
 
-    /**This Jsp have a Stripes Taglib declared
+    /**
+     * This Jsp have a Stripes Taglib declared
      *
      * @param jspFile JspFile
+     *
      * @return true or false
      */
     public static boolean isStripesPage(JspFile jspFile)
@@ -202,21 +211,23 @@ public class StripesUtil
         return false;
     }
 
-    /**get the stripes namespace for a JspFile
+    /**
+     * get the stripes namespace for a JspFile
      *
      * @param jspFile JspFile
+     *
      * @return the namespace, null if this page don't have stripes taglib
      */
     public static String getStripesNamespace(JspFile jspFile)
     {
-        if(isStripesPage(jspFile))
+        if (isStripesPage(jspFile))
         {
             XmlTag[] tags = jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true);
             for (XmlTag tag : tags)
             {
                 String uri = tag.getAttributeValue("uri");
                 assert uri != null;
-                if(uri.equals(StripesConstants.STRIPES_DYNAMIC_TLD) || uri.equals(StripesConstants.STRIPES_TLD))
+                if (uri.equals(StripesConstants.STRIPES_DYNAMIC_TLD) || uri.equals(StripesConstants.STRIPES_TLD))
                 {
                     return tag.getAttributeValue("prefix");
                 }
@@ -229,5 +240,5 @@ public class StripesUtil
         }
     }
 
-    
+
 }
