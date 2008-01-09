@@ -20,6 +20,7 @@ package org.intellij.stripes.components.project;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiLiteralExpression;
+import com.intellij.psi.css.impl.util.CssInHtmlClassOrIdReferenceProvider;
 import com.intellij.psi.filters.*;
 import com.intellij.psi.filters.position.NamespaceFilter;
 import com.intellij.psi.filters.position.ParentElementFilter;
@@ -90,6 +91,8 @@ public class StripesReferencesComponent implements ProjectComponent
         registerTags(new WebPathReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_RENDER_TAG);
         //layout-component
         registerTags(new LayoutComponentReferenceProvider(), stripesNamespaceFilter, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_COMPONENT);
+        //css
+        registerTags(new CssInHtmlClassOrIdReferenceProvider(), stripesNamespaceFilter, StripesConstants.CLASS_ATTRIBUTE, StripesConstants.CLASS_TAGS);
         registerSpringBeanReference();
 
     }
