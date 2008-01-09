@@ -56,6 +56,9 @@ public interface StripesConstants
     String STRIPES_TLD = "http://stripes.sourceforge.net/stripes.tld";
     String STRIPES_DYNAMIC_TLD = "http://stripes.sourceforge.net/stripes-dynattr.tld";
     String[] STRIPES_TLDS = {STRIPES_DYNAMIC_TLD, STRIPES_TLD};
+    String CLASS_ATTRIBUTE = "class";
+    String[] CLASS_TAGS = {"button", "checkbox", "file", "form", "image", "label", "link", "hidden", "option", "options-collection",
+            "options-enumeration", "password", "radio", "reset", "select", "submit", "text", "textarea"};
     String FORM_TAG = "form";
     String LINK_TAG = "link";
     String ERRORS_TAG = "errors";

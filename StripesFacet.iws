@@ -12,17 +12,18 @@
     <option name="synchOutside" value="false" />
     <option name="isHistoryResticted" value="true" />
     <option name="useIdenticalSwitch" value="true" />
-    <option name="synchActivitiesOnRefresh" value="true" />
     <option name="lastScr" value="" />
     <option name="scrTextFileName" value="" />
+    <option name="lastViewType" />
     <option name="historyRevisionsNumber" value="4" />
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/intellij/stripes/util/StripesUtil.java" afterPath="$PROJECT_DIR$/src/org/intellij/stripes/util/StripesUtil.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/META-INF/plugin.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/StripesFacet.jar" afterPath="$PROJECT_DIR$/StripesFacet.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/intellij/stripes/util/StripesConstants.java" afterPath="$PROJECT_DIR$/src/org/intellij/stripes/util/StripesConstants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/intellij/stripes/components/project/StripesReferencesComponent.java" afterPath="$PROJECT_DIR$/src/org/intellij/stripes/components/project/StripesReferencesComponent.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/StripesFacet.iws" afterPath="$PROJECT_DIR$/StripesFacet.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/StripesFacet.jar" afterPath="$PROJECT_DIR$/StripesFacet.jar" />
     </list>
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
@@ -104,10 +105,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="plugin.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="plugin.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/META-INF/plugin.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="18" selection-start="869" selection-end="869" vertical-scroll-proportion="0.27906978">
+            <state line="21" column="22" selection-start="873" selection-end="873" vertical-scroll-proportion="0.23119015">
               <folding />
             </state>
           </provider>
@@ -147,7 +148,7 @@
       <file leaf-file-name="ActionBeanResolutionMethodsReference.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/reference/ActionBeanResolutionMethodsReference.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="87" column="46" selection-start="2613" selection-end="2613" vertical-scroll-proportion="0.81975967">
+            <state line="87" column="46" selection-start="2613" selection-end="2613" vertical-scroll-proportion="0.7730307">
               <folding />
             </state>
           </provider>
@@ -165,13 +166,22 @@
       <file leaf-file-name="StripesReferencesComponent.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/components/project/StripesReferencesComponent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="149" selection-start="3695" selection-end="3695" vertical-scroll-proportion="0.14686248">
+            <state line="94" column="64" selection-start="4732" selection-end="4732" vertical-scroll-proportion="0.24966623">
               <folding>
-                <marker date="1197129738921" expanded="true" signature="4677:5072" placeholder="{...}" />
-                <marker date="1197129738921" expanded="true" signature="5113:5121" placeholder="{...}" />
-                <marker date="1197129738921" expanded="true" signature="5263:5421" placeholder="{...}" />
-                <marker date="1197129738921" expanded="true" signature="5550:5870" placeholder="{...}" />
+                <marker date="1199852786609" expanded="true" signature="4918:5313" placeholder="{...}" />
+                <marker date="1199852786609" expanded="true" signature="5354:5362" placeholder="{...}" />
+                <marker date="1199852786609" expanded="true" signature="5504:5662" placeholder="{...}" />
+                <marker date="1199852786609" expanded="true" signature="5791:6111" placeholder="{...}" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CssReferenceProvider.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/psi/css/impl/util/CssReferenceProvider.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="11" selection-start="453" selection-end="453" vertical-scroll-proportion="0.1682243">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -211,10 +221,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StripesConstants.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="StripesConstants.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/util/StripesConstants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="69" column="48" selection-start="3391" selection-end="3391" vertical-scroll-proportion="0.259012">
+            <state line="59" column="71" selection-start="2962" selection-end="2962" vertical-scroll-proportion="0.018691588">
               <folding />
             </state>
           </provider>
@@ -223,7 +233,7 @@
       <file leaf-file-name="ActionBeanSetterMethodsReference.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/reference/ActionBeanSetterMethodsReference.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="84" column="48" selection-start="2580" selection-end="2580" vertical-scroll-proportion="0.44592792">
+            <state line="84" column="48" selection-start="2580" selection-end="2580" vertical-scroll-proportion="0.39919892">
               <folding />
             </state>
           </provider>
@@ -977,19 +987,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Plugin.plugin">
-    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <module name="" />
       <option name="MAIN_CLASS_NAME" />
@@ -1002,32 +999,17 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
-    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
-      <module name="StripesFacet" />
+    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
-    </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
-      <module name="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="ADDITIONAL_CLASS_PATH" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <method>
-        <option name="Make" value="true" />
-      </method>
+      <module name="" />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG" enabled="false" merge="false">
       <module name="" />
@@ -1051,12 +1033,37 @@
         <value defaultName="wholeProject" />
       </option>
       <option name="PROPERTIES_FILE" />
-      <envs />
       <properties />
       <listeners />
       <method>
         <option name="Make" value="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="StripesFacet" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
     </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
@@ -1158,7 +1165,7 @@
       <window_info id="simpleUML" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282353" order="7" />
       <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3267974" order="0" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32924837" order="0" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3255814" order="2" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
       <window_info id="Dependency Cycles" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
@@ -1167,6 +1174,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19174758" order="3" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19767442" order="1" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.51877934" order="4" />
+      <window_info id="Code Graph" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34313726" order="3" />
       <window_info id="FileBrowser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33496732" order="3" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3255814" order="8" />
       <window_info id="Metrics" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329849" order="8" />
@@ -1193,7 +1201,7 @@
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug Fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="CSS Completion" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -1211,6 +1219,7 @@
     <MESSAGE value="Stripes Libraries in Facet Configuration" />
     <MESSAGE value="Auto Completion on stripes:param tag" />
     <MESSAGE value="Bug Fix" />
+    <MESSAGE value="CSS Completion" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -1246,25 +1255,15 @@
       <option name="VERSION" />
     </GetOptions>
   </component>
+  <component name="XPathView.XPathProjectComponent">
+    <history />
+    <find-history />
+  </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/reference/filters/SpringBeanAnnotationFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="66" column="19" selection-start="2281" selection-end="2281" vertical-scroll-proportion="1.0344827">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/facet/StripesFacetType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="0" selection-start="1393" selection-end="1393" vertical-scroll-proportion="0.39580765">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/facet/StripesFacet.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="30" column="13" selection-start="1020" selection-end="1020" vertical-scroll-proportion="0.5166461">
@@ -1293,6 +1292,13 @@
     <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/components/application/StripesApplicationComponent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="64" column="46" selection-start="1897" selection-end="1897" vertical-scroll-proportion="0.55">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/psi/css/impl/util/CssInHtmlLinkReferenceProvider.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="11" selection-start="283" selection-end="283" vertical-scroll-proportion="0.13084112">
           <folding />
         </state>
       </provider>
@@ -1326,7 +1332,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/reference/ActionBeanResolutionMethodsReference.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="87" column="46" selection-start="2613" selection-end="2613" vertical-scroll-proportion="0.81975967">
+        <state line="87" column="46" selection-start="2613" selection-end="2613" vertical-scroll-proportion="0.7730307">
           <folding />
         </state>
       </provider>
@@ -1338,15 +1344,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/components/project/StripesReferencesComponent.java">
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/psi/css/impl/util/CssReferenceProvider.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="149" selection-start="3695" selection-end="3695" vertical-scroll-proportion="0.14686248">
-          <folding>
-            <marker date="1197129738921" expanded="true" signature="4677:5072" placeholder="{...}" />
-            <marker date="1197129738921" expanded="true" signature="5113:5121" placeholder="{...}" />
-            <marker date="1197129738921" expanded="true" signature="5263:5421" placeholder="{...}" />
-            <marker date="1197129738921" expanded="true" signature="5550:5870" placeholder="{...}" />
-          </folding>
+        <state line="9" column="11" selection-start="453" selection-end="453" vertical-scroll-proportion="0.1682243">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1379,23 +1380,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/util/StripesConstants.java">
+    <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/reference/ActionBeanSetterMethodsReference.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="48" selection-start="3391" selection-end="3391" vertical-scroll-proportion="0.259012">
+        <state line="84" column="48" selection-start="2580" selection-end="2580" vertical-scroll-proportion="0.39919892">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/reference/ActionBeanSetterMethodsReference.java">
+    <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/components/project/StripesReferencesComponent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="84" column="48" selection-start="2580" selection-end="2580" vertical-scroll-proportion="0.44592792">
-          <folding />
+        <state line="94" column="64" selection-start="4732" selection-end="4732" vertical-scroll-proportion="0.24966623">
+          <folding>
+            <marker date="1199852786609" expanded="true" signature="4918:5313" placeholder="{...}" />
+            <marker date="1199852786609" expanded="true" signature="5354:5362" placeholder="{...}" />
+            <marker date="1199852786609" expanded="true" signature="5504:5662" placeholder="{...}" />
+            <marker date="1199852786609" expanded="true" signature="5791:6111" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/META-INF/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="18" selection-start="869" selection-end="869" vertical-scroll-proportion="0.27906978">
+        <state line="21" column="22" selection-start="873" selection-end="873" vertical-scroll-proportion="0.23119015">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/intellij/stripes/util/StripesConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="59" column="71" selection-start="2962" selection-end="2962" vertical-scroll-proportion="0.018691588">
           <folding />
         </state>
       </provider>
