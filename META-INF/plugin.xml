@@ -19,7 +19,7 @@
 <idea-plugin url="http://www.jroller.com/neuronica/">
     <name>IntelliStripes</name>
     <description>Stripes even more easy!!!</description>
-    <version>0.7.7.626</version>
+    <version>0.7.7.577</version>
     <vendor email="mario.arias.c@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">
         Mario Arias
@@ -31,7 +31,7 @@
                 </a>
         ]]>
     </change-notes>
-    <idea-version since-build="7361"/>
+    <idea-version since-build="7757" until-build="7999"/>
     <depends>com.intellij.javaee</depends>
     <depends>com.intellij.spring</depends>
     <extensions xmlns="com.intellij">

@@ -15,20 +15,24 @@
  *
  */
 
-package org.intellij.stripes.actions;
+package org.intellij.stripes.reference.filters;
 
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import org.intellij.stripes.util.StripesConstants;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.filters.ElementFilter;
 
 /**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 9/11/2007 Time: 11:55:40 PM
+ * Created by IntelliJ IDEA. User: Mario Arias Date: 22/03/2008 Time: 10:45:50 PM
  */
-public class StripesGroup extends DefaultActionGroup {
-// --------------------------- CONSTRUCTORS ---------------------------
+public class ForwardResolutionFilter implements ElementFilter {
+// ------------------------ INTERFACE METHODS ------------------------
 
-    public StripesGroup() {
-        super(StripesConstants.STRIPES, true);
-        getTemplatePresentation().setDescription(StripesConstants.STRIPES);
-        getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
+// --------------------- Interface ElementFilter ---------------------
+
+    public boolean isAcceptable(Object o, PsiElement psiElement) {
+        return false;
+    }
+
+    public boolean isClassAcceptable(Class aClass) {
+        return true;
     }
 }

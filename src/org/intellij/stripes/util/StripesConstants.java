@@ -26,8 +26,9 @@ import javax.swing.*;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 02:07:44 AM
  */
-public interface StripesConstants
-{
+public interface StripesConstants {
+// ------------------------------ FIELDS ------------------------------
+
     //Icons
     Icon ACTION_BEAN_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/ActionBean.png");
     Icon STRIPES_JSP_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/JspStripes.png");

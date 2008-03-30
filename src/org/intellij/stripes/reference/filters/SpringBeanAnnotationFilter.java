@@ -24,48 +24,41 @@ import com.intellij.psi.PsiNameValuePair;
 import com.intellij.psi.filters.ElementFilter;
 import org.intellij.stripes.util.StripesConstants;
 
-/**This Class Filter AutoCompletion For @SpringBean
- *
+/**
+ * This Class Filter AutoCompletion For @SpringBean
+ * <p/>
  * Created by IntelliJ IDEA. User: Mario Arias Date: 24/09/2007 Time: 10:34:19 PM
  */
-public class SpringBeanAnnotationFilter implements ElementFilter
-{
+public class SpringBeanAnnotationFilter implements ElementFilter {
+// ------------------------ INTERFACE METHODS ------------------------
 
-    public boolean isAcceptable(final Object element, final PsiElement context)
-    {       
-        if (element instanceof PsiNameValuePair)
-        {
+// --------------------- Interface ElementFilter ---------------------
+
+    public boolean isAcceptable(final Object element, final PsiElement context) {
+        if (element instanceof PsiNameValuePair) {
             PsiNameValuePair value = (PsiNameValuePair) element;
             //Ia the element An Annotation Parameter List
-            if (value.getParent() instanceof PsiAnnotationParameterList)
-            {
+            if (value.getParent() instanceof PsiAnnotationParameterList) {
                 PsiAnnotationParameterList annotationParameterList = (PsiAnnotationParameterList) value.getParent();
                 //get the Annotation Object
                 PsiAnnotation annotation = (PsiAnnotation) annotationParameterList.getParent();
-                try
-                {
+                try {
                     //Is @SpringBean Annotation??
                     return annotation.getQualifiedName().equals(StripesConstants.SPRING_BEAN);
                 }
-                catch (NullPointerException e)
-                {
+                catch (NullPointerException e) {
                     //OOPS 
                     return false;
                 }
-            }
-            else
-            {
+            } else {
                 return false;
             }
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    public boolean isClassAcceptable(final Class hintClass)
-    {
+    public boolean isClassAcceptable(final Class hintClass) {
         return true;
     }
 }

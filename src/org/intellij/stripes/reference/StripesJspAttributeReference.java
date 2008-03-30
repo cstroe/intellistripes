@@ -17,35 +17,38 @@
 
 package org.intellij.stripes.reference;
 
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.openapi.util.TextRange;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 11/07/2007 Time: 10:49:45 PM
  */
-public class StripesJspAttributeReference extends StripesReference
-{
+public class StripesJspAttributeReference extends StripesReference {
+// ------------------------------ FIELDS ------------------------------
+
     protected XmlAttributeValue xmlAttributeValue;
 
-    public StripesJspAttributeReference(XmlAttributeValue xmlAttributeValue)
-    {
+// --------------------------- CONSTRUCTORS ---------------------------
+
+    public StripesJspAttributeReference(XmlAttributeValue xmlAttributeValue) {
         this.xmlAttributeValue = xmlAttributeValue;
     }
 
-    public PsiElement getElement()
-    {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface PsiReference ---------------------
+
+    public PsiElement getElement() {
         return xmlAttributeValue;
     }
 
-    public TextRange getRangeInElement()
-    {
-        return new TextRange(1,xmlAttributeValue.getValue().length() + 1);
+    public TextRange getRangeInElement() {
+        return new TextRange(1, xmlAttributeValue.getValue().length() + 1);
     }
 
     @Override
-    public String getCanonicalText()
-    {
+    public String getCanonicalText() {
         return xmlAttributeValue.getValue();
     }
 }

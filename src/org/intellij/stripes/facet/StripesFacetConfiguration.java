@@ -32,8 +32,8 @@ import org.jdom.Element;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 10:53:00 PM
  */
-public class StripesFacetConfiguration implements FacetConfiguration
-{
+public class StripesFacetConfiguration implements FacetConfiguration {
+// ------------------------------ FIELDS ------------------------------
 
     private boolean springIntegration;
     private boolean logging;
@@ -43,99 +43,68 @@ public class StripesFacetConfiguration implements FacetConfiguration
     private String urlFiltersValue;
     private boolean changeIcons = true;
 
-    public String getLog4jFile()
-    {
+// --------------------- GETTER / SETTER METHODS ---------------------
+
+    public String getLog4jFile() {
         return log4jFile;
     }
 
-    public void setLog4jFile(String log4jFile)
-    {
+    public void setLog4jFile(String log4jFile) {
         this.log4jFile = log4jFile;
     }
 
-    public boolean isLogging()
-    {
-        return logging;
-    }
-
-    public void setLogging(boolean logging)
-    {
-        this.logging = logging;
-    }
-
-    public boolean isStripesResources()
-    {
-        return stripesResources;
-    }
-
-    public void setStripesResources(boolean stripesResources)
-    {
-        this.stripesResources = stripesResources;
-    }
-
-    public boolean isSpringIntegration()
-    {
-        return springIntegration;
-    }
-
-    public void setSpringIntegration(boolean springIntegration)
-    {
-        this.springIntegration = springIntegration;
-    }
-
-    public FacetEditorTab[] createEditorTabs(final FacetEditorContext editorContext, final FacetValidatorsManager validatorsManager)
-    {
-        return new FacetEditorTab[]{new StripesConfigurationTab(editorContext, this, validatorsManager),
-                new FacetConfigurationTab(this)};
-    }
-
-    public void readExternal(Element element) throws InvalidDataException
-    {
-        springIntegration = JDOMExternalizer.readBoolean(element, StripesConstants.SPRING_INTEGRATION);
-        logging = JDOMExternalizer.readBoolean(element, StripesConstants.LOGGING);
-        stripesResources = JDOMExternalizer.readBoolean(element, StripesConstants.STRIPES_RESOURCES);
-        log4jFile = JDOMExternalizer.readString(element, StripesConstants.LOG4J_FILE);
-        actionResolverUrlFilters = JDOMExternalizer.readBoolean(element, StripesConstants.URL_FILTER);
-        urlFiltersValue = JDOMExternalizer.readString(element, StripesConstants.FILTER_VALUE);
-        changeIcons = JDOMExternalizer.readBoolean(element, StripesConstants.CHANGE_ICONS);
-
-    }
-
-    public void writeExternal(Element element) throws WriteExternalException
-    {
-        JDOMExternalizer.write(element, StripesConstants.SPRING_INTEGRATION, springIntegration);
-        JDOMExternalizer.write(element, StripesConstants.LOGGING, logging);
-        JDOMExternalizer.write(element, StripesConstants.STRIPES_RESOURCES, stripesResources);
-        JDOMExternalizer.write(element, StripesConstants.LOG4J_FILE, log4jFile);
-        JDOMExternalizer.write(element, StripesConstants.URL_FILTER, actionResolverUrlFilters);
-        JDOMExternalizer.write(element, StripesConstants.FILTER_VALUE, urlFiltersValue);
-        JDOMExternalizer.write(element, StripesConstants.CHANGE_ICONS, changeIcons);
-    }
-
-    public void setActionResolverUrlFilters(boolean actionResolverUrlFilters)
-    {
-        this.actionResolverUrlFilters = actionResolverUrlFilters;
-    }
-
-    public boolean isActionResolverUrlFilters()
-    {
-        return actionResolverUrlFilters;
-    }
-
-    public String getUrlFiltersValue()
-    {
+    public String getUrlFiltersValue() {
         return urlFiltersValue;
     }
 
-    public void setUrlFiltersValue(String urlFiltersValue)
-    {
+    public void setUrlFiltersValue(String urlFiltersValue) {
         this.urlFiltersValue = urlFiltersValue;
     }
 
+    public boolean isActionResolverUrlFilters() {
+        return actionResolverUrlFilters;
+    }
+
+    public void setActionResolverUrlFilters(boolean actionResolverUrlFilters) {
+        this.actionResolverUrlFilters = actionResolverUrlFilters;
+    }
+
+    public boolean isChangeIcons() {
+        return changeIcons;
+    }
+
+    public void setChangeIcons(boolean changeIcons) {
+        this.changeIcons = changeIcons;
+    }
+
+    public boolean isLogging() {
+        return logging;
+    }
+
+    public void setLogging(boolean logging) {
+        this.logging = logging;
+    }
+
+    public boolean isSpringIntegration() {
+        return springIntegration;
+    }
+
+    public void setSpringIntegration(boolean springIntegration) {
+        this.springIntegration = springIntegration;
+    }
+
+    public boolean isStripesResources() {
+        return stripesResources;
+    }
+
+    public void setStripesResources(boolean stripesResources) {
+        this.stripesResources = stripesResources;
+    }
+
+// ------------------------ CANONICAL METHODS ------------------------
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "StripesFacetConfiguration{" +
                 "actionResolverUrlFilters=" + actionResolverUrlFilters +
                 ", springIntegration=" + springIntegration +
@@ -147,15 +116,35 @@ public class StripesFacetConfiguration implements FacetConfiguration
                 '}';
     }
 
-    public boolean isChangeIcons()
-    {
-        return changeIcons;
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface FacetConfiguration ---------------------
+
+    public FacetEditorTab[] createEditorTabs(final FacetEditorContext editorContext, final FacetValidatorsManager validatorsManager) {
+        return new FacetEditorTab[]{new StripesConfigurationTab(editorContext, this, validatorsManager),
+                new FacetConfigurationTab(this)};
     }
 
-    public void setChangeIcons(boolean changeIcons)
-    {
-        this.changeIcons = changeIcons;
+// --------------------- Interface JDOMExternalizable ---------------------
+
+
+    public void readExternal(Element element) throws InvalidDataException {
+        springIntegration = JDOMExternalizer.readBoolean(element, StripesConstants.SPRING_INTEGRATION);
+        logging = JDOMExternalizer.readBoolean(element, StripesConstants.LOGGING);
+        stripesResources = JDOMExternalizer.readBoolean(element, StripesConstants.STRIPES_RESOURCES);
+        log4jFile = JDOMExternalizer.readString(element, StripesConstants.LOG4J_FILE);
+        actionResolverUrlFilters = JDOMExternalizer.readBoolean(element, StripesConstants.URL_FILTER);
+        urlFiltersValue = JDOMExternalizer.readString(element, StripesConstants.FILTER_VALUE);
+        changeIcons = JDOMExternalizer.readBoolean(element, StripesConstants.CHANGE_ICONS);
     }
 
-
+    public void writeExternal(Element element) throws WriteExternalException {
+        JDOMExternalizer.write(element, StripesConstants.SPRING_INTEGRATION, springIntegration);
+        JDOMExternalizer.write(element, StripesConstants.LOGGING, logging);
+        JDOMExternalizer.write(element, StripesConstants.STRIPES_RESOURCES, stripesResources);
+        JDOMExternalizer.write(element, StripesConstants.LOG4J_FILE, log4jFile);
+        JDOMExternalizer.write(element, StripesConstants.URL_FILTER, actionResolverUrlFilters);
+        JDOMExternalizer.write(element, StripesConstants.FILTER_VALUE, urlFiltersValue);
+        JDOMExternalizer.write(element, StripesConstants.CHANGE_ICONS, changeIcons);
+    }
 }

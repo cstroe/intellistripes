@@ -47,8 +47,9 @@ import java.awt.event.ActionListener;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 11:22:05 PM
  */
-public class StripesConfigurationTab extends FacetEditorTab
-{
+public class StripesConfigurationTab extends FacetEditorTab {
+// ------------------------------ FIELDS ------------------------------
+
     private FacetEditorContext editorContext;
     private StripesFacetConfiguration configuration;
     private FacetLibrariesValidator validator;
@@ -63,82 +64,79 @@ public class StripesConfigurationTab extends FacetEditorTab
     private JCheckBox configureActionResolverUrlFiltersCheckBox;
     private JTextField actionResolverUrlFiltersTextField;
 
-    public StripesConfigurationTab(FacetEditorContext editorContext, final StripesFacetConfiguration configuration, FacetValidatorsManager validatorsManager)
-    {
+// --------------------------- CONSTRUCTORS ---------------------------
+
+    public StripesConfigurationTab(FacetEditorContext editorContext, final StripesFacetConfiguration configuration, FacetValidatorsManager validatorsManager) {
         validator = FacetEditorsFactory.getInstance().createLibrariesValidator(StripesConstants.STRIPES_LIBRARY_INFO,
-                                                                               new FacetLibrariesValidatorDescription(StripesConstants.STRIPES),
-                                                                               editorContext,
-                                                                               validatorsManager);
+                new FacetLibrariesValidatorDescription(StripesConstants.STRIPES),
+                editorContext,
+                validatorsManager);
         validatorsManager.registerValidator(validator);
         this.editorContext = editorContext;
         this.configuration = configuration;
         messagePanel.setLayout(new VerticalFlowLayout());
         messagePanel.add(StripesUtil.createLink("More about Stripes", "http://mc4j.org/confluence/display/stripes/"), 1);
-        addLoggingCheckBox.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent event)
-            {
+        addLoggingCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
                 log4jComboBox.setEnabled(addLoggingCheckBox.isSelected());
             }
         });
-        configureActionResolverUrlFiltersCheckBox.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent event)
-            {
+        configureActionResolverUrlFiltersCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
                 actionResolverUrlFiltersTextField.setEnabled(configureActionResolverUrlFiltersCheckBox.isSelected());
             }
         });
         fillData();
     }
 
-
-    private void fillData()
-    {
+    private void fillData() {
         addSpringIntegrationCheckBox.setSelected(configuration.isSpringIntegration());
         addLoggingCheckBox.setSelected(configuration.isLogging());
         addStripesResourcesCheckBox.setSelected(configuration.isStripesResources());
-        if (configuration.getLog4jFile() == null || configuration.getLog4jFile().equalsIgnoreCase(""))
-        {
+        if (configuration.getLog4jFile() == null || configuration.getLog4jFile().equalsIgnoreCase("")) {
             log4jComboBox.setSelectedItem(StripesConstants.LOG4J_PROPERTIES);
-        }
-        else
-        {
+        } else {
             log4jComboBox.setSelectedItem(configuration.getLog4jFile());
         }
         log4jComboBox.setEnabled(addLoggingCheckBox.isSelected());
         configureActionResolverUrlFiltersCheckBox.setSelected(configuration.isActionResolverUrlFilters());
         actionResolverUrlFiltersTextField.setEnabled(configuration.isActionResolverUrlFilters());
-        if (configuration.getUrlFiltersValue() != null)
-        {
-            if (!(configuration.getUrlFiltersValue().length() == 0))
-            {
+        if (configuration.getUrlFiltersValue() != null) {
+            if (!(configuration.getUrlFiltersValue().length() == 0)) {
                 actionResolverUrlFiltersTextField.setText(configuration.getUrlFiltersValue());
-            }
-            else
-            {
+            } else {
                 actionResolverUrlFiltersTextField.setText("WEB-INF/classes");
             }
         }
     }
 
+    // ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface Configurable ---------------------
+
     @Nls
-    public String getDisplayName()
-    {
+    public String getDisplayName() {
         return "Stripes Configuration";
     }
 
-    public JComponent createComponent()
-    {
+    @Override
+    @Nullable
+    public Icon getIcon() {
+        return StripesConstants.STRIPES_ICON;
+    }
+
+// --------------------- Interface UnnamedConfigurable ---------------------
+
+
+    public JComponent createComponent() {
         return mainPanel;
     }
 
-    public boolean isModified()
-    {
+    public boolean isModified() {
         return true;
     }
 
-    public void apply() throws ConfigurationException
-    {
+    public void apply() throws ConfigurationException {
         configuration.setSpringIntegration(addSpringIntegrationCheckBox.isSelected());
         configuration.setLogging(addLoggingCheckBox.isSelected());
         configuration.setStripesResources(addStripesResourcesCheckBox.isSelected());
@@ -147,36 +145,26 @@ public class StripesConfigurationTab extends FacetEditorTab
         configuration.setUrlFiltersValue(actionResolverUrlFiltersTextField.getText());
         final StripesFacet stripesFacet = (StripesFacet) editorContext.getFacet();
         assert stripesFacet != null;
-        new WriteCommandAction.Simple(editorContext.getProject(), stripesFacet.getWebXmlPsiFile())
-        {
+        new WriteCommandAction.Simple(editorContext.getProject(), stripesFacet.getWebXmlPsiFile()) {
             @Override
-            protected void run() throws Throwable
-            {
+            protected void run() throws Throwable {
                 StripesSupportUtil.addSupport(stripesFacet);
             }
         }.execute();
     }
 
-    public void reset()
-    {
+    public void reset() {
 
     }
+
+    public void disposeUIResources() {
+
+    }
+
+// -------------------------- OTHER METHODS --------------------------
 
     @Override
-    @Nullable
-    public Icon getIcon()
-    {
-        return StripesConstants.STRIPES_ICON;
-    }
-
-    public void disposeUIResources()
-    {
-
-    }
-
-    @Override
-    public void onFacetInitialized(@NotNull Facet facet)
-    {
+    public void onFacetInitialized(@NotNull Facet facet) {
         validator.onFacetInitialized(facet);
     }
 
@@ -188,13 +176,13 @@ public class StripesConfigurationTab extends FacetEditorTab
     }
 
     /**
-     * Method generated by IntelliJ IDEA GUI Designer >>> IMPORTANT!! <<< DO NOT edit this method OR call it in your
-     * code!
+     * Method generated by IntelliJ IDEA GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
      *
      * @noinspection ALL
      */
-    private void $$$setupUI$$$()
-    {
+    private void $$$setupUI$$$() {
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
         final Spacer spacer1 = new Spacer();
@@ -243,8 +231,7 @@ public class StripesConfigurationTab extends FacetEditorTab
     /**
      * @noinspection ALL
      */
-    public JComponent $$$getRootComponent$$$()
-    {
+    public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
 }

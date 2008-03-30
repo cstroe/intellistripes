@@ -36,65 +36,46 @@ import javax.swing.event.HyperlinkListener;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 02:04:03 AM
  */
-public class StripesUtil
-{
-    private StripesUtil()
-    {
-    }
+public final class StripesUtil {
+// -------------------------- STATIC METHODS --------------------------
 
-    public static boolean isSubclass(PsiClass clazz, String superClass)
-    {
-        if (clazz == null)
-        {
+    public static boolean isSubclass(PsiClass clazz, String superClass) {
+        if (clazz == null) {
             return false;
         }
         boolean b = false;
-        try
-        {
+        try {
             b = clazz.getQualifiedName().equals(superClass);
         }
-        catch (NullPointerException e)
-        {
+        catch (NullPointerException e) {
             //
         }
-        if (b)
-        {
+        if (b) {
             return true;
-        }
-        else
-        {
-            if (isSubclass(clazz.getSupers(), superClass))
-            {
+        } else {
+            if (isSubclass(clazz.getSupers(), superClass)) {
                 return true;
-            }
-            else if (isSubclass(clazz.getInterfaces(), superClass))
-            {
-                return true;
-            }
-
-        }
-        return false;
-    }
-
-    protected static boolean isSubclass(PsiClass[] supers, String superClass)
-    {
-        for (PsiClass aSuper : supers)
-        {
-            if (isSubclass(aSuper, superClass))
-            {
+            } else if (isSubclass(clazz.getInterfaces(), superClass)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static String[] getStringsArray(String... strings)
-    {
+    protected static boolean isSubclass(PsiClass[] supers, String superClass) {
+        for (PsiClass aSuper : supers) {
+            if (isSubclass(aSuper, superClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String[] getStringsArray(String... strings) {
         return strings;
     }
 
-    public static <T> T[] makeArray(T... parameters)
-    {
+    public static <T> T[] makeArray(T... parameters) {
         return parameters;
     }
 
@@ -102,13 +83,10 @@ public class StripesUtil
      * Is Stripes Facet Configured
      *
      * @param module Module
-     *
      * @return true or false (D'oh)
      */
-    public static boolean isStripesFacetConfigured(Module module)
-    {
-        if (module == null)
-        {
+    public static boolean isStripesFacetConfigured(Module module) {
+        if (module == null) {
             return false;
         }
         StripesFacet stripesFacet = getStripesFacet(module);
@@ -119,18 +97,13 @@ public class StripesUtil
      * Get Stripes Facet
      *
      * @param module Module
-     *
      * @return StripesFacetObject
      */
-    public static StripesFacet getStripesFacet(Module module)
-    {
-        if (module != null)
-        {
+    public static StripesFacet getStripesFacet(Module module) {
+        if (module != null) {
             FacetManager facetManager = FacetManager.getInstance(module);
             return facetManager.findFacet(StripesFacet.FACET_TYPE_ID, "Stripes");
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
@@ -139,17 +112,13 @@ public class StripesUtil
      * Get a Module
      *
      * @param psiElement PsiElement
-     *
      * @return Module
      */
-    public static Module getModule(PsiElement psiElement)
-    {
-        try
-        {
+    public static Module getModule(PsiElement psiElement) {
+        try {
             return ModuleUtil.findModuleForPsiElement(psiElement);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return null;
         }
     }
@@ -159,16 +128,12 @@ public class StripesUtil
      *
      * @param text Text
      * @param url  Url
-     *
      * @return a HyperLinkLaber, when the user Click on it IntelliJ Open a Navigator with the URL
      */
-    public static HyperlinkLabel createLink(final String text, final @NonNls String url)
-    {
+    public static HyperlinkLabel createLink(final String text, final @NonNls String url) {
         final HyperlinkLabel link = new HyperlinkLabel(text);
-        link.addHyperlinkListener(new HyperlinkListener()
-        {
-            public void hyperlinkUpdate(HyperlinkEvent e)
-            {
+        link.addHyperlinkListener(new HyperlinkListener() {
+            public void hyperlinkUpdate(HyperlinkEvent e) {
                 BrowserUtil.launchBrowser(url);
             }
         });
@@ -176,69 +141,58 @@ public class StripesUtil
     }
 
     /**
+     * get the stripes namespace for a JspFile
+     *
+     * @param jspFile JspFile
+     * @return the namespace, null if this page don't have stripes taglib
+     */
+    public static String getStripesNamespace(JspFile jspFile) {
+        if (isStripesPage(jspFile)) {
+            XmlTag[] tags = jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true);
+            for (XmlTag tag : tags) {
+                String uri = tag.getAttributeValue("uri");
+                assert uri != null;
+                if (uri.equals(StripesConstants.STRIPES_DYNAMIC_TLD) || uri.equals(StripesConstants.STRIPES_TLD)) {
+                    return tag.getAttributeValue("prefix");
+                }
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * This Jsp have a Stripes Taglib declared
      *
      * @param jspFile JspFile
-     *
      * @return true or false
      */
-    public static boolean isStripesPage(JspFile jspFile)
-    {
+    public static boolean isStripesPage(JspFile jspFile) {
         XmlTag[] tags = jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true);
         boolean[] isStripesPageList = new boolean[tags.length];
-        for (int i = 0; i < tags.length; i++)
-        {
+        for (int i = 0; i < tags.length; i++) {
             XmlTag tag = tags[i];
             String uri = tag.getAttributeValue("uri");
-            try
-            {
+            try {
                 //this tag is a Stripes declaration taglib?
                 isStripesPageList[i] = uri.equals(StripesConstants.STRIPES_DYNAMIC_TLD) || uri.equals(StripesConstants.STRIPES_TLD);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 //
             }
         }
 
-        for (boolean isStripes : isStripesPageList)
-        {
-            if (isStripes)
-            {
+        for (boolean isStripes : isStripesPageList) {
+            if (isStripes) {
                 return true;
             }
         }
         return false;
     }
 
-    /**
-     * get the stripes namespace for a JspFile
-     *
-     * @param jspFile JspFile
-     *
-     * @return the namespace, null if this page don't have stripes taglib
-     */
-    public static String getStripesNamespace(JspFile jspFile)
-    {
-        if (isStripesPage(jspFile))
-        {
-            XmlTag[] tags = jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true);
-            for (XmlTag tag : tags)
-            {
-                String uri = tag.getAttributeValue("uri");
-                assert uri != null;
-                if (uri.equals(StripesConstants.STRIPES_DYNAMIC_TLD) || uri.equals(StripesConstants.STRIPES_TLD))
-                {
-                    return tag.getAttributeValue("prefix");
-                }
-            }
-            return null;
-        }
-        else
-        {
-            return null;
-        }
+// --------------------------- CONSTRUCTORS ---------------------------
+
+    private StripesUtil() {
     }
-
-
 }

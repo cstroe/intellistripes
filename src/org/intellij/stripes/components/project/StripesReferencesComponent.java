@@ -39,39 +39,32 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 3/07/2007 Time: 11:14:42 PM
  */
-public class StripesReferencesComponent implements ProjectComponent
-{
+public class StripesReferencesComponent implements ProjectComponent {
+// ------------------------------ FIELDS ------------------------------
+
     private ReferenceProvidersRegistry registry;
     private NamespaceFilter stripesNamespaceFilter;
 
-    public StripesReferencesComponent(Project project)
-    {
+// --------------------------- CONSTRUCTORS ---------------------------
+
+    public StripesReferencesComponent(Project project) {
         registry = ReferenceProvidersRegistry.getInstance(project);
         stripesNamespaceFilter = new NamespaceFilter(StripesConstants.STRIPES_TLDS);
     }
 
-    public void projectOpened()
-    {
+// ------------------------ INTERFACE METHODS ------------------------
 
-    }
+// --------------------- Interface BaseComponent ---------------------
 
-    public void projectClosed()
-    {
-
-    }
 
     @NotNull
-    public String getComponentName()
-    {
+    public String getComponentName() {
         return "Stripes References Provider";
     }
 
-    public void initComponent()
-    {
-
+    public void initComponent() {
         String[] tags = StripesConstants.ACTION_BEAN_TAGS;
-        for (String tag : tags)
-        {
+        for (String tag : tags) {
             //all stripes tags with beanclass parameter add Reference provider for implementations od Stripes ActionBean
             registerSubclass(stripesNamespaceFilter, tag, StripesConstants.BEAN_CLASS_ATTRIBUTE, StripesConstants.STRIPES_ACTION_BEAN_CLASS);
         }
@@ -94,38 +87,44 @@ public class StripesReferencesComponent implements ProjectComponent
         //css
         registerTags(new CssInHtmlClassOrIdReferenceProvider(), stripesNamespaceFilter, StripesConstants.CLASS_ATTRIBUTE, StripesConstants.CLASS_TAGS);
         registerSpringBeanReference();
+    }
+
+    public void disposeComponent() {
 
     }
 
-    private void registerSpringBeanReference()
-    {
+// --------------------- Interface ProjectComponent ---------------------
+
+    public void projectOpened() {
+
+    }
+
+    public void projectClosed() {
+
+    }
+
+// -------------------------- OTHER METHODS --------------------------
+
+    private void registerSpringBeanReference() {
         //Register Provider
         registry.registerReferenceProvider(new ParentElementFilter(new SpringBeanAnnotationFilter()),//Our Filter
-                                           PsiLiteralExpression.class,// Only in Strings
-                                           new SpringBeanNamesReferenceProvider()//Add <IDEA_HOME>/plugins/Spring/lib/spring.jar to your IDEA JDK
+                PsiLiteralExpression.class,// Only in Strings
+                new SpringBeanNamesReferenceProvider()//Add <IDEA_HOME>/plugins/Spring/lib/spring.jar to your IDEA JDK
         );
     }
 
-    public void disposeComponent()
-    {
-
-    }
-
-    private void registerTags(PsiReferenceProvider provider, NamespaceFilter namespaceFilter, String attributeName, String... tagNames)
-    {
-        registry.registerXmlAttributeValueReferenceProvider(StripesUtil.makeArray(attributeName), getTagsFilter(namespaceFilter, tagNames), provider);
-    }
-
-    private void registerSubclass(NamespaceFilter namespaceFilter, String tagName, String attributName, String... classes)
-    {
+    private void registerSubclass(NamespaceFilter namespaceFilter, String tagName, String attributName, String... classes) {
         JavaClassReferenceProvider provider = new JavaClassReferenceProvider();
         provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, classes);
         provider.setOption(JavaClassReferenceProvider.INSTANTIATABLE, true);
         registerTags(provider, namespaceFilter, attributName, tagName);
     }
 
-    private static ScopeFilter getTagsFilter(ElementFilter elementFilter, String... tagsNames)
-    {
+    private void registerTags(PsiReferenceProvider provider, NamespaceFilter namespaceFilter, String attributeName, String... tagNames) {
+        registry.registerXmlAttributeValueReferenceProvider(StripesUtil.makeArray(attributeName), getTagsFilter(namespaceFilter, tagNames), provider);
+    }
+
+    private static ScopeFilter getTagsFilter(ElementFilter elementFilter, String... tagsNames) {
         return new ScopeFilter(new ParentElementFilter(new AndFilter(elementFilter, new ClassFilter(XmlTag.class), new TextFilter(tagsNames)), 2));
     }
 }

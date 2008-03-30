@@ -31,40 +31,39 @@ import javax.swing.*;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 10:52:09 PM
  */
-public class StripesFacetType extends FacetType<StripesFacet,StripesFacetConfiguration>
-{
+public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfiguration> {
+// ------------------------------ FIELDS ------------------------------
+
     public final static StripesFacetType INSTANCE = new StripesFacetType();
 
-    private StripesFacetType()
-    {
-        super(StripesFacet.FACET_TYPE_ID,"Stripes","Stripes", WebFacet.ID);        
+// --------------------------- CONSTRUCTORS ---------------------------
+
+    private StripesFacetType() {
+        super(StripesFacet.FACET_TYPE_ID, "Stripes", "Stripes", WebFacet.ID);
     }
 
-    public StripesFacetConfiguration createDefaultConfiguration()
-    {
-        return new StripesFacetConfiguration();
-    }
-
-    public StripesFacet createFacet(@NotNull Module module, String name, @NotNull StripesFacetConfiguration configuration, @Nullable Facet underlyingFacet)
-    {
-        return new StripesFacet(this,module,name,configuration,underlyingFacet);
-    }
+// -------------------------- OTHER METHODS --------------------------
 
     @Override
-    public boolean isOnlyOneFacetAllowed()
-    {
+    public boolean isOnlyOneFacetAllowed() {
         return true;
     }
 
     @Override
-    public Icon getIcon()
-    {
-        return StripesConstants.STRIPES_ICON;
+    public boolean isSuitableModuleType(ModuleType moduleType) {
+        return moduleType == ModuleType.JAVA;
     }
 
     @Override
-    public boolean isSuitableModuleType(ModuleType moduleType)
-    {
-        return moduleType == ModuleType.JAVA;
+    public Icon getIcon() {
+        return StripesConstants.STRIPES_ICON;
+    }
+
+    public StripesFacet createFacet(@NotNull Module module, String name, @NotNull StripesFacetConfiguration configuration, @Nullable Facet underlyingFacet) {
+        return new StripesFacet(this, module, name, configuration, underlyingFacet);
+    }
+
+    public StripesFacetConfiguration createDefaultConfiguration() {
+        return new StripesFacetConfiguration();
     }
 }

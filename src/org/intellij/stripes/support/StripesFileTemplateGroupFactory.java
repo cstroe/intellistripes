@@ -17,21 +17,23 @@
 
 package org.intellij.stripes.support;
 
-import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptorFactory;
-import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptor;
 import com.intellij.ide.fileTemplates.FileTemplateDescriptor;
+import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptor;
+import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptorFactory;
 import org.intellij.stripes.util.StripesConstants;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/08/2007 Time: 10:06:35 PM
  */
-public class StripesFileTemplateGroupFactory implements FileTemplateGroupDescriptorFactory
-{
-    public FileTemplateGroupDescriptor getFileTemplatesDescriptor()
-    {
+public class StripesFileTemplateGroupFactory implements FileTemplateGroupDescriptorFactory {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface FileTemplateGroupDescriptorFactory ---------------------
+
+    public FileTemplateGroupDescriptor getFileTemplatesDescriptor() {
         FileTemplateGroupDescriptor descriptor = new FileTemplateGroupDescriptor(StripesConstants.STRIPES_TEMPLATES, StripesConstants.STRIPES_ICON);
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.LOG4J_PROPERTIES_TEMPLATE));
-        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.COMMONS_LOGGING_PROPERTIES));        
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.COMMONS_LOGGING_PROPERTIES));
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.STRIPES_RESOURCES_PROPERTIES));
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.LOG4J_XML_TEMPLATE));
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.ACTION_BEAN_TEMPLATE, StripesConstants.ACTION_BEAN_ICON));

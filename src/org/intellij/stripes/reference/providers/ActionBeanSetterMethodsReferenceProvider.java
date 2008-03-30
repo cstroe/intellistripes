@@ -25,24 +25,26 @@ import com.intellij.psi.xml.XmlTag;
 import org.intellij.stripes.reference.ActionBeanSetterMethodsReference;
 import org.jetbrains.annotations.NotNull;
 
-/**This class provide References to Setter Methods for an Action Bean Class, in tags atripes:[input]
- *
+/**
+ * This class provide References to Setter Methods for an Action Bean Class, in tags atripes:[input]
+ * <p/>
  * Created by IntelliJ IDEA. User: Mario Arias Date: 4/07/2007 Time: 12:45:02 AM
  */
-public class ActionBeanSetterMethodsReferenceProvider extends AbstractReferenceProvider
-{
+public class ActionBeanSetterMethodsReferenceProvider extends AbstractReferenceProvider {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface PsiReferenceProvider ---------------------
+
     //private static final Logger LOGGER = Logger.getInstance(ActionBeanSetterMethodsReferenceProvider.class.getName());
 
     @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement)
-    {
+    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
         XmlAttributeValue value = (XmlAttributeValue) psiElement;
         XmlTag tag = (XmlTag) value.getParent().getParent();
         final PsiClass actionBeanPsiClass = getFormBeanClass(tag);
-        if (actionBeanPsiClass == null)
-        {
+        if (actionBeanPsiClass == null) {
             return PsiReference.EMPTY_ARRAY;
-        }        
+        }
         return new PsiReference[]{new ActionBeanSetterMethodsReference(value, actionBeanPsiClass)};
     }
 }

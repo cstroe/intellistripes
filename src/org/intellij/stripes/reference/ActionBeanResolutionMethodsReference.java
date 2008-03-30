@@ -17,28 +17,51 @@
 
 package org.intellij.stripes.reference;
 
+import com.intellij.codeInsight.lookup.LookupValueFactory;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.codeInsight.lookup.LookupValueFactory;
-import org.jetbrains.annotations.Nullable;
 import org.intellij.stripes.util.StripesConstants;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 21/09/2007 Time: 01:28:16 AM
  */
-public class ActionBeanResolutionMethodsReference extends StripesJspAttributeReference
-{
+public class ActionBeanResolutionMethodsReference extends StripesJspAttributeReference {
+// ------------------------------ FIELDS ------------------------------
+
     private PsiClass actionBeanPsiClass;
 
-    public ActionBeanResolutionMethodsReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass)
-    {
+// --------------------------- CONSTRUCTORS ---------------------------
+
+    public ActionBeanResolutionMethodsReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass) {
         super(xmlAttributeValue);
         this.actionBeanPsiClass = actionBeanPsiClass;
     }
+
+// --------------------- GETTER / SETTER METHODS ---------------------
+
+    /**
+     * Get all Posible Resolution Methods for an ActionBean Class
+     *
+     * @return an Array with References to Resolution Methods
+     */
+    @Override
+    public Object[] getVariants() {
+        String[] names = getResolutionMethodsNames(actionBeanPsiClass);
+        Object[] variants = new Object[names.length];
+        for (int i = 0; i < variants.length; i++) {
+            variants[i] = LookupValueFactory.createLookupValue(names[i], StripesConstants.RESOLUTION_ICON);
+        }
+        return variants;
+    }
+
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface PsiReference ---------------------
 
     /**
      * Ctrl + Click in the attribute name will be resolved
@@ -47,15 +70,12 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
      */
     @Nullable
     @Override
-    public PsiElement resolve()
-    {
+    public PsiElement resolve() {
         PsiMethod[] psiMethods = actionBeanPsiClass.findMethodsByName(getCanonicalText(), true);
-        try
-        {
+        try {
             return psiMethods[0];
         }
-        catch (ArrayIndexOutOfBoundsException e)
-        {
+        catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
     }
@@ -64,33 +84,13 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
      * When Method will renamed
      *
      * @param newElementName the new methodName
-     *
      * @return Element
-     *
      * @throws com.intellij.util.IncorrectOperationException
      *
      */
     @Override
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
-    {
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
         ((XmlAttribute) xmlAttributeValue.getParent()).setValue(newElementName);
         return resolve();
-    }
-
-    /**
-     * Get all Posible Resolution Methods for an ActionBean Class
-     *
-     * @return an Array with References to Resolution Methods
-     */
-    @Override
-    public Object[] getVariants()
-    {
-        String[] names = getResolutionMethodsNames(actionBeanPsiClass);
-        Object[] variants = new Object[names.length];
-        for (int i = 0; i < variants.length; i++)
-        {
-            variants[i] = LookupValueFactory.createLookupValue(names[i], StripesConstants.RESOLUTION_ICON);
-        }
-        return variants;
     }
 }

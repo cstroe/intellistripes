@@ -28,25 +28,24 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 10:52:45 PM
  */
-public class StripesFacet extends Facet<StripesFacetConfiguration> 
-{
-    
+public class StripesFacet extends Facet<StripesFacetConfiguration> {
+// ------------------------------ FIELDS ------------------------------
 
     public final static FacetTypeId<StripesFacet> FACET_TYPE_ID = new FacetTypeId<StripesFacet>();
 
-    public StripesFacet(@NotNull FacetType facetType, @NotNull Module module, String name, @NotNull StripesFacetConfiguration configuration, Facet underlyingFacet)
-    {
+// --------------------------- CONSTRUCTORS ---------------------------
+
+    public StripesFacet(@NotNull FacetType facetType, @NotNull Module module, String name, @NotNull StripesFacetConfiguration configuration, Facet underlyingFacet) {
         super(facetType, module, name, configuration, underlyingFacet);
     }
 
-    public WebFacet getWebFacet()
-    {
-        return (WebFacet) getUnderlyingFacet();
-    }
+// -------------------------- OTHER METHODS --------------------------
 
-    public PsiFile getWebXmlPsiFile()
-    {
+    public PsiFile getWebXmlPsiFile() {
         return getWebFacet().getWebXmlDescriptor().getPsiFile();
     }
 
+    public WebFacet getWebFacet() {
+        return (WebFacet) getUnderlyingFacet();
+    }
 }
