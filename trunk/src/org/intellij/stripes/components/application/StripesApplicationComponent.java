@@ -36,84 +36,68 @@ import javax.swing.*;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 01:57:05 AM
  */
-public class StripesApplicationComponent implements ApplicationComponent, IconProvider
-{
+public class StripesApplicationComponent implements ApplicationComponent, IconProvider {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface BaseComponent ---------------------
 
     @NotNull
-    public String getComponentName()
-    {
+    public String getComponentName() {
         return "Stripes Application Component";
     }
 
-
-    public void initComponent()
-    {
+    public void initComponent() {
         //Register a new Facet Type
         FacetTypeRegistry.getInstance().registerFacetType(StripesFacetType.INSTANCE);
     }
 
-    public void disposeComponent()
-    {
+    public void disposeComponent() {
 
     }
 
+// --------------------- Interface IconProvider ---------------------
+
+
     @Nullable
-    public Icon getIcon(@NotNull PsiElement element, int flags)
-    {
-
-
+    public Icon getIcon(@NotNull PsiElement element, int flags) {
         StripesFacet facet = StripesUtil.getStripesFacet(StripesUtil.getModule(element));
-        if (facet == null)
-        {
+        if (facet == null) {
             return null;
         }
-        //Change Icons?        
-        if (facet.getConfiguration().isChangeIcons())
-        {
+        //Change Icons?
+        if (facet.getConfiguration().isChangeIcons()) {
             //is JSP's?
-            if (element instanceof JspFile)
-            {
+            if (element instanceof JspFile) {
                 JspFile jspFile = (JspFile) element;
                 //get tags like page, taglib...
-                if(StripesUtil.isStripesPage(jspFile))
-                {
+                if (StripesUtil.isStripesPage(jspFile)) {
                     return StripesConstants.STRIPES_JSP_ICON;
-                }                
+                }
             }
             //is class?
-            else if (element instanceof PsiClass)
-            {
+            else if (element instanceof PsiClass) {
                 PsiClass clazz = (PsiClass) element;
 
                 boolean isActionBean = false;
-                try
-                {
-
+                try {
                     PsiModifierList list = clazz.getModifierList();
                     boolean isAbstract = list.hasExplicitModifier("abstract");
                     //is abstract?
-                    if (!isAbstract)
-                    {
+                    if (!isAbstract) {
                         //Is an implementation of ActionBean?
                         isActionBean = StripesUtil.isSubclass(clazz, StripesConstants.STRIPES_ACTION_BEAN_CLASS);
                     }
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     //
                 }
 
-                if (isActionBean)
-                {
+                if (isActionBean) {
                     return StripesConstants.ACTION_BEAN_ICON;
-                }
-                else
-                {
+                } else {
                     return null;
                 }
-            }
-            else
-            {
+            } else {
                 return null;
             }
         }

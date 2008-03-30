@@ -30,20 +30,20 @@ import org.jetbrains.annotations.NotNull;
  * <p/>
  * Created by IntelliJ IDEA. User: Mario Arias Date: 22/09/2007 Time: 10:43:04 PM
  */
-public class ParamSetterMethodsReferenceProvider extends AbstractReferenceProvider
-{
+public class ParamSetterMethodsReferenceProvider extends AbstractReferenceProvider {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface PsiReferenceProvider ---------------------
+
     @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement)
-    {
+    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
         XmlAttributeValue value = (XmlAttributeValue) psiElement;
         XmlTag tag = (XmlTag) value.getParent().getParent();
         PsiClass actionBeanPsiClass = getLinkBeanClass(tag);
-        if (actionBeanPsiClass == null)
-        {
+        if (actionBeanPsiClass == null) {
             actionBeanPsiClass = getUrlBeanClass(tag);
         }
-        if (actionBeanPsiClass == null)
-        {
+        if (actionBeanPsiClass == null) {
             return PsiReference.EMPTY_ARRAY;
         }
         return new PsiReference[]{new ActionBeanSetterMethodsReference(value, actionBeanPsiClass)};

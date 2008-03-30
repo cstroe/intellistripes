@@ -29,19 +29,20 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 8/11/2007 Time: 11:19:41 PM
  */
-public class LayoutComponentReferenceProvider extends AbstractReferenceProvider
-{
+public class LayoutComponentReferenceProvider extends AbstractReferenceProvider {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface PsiReferenceProvider ---------------------
+
     @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement)
-    {
+    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
         //the attribute
         XmlAttributeValue value = (XmlAttributeValue) psiElement;
         //the tag
         XmlTag tag = (XmlTag) value.getParent().getParent();
         //the JspFile
         final JspFile jspFile = getJspFileFromParentTag(tag, StripesConstants.LAYOUT_RENDER);
-        if (jspFile == null)
-        {
+        if (jspFile == null) {
             return PsiReference.EMPTY_ARRAY;
         }
         return new PsiReference[]{new LayoutComponentReference(value, jspFile)};

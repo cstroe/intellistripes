@@ -17,28 +17,30 @@
 
 package org.intellij.stripes.reference.providers;
 
-import org.jetbrains.annotations.NotNull;
-import org.intellij.stripes.reference.ActionBeanSetterMethodsReference;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
+import org.intellij.stripes.reference.ActionBeanSetterMethodsReference;
+import org.jetbrains.annotations.NotNull;
 
-/**This Class provide References for Setter methods in stripes:link-param tag on name parameter
- *
+/**
+ * This Class provide References for Setter methods in stripes:link-param tag on name parameter
+ * <p/>
  * Created by IntelliJ IDEA. User: Mario Arias Date: 22/09/2007 Time: 10:43:04 PM
  */
-public class LinkParamSetterMethodsReferenceProvider extends AbstractReferenceProvider
-{
+public class LinkParamSetterMethodsReferenceProvider extends AbstractReferenceProvider {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface PsiReferenceProvider ---------------------
+
     @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement)
-    {
+    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
         XmlAttributeValue value = (XmlAttributeValue) psiElement;
         XmlTag tag = (XmlTag) value.getParent().getParent();
         final PsiClass actionBeanPsiClass = getLinkBeanClass(tag);
-        if (actionBeanPsiClass == null)
-        {
+        if (actionBeanPsiClass == null) {
             return PsiReference.EMPTY_ARRAY;
         }
         return new PsiReference[]{new ActionBeanSetterMethodsReference(value, actionBeanPsiClass)};

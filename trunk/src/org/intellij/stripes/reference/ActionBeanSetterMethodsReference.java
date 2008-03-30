@@ -35,15 +35,21 @@ import java.util.List;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 21/09/2007 Time: 01:21:38 AM
  */
-public class ActionBeanSetterMethodsReference extends StripesJspAttributeReference
-{
+public class ActionBeanSetterMethodsReference extends StripesJspAttributeReference {
+// ------------------------------ FIELDS ------------------------------
+
     private PsiClass actionBeanPsiClass;
 
-    public ActionBeanSetterMethodsReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass)
-    {
+// --------------------------- CONSTRUCTORS ---------------------------
+
+    public ActionBeanSetterMethodsReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass) {
         super(xmlAttributeValue);
         this.actionBeanPsiClass = actionBeanPsiClass;
     }
+
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface PsiReference ---------------------
 
     /**
      * Ctrl + Click in the attribute name will be resolved
@@ -52,15 +58,12 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
      */
     @Override
     @Nullable
-    public PsiElement resolve()
-    {
+    public PsiElement resolve() {
         PsiMethod[] psiMethods = actionBeanPsiClass.findMethodsByName("set" + StringUtil.capitalize(getCanonicalText()), true);
-        try
-        {
+        try {
             return psiMethods[0];
         }
-        catch (ArrayIndexOutOfBoundsException e)
-        {
+        catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
     }
@@ -69,17 +72,24 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
      * When Method will renamed
      *
      * @param newElementName the new methodName
-     *
      * @return Element
-     *
      * @throws com.intellij.util.IncorrectOperationException
      *
      */
     @Override
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
-    {
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
         ((XmlAttribute) xmlAttributeValue.getParent()).setValue(StringUtil.decapitalize(newElementName.replace("set", "")));
         return resolve();
+    }
+
+    @Override
+    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+        return super.bindToElement(element);
+    }
+
+    @Override
+    public boolean isReferenceTo(PsiElement element) {
+        return super.isReferenceTo(element);
     }
 
     /**
@@ -88,26 +98,12 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
      * @return An Array with References
      */
     @Override
-    public Object[] getVariants()
-    {
+    public Object[] getVariants() {
         List<String> properties = getWritableProperties(actionBeanPsiClass);
         List<Object> variants = new ArrayList<Object>(16);
-        for (String property : properties)
-        {
+        for (String property : properties) {
             variants.add(LookupValueFactory.createLookupValue(property, StripesConstants.FIELD_ICON));
         }
         return variants.toArray();
-    }
-
-    @Override
-    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
-    {
-        return super.bindToElement(element);
-    }
-
-    @Override
-    public boolean isReferenceTo(PsiElement element)
-    {
-        return super.isReferenceTo(element);
     }
 }

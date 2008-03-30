@@ -25,20 +25,22 @@ import com.intellij.psi.xml.XmlTag;
 import org.intellij.stripes.reference.ActionBeanResolutionMethodsReference;
 import org.jetbrains.annotations.NotNull;
 
-/**This class Provide References to Resolution methods in stripes:link, url or useActionBean tags in
- *
+/**
+ * This class Provide References to Resolution methods in stripes:link, url or useActionBean tags in
+ * <p/>
  * Created by IntelliJ IDEA. User: Mario Arias Date: 18/09/2007 Time: 01:01:55 AM
  */
-public class TagResolutionMethodsReferenceProvider extends AbstractReferenceProvider
-{
+public class TagResolutionMethodsReferenceProvider extends AbstractReferenceProvider {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface PsiReferenceProvider ---------------------
+
     @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement)
-    {
+    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
         XmlAttributeValue value = (XmlAttributeValue) psiElement;
         XmlTag tag = (XmlTag) value.getParent().getParent();
         final PsiClass actionBeanPsiClass = getActionBeanClassFromTag(tag);
-        if (actionBeanPsiClass == null)
-        {
+        if (actionBeanPsiClass == null) {
             return PsiReference.EMPTY_ARRAY;
         }
         return new PsiReference[]{new ActionBeanResolutionMethodsReference(value, actionBeanPsiClass)};

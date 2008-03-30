@@ -18,11 +18,11 @@
 package org.intellij.stripes.reference;
 
 import com.intellij.codeInsight.lookup.LookupValueFactory;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.jsp.JspFile;
+import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.Nullable;
@@ -30,33 +30,53 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 8/11/2007 Time: 11:14:26 PM
  */
-public class LayoutComponentReference extends StripesJspAttributeReference
-{
-    private JspFile jspFile;
-    private static final Object[] EMPTY_OBJECT = new Object[]{};
+public class LayoutComponentReference extends StripesJspAttributeReference {
+// ------------------------------ FIELDS ------------------------------
 
-    public LayoutComponentReference(XmlAttributeValue xmlAttributeValue, JspFile jspFile)
-    {
+    private static final Object[] EMPTY_OBJECT = new Object[]{};
+    private JspFile jspFile;
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+    public LayoutComponentReference(XmlAttributeValue xmlAttributeValue, JspFile jspFile) {
         super(xmlAttributeValue);
         this.jspFile = jspFile;
     }
 
+// --------------------- GETTER / SETTER METHODS ---------------------
+
+    @Override
+    public Object[] getVariants() {
+        XmlTag[] tags = getLayoutComponents(jspFile);
+        if (tags == null) {
+            return EMPTY_OBJECT;
+        }
+        Object[] variants = new Object[tags.length];
+        for (int i = 0; i < tags.length; i++) {
+            XmlTag tag = tags[i];
+            String name = tag.getAttributeValue(StripesConstants.NAME_ATTRIBUTE);
+            assert name != null;
+            variants[i] = LookupValueFactory.createLookupValue(name, StripesConstants.LAYOUT_COMPONENT_ICON);
+        }
+        return variants;
+    }
+
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface PsiReference ---------------------
+
     @Override
     @Nullable
-    public PsiElement resolve()
-    {
+    public PsiElement resolve() {
         XmlTag[] tags = getLayoutComponents(jspFile);
-        if(tags == null)
-        {
-            return null;            
+        if (tags == null) {
+            return null;
         }
         XmlTag component = null;
-        for (XmlTag tag : tags)
-        {
+        for (XmlTag tag : tags) {
             String name = tag.getAttributeValue("name");
             assert name != null;
-            if(name.equals(getCanonicalText()))
-            {
+            if (name.equals(getCanonicalText())) {
                 component = tag;
             }
         }
@@ -67,35 +87,13 @@ public class LayoutComponentReference extends StripesJspAttributeReference
      * When Method will renamed
      *
      * @param newElementName the new methodName
-     *
      * @return Element
-     *
      * @throws com.intellij.util.IncorrectOperationException
      *
      */
     @Override
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
-    {
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
         ((XmlAttribute) xmlAttributeValue.getParent()).setValue(newElementName);
         return resolve();
-    }
-
-    @Override
-    public Object[] getVariants()
-    {
-        XmlTag[] tags = getLayoutComponents(jspFile);
-        if(tags == null)
-        {
-            return EMPTY_OBJECT;
-        }
-        Object[] variants = new Object[tags.length];
-        for (int i = 0; i < tags.length; i++)
-        {
-            XmlTag tag = tags[i];
-            String name = tag.getAttributeValue(StripesConstants.NAME_ATTRIBUTE);
-            assert name != null;
-            variants[i] = LookupValueFactory.createLookupValue(name, StripesConstants.LAYOUT_COMPONENT_ICON);
-        }
-        return variants;
     }
 }
