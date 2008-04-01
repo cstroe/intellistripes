@@ -19,9 +19,7 @@ package org.intellij.stripes.reference;
 
 import com.intellij.codeInsight.lookup.LookupValueFactory;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.IncorrectOperationException;
@@ -59,13 +57,27 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
     @Override
     @Nullable
     public PsiElement resolve() {
-        PsiMethod[] psiMethods = actionBeanPsiClass.findMethodsByName("set" + StringUtil.capitalize(getCanonicalText()), true);
+        List<String> arr = StringUtil.split(getCanonicalText(), ".");
         try {
-            return psiMethods[0];
-        }
-        catch (ArrayIndexOutOfBoundsException e) {
+            if (arr.size() == 1) {
+                PsiMethod[] psiMethods = actionBeanPsiClass.findMethodsByName("set" + StringUtil.capitalize(getCanonicalText()), true);
+                return psiMethods[0];
+            } else if (arr.size() > 1) {
+                PsiClass cls = actionBeanPsiClass;
+                for (int i = 1; i < arr.size(); i++) {
+                    PsiType type = cls.findMethodsByName("set" + StringUtil.capitalize(arr.get(i - 1)), true)[0]
+                            .getParameterList().getParameters()[0].getType();
+                    if (type instanceof PsiClassType) {
+                        cls = ((PsiClassType) type).resolve();
+                    }
+                }
+                return cls.findMethodsByName("set" + StringUtil.capitalize(arr.get(arr.size() - 1)), true)[0];
+            }
+        } catch (Exception e) {
+            //e.printStackTrace(System.out);
             return null;
         }
+        return null;
     }
 
     /**

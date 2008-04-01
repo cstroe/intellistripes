@@ -45,6 +45,9 @@ public interface StripesConstants {
     String SPRING_INTERCEPTOR_CLASS = "net.sourceforge.stripes.integration.spring.SpringInterceptor";
     String BEFORE_AFTER_METHOD_INTERCEPTOR_CLASS = "net.sourceforge.stripes.controller.BeforeAfterMethodInterceptor";
     String STRIPES_ACTION_BEAN_CLASS = "net.sourceforge.stripes.action.ActionBean";
+    String STRIPES_ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
+    String SPRING_BEAN = "net.sourceforge.stripes.integration.spring.SpringBean";
+    String STRIPES_HANDLES_EVENT_ANNOTATION = "net.sourceforge.stripes.action.HandlesEvent";
     //Others
     String STRIPES_SERVLET_NAME = "StripesDispatcher";
     String DEFAULT_STRIPES_MAPPING = "*.action";
@@ -98,7 +101,6 @@ public interface StripesConstants {
     String LOG4J_XML = "log4j.xml";
     String LOG4J_PROPERTIES = "log4j.properties";
 
-    String SPRING_BEAN = "net.sourceforge.stripes.integration.spring.SpringBean";
 
     String STRIPES = "Stripes";
     //layouts

@@ -27,6 +27,8 @@ import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 21/09/2007 Time: 01:28:16 AM
  */
@@ -51,10 +53,10 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
      */
     @Override
     public Object[] getVariants() {
-        String[] names = getResolutionMethodsNames(actionBeanPsiClass);
-        Object[] variants = new Object[names.length];
+        List<String> names = getResolutionMethodsNames(actionBeanPsiClass);
+        Object[] variants = new Object[names.size()];
         for (int i = 0; i < variants.length; i++) {
-            variants[i] = LookupValueFactory.createLookupValue(names[i], StripesConstants.RESOLUTION_ICON);
+            variants[i] = LookupValueFactory.createLookupValue(names.get(i), StripesConstants.RESOLUTION_ICON);
         }
         return variants;
     }
@@ -71,13 +73,17 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
     @Nullable
     @Override
     public PsiElement resolve() {
-        PsiMethod[] psiMethods = actionBeanPsiClass.findMethodsByName(getCanonicalText(), true);
-        try {
-            return psiMethods[0];
+
+        PsiMethod[] methods = getResolutionMethods(actionBeanPsiClass);
+        for (PsiMethod method : methods) {
+            if (getCanonicalText().equals(method.getName())) {
+                return method;
+            } else if (getCanonicalText().equals(resolveHandlesEventAnnotation(method))) {
+                return method;
+            }
         }
-        catch (ArrayIndexOutOfBoundsException e) {
-            return null;
-        }
+
+        return null;
     }
 
     /**
