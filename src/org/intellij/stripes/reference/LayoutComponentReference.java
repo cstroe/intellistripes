@@ -27,6 +27,8 @@ import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 8/11/2007 Time: 11:14:26 PM
  */
@@ -47,13 +49,13 @@ public class LayoutComponentReference extends StripesJspAttributeReference {
 
     @Override
     public Object[] getVariants() {
-        XmlTag[] tags = getLayoutComponents(jspFile);
+        List<XmlTag> tags = getLayoutComponents(jspFile);
         if (tags == null) {
             return EMPTY_OBJECT;
         }
-        Object[] variants = new Object[tags.length];
-        for (int i = 0; i < tags.length; i++) {
-            XmlTag tag = tags[i];
+        Object[] variants = new Object[tags.size()];
+        for (int i = 0; i < variants.length; i++) {
+            XmlTag tag = tags.get(i);
             String name = tag.getAttributeValue(StripesConstants.NAME_ATTRIBUTE);
             assert name != null;
             variants[i] = LookupValueFactory.createLookupValue(name, StripesConstants.LAYOUT_COMPONENT_ICON);
@@ -68,7 +70,7 @@ public class LayoutComponentReference extends StripesJspAttributeReference {
     @Override
     @Nullable
     public PsiElement resolve() {
-        XmlTag[] tags = getLayoutComponents(jspFile);
+        List<XmlTag> tags = getLayoutComponents(jspFile);
         if (tags == null) {
             return null;
         }

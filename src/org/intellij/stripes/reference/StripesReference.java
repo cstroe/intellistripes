@@ -20,7 +20,7 @@ package org.intellij.stripes.reference;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.jsp.JspFile;
-import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.IncorrectOperationException;
@@ -29,7 +29,6 @@ import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,44 +43,44 @@ public abstract class StripesReference implements PsiReference {
 
 // -------------------------- STATIC METHODS --------------------------
 
-    /**
-     * Get Setter methods for a class
-     *
-     * @param psiClass a Class
-     * @return a list with Setter methods
-     */
-    protected static List<String> getSetterMethods(PsiClass psiClass) {
-        List<String> properties = getWritableProperties(psiClass);
-        List<String> methods = new ArrayList<String>(16);
-        for (String property : properties) {
-            methods.add(MessageFormat.format("set{0}", StringUtil.capitalize(property)));
-        }
-        return methods;
-    }
-
-    /**
-     * Get Setter Methods without the set (setFoo(String bar) will be foo) from a class minus setContext for an ActionBean
-     *
-     * @param psiClass a Class
-     * @return a list with writable properties
-     */
     protected static List<String> getWritableProperties(PsiClass psiClass) {
         List<String> methodNames = new ArrayList<String>(16);
+
+        if (null == psiClass) return methodNames;
+
         PsiMethod[] psiMethods = psiClass.getMethods();
         for (PsiMethod psiMethod : psiMethods) {
             String methodName = psiMethod.getName();
             //method start with set and have only one parameter
             if (methodName.startsWith("set") && psiMethod.getParameterList().getParametersCount() == 1) {
-                methodNames.add(StringUtil.decapitalize(methodName.replaceFirst("set", "")));
+                String mName = StringUtil.decapitalize(methodName.replaceFirst("set", ""));
+
+                PsiType paramType = psiMethod.getParameterList().getParameters()[0].getType();
+                if (paramType instanceof PsiClassType) {
+
+                    PsiClass propertyClass = PsiUtil.resolveClassInType(paramType);
+                    //Don't show ActionBeanContext Properties, maybe result in a security flaw
+                    if (!StripesUtil.isSubclass(propertyClass, StripesConstants.STRIPES_ACTION_BEAN_CONTEXT)) {
+                        List<String> props = getWritableProperties(propertyClass);
+                        if (!props.isEmpty()) {
+                            for (String prop : props) methodNames.add(mName + '.' + prop);
+                        } else {
+                            methodNames.add(mName);
+                        }
+                    }
+                } else {
+                    methodNames.add(mName);
+                }
             }
         }
-        methodNames.remove("context");
+
         //to recover the super class methods
         PsiClass superClass = psiClass.getSuperClass();
         assert superClass != null;
         if (!(superClass.getQualifiedName().equals("java.lang.Object"))) {
             methodNames.addAll(getWritableProperties(superClass));
         }
+
         return methodNames;
     }
 
@@ -107,11 +106,19 @@ public abstract class StripesReference implements PsiReference {
      * @param psiClass an ActionBean PsiClass
      * @return List with all Resolution Methods names
      */
-    protected static String[] getResolutionMethodsNames(PsiClass psiClass) {
+
+    protected static List<String> getResolutionMethodsNames(PsiClass psiClass) {
         PsiMethod[] psiMethods = getResolutionMethods(psiClass);
-        String[] methodNames = new String[psiMethods.length];
-        for (int i = 0; i < methodNames.length; i++) {
-            methodNames[i] = psiMethods[i].getName();
+        List<String> methodNames = new ArrayList<String>(16);
+        for (PsiMethod method : psiMethods) {
+            String s = resolveHandlesEventAnnotation(method);
+            //add the @HandlesEvent value
+            if (null != s) {
+                methodNames.add(s);
+            } else {
+                //add the method name
+                methodNames.add(method.getName());
+            }
         }
         return methodNames;
     }
@@ -143,13 +150,18 @@ public abstract class StripesReference implements PsiReference {
         return psiMethods.toArray(PsiMethod.EMPTY_ARRAY);
     }
 
+    protected static String resolveHandlesEventAnnotation(PsiMethod method) {
+        PsiAnnotation a = method.getModifierList().findAnnotation(StripesConstants.STRIPES_HANDLES_EVENT_ANNOTATION);
+        return null != a ? StringUtil.stripQuotesAroundValue(a.findAttributeValue("value").getText()) : null;
+    }
+
     /**
      * Get all the tags layout-component in a JspFIle
      *
      * @param jspFile JspFile
      * @return a bunch of tags
      */
-    protected static XmlTag[] getLayoutComponents(JspFile jspFile) {
+    protected static List<XmlTag> getLayoutComponents(JspFile jspFile) {
         // get the stripes namespace in the jspFile
         String stripesNamespace = StripesUtil.getStripesNamespace(jspFile);
         //yes this page have a stripes taglib
@@ -161,46 +173,36 @@ public abstract class StripesReference implements PsiReference {
             String layoutComponent = stripesNamespace + ':' + StripesConstants.LAYOUT_COMPONENT;
             assert rootTag != null;
             //this tag is the layout-definition?
-            if (rootTag.getName().equals(layoutDefinition)) {
-                // get all layout-component tags inside
-                return getStripesTags(rootTag, layoutComponent);
-            } else {
-                //get the layout-definition tag
-                XmlTag[] tags = getStripesTags(rootTag, layoutDefinition);
-                try {
-                    // get all layout-component tags inside
-                    return getStripesTags(tags[0], layoutComponent);
-                }
-                catch (ArrayIndexOutOfBoundsException e) {
+            if (rootTag.getName().equals(layoutDefinition)) {// get all layout-component tags inside
+                return getLayoutComponentsTags(rootTag, layoutComponent);
+            } else {//get the layout-definition tag
+                XmlTag[] tags = rootTag.findSubTags(layoutDefinition);
+                try {// get all layout-component tags inside
+                    return getLayoutComponentsTags(tags[0], layoutComponent);
+                } catch (ArrayIndexOutOfBoundsException e) {
                     return null;
                 }
             }
         }
-        //Nop, this pages don't have a Stripes taglib, bad luck
-        else {
-            return null;
+//Nop, this pages don't have a Stripes taglib, bad luck
+        return null;
+    }
+
+    protected static List<XmlTag> getLayoutComponentsTags(XmlTag xmlTag, String name) {
+        List<XmlTag> retval = new ArrayList<XmlTag>();
+
+        XmlTag[] subTags = xmlTag.getSubTags();
+        if (subTags.length > 0) {
+            for (XmlTag tag : xmlTag.getSubTags()) {
+                retval.addAll(getLayoutComponentsTags(tag, name));
+            }
         }
-    }
 
-    /**
-     * Get the Subtags
-     *
-     * @param xmlTag the parent tag
-     * @param name   tag name
-     * @return a lot of tags
-     */
-    protected static XmlTag[] getStripesTags(XmlTag xmlTag, String name) {
-        return xmlTag.findSubTags(name);
-    }
+        if (name.equals(xmlTag.getName())) {
+            retval.add(xmlTag);
+        }
 
-    /**
-     * Get a XmlTag from a XmlAttribute
-     *
-     * @param xmlAttribute XmlAttribute
-     * @return Xmltag
-     */
-    public static XmlTag getXmlTag(XmlAttribute xmlAttribute) {
-        return (XmlTag) xmlAttribute.getParent().getParent();
+        return retval;
     }
 
 // ------------------------ INTERFACE METHODS ------------------------
