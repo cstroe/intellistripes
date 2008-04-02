@@ -20,10 +20,12 @@ package org.intellij.stripes.reference;
 import com.intellij.codeInsight.lookup.LookupValueFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,6 +59,7 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
     @Override
     @Nullable
     public PsiElement resolve() {
+        if (getCanonicalText().endsWith(".")) return null;
         List<String> arr = StringUtil.split(getCanonicalText(), ".");
         try {
             if (arr.size() == 1) {
@@ -104,18 +107,59 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
         return super.isReferenceTo(element);
     }
 
-    /**
-     * Get all Setter methods for an ActionBean Class
-     *
-     * @return An Array with References
-     */
     @Override
     public Object[] getVariants() {
-        List<String> properties = getWritableProperties(actionBeanPsiClass);
-        List<Object> variants = new ArrayList<Object>(16);
+        PsiClass cls = actionBeanPsiClass;
+        String prefix = "";
+        String cText = getCanonicalText().replaceAll("IntellijIdeaRulezzz", "");
+        cText = cText.substring(0, cText.indexOf(" "));
+
+        if (cText.contains(".")) {
+            List<String> arr = StringUtil.split(cText, ".");
+            if (!cText.endsWith(".")) arr.remove(arr.size() - 1);
+            prefix = StringUtil.join(arr, ".") + ".";
+
+            for (String field : arr) {
+                try {
+                    PsiMethod setter = cls.findMethodsByName("set" + StringUtil.capitalize(field), true)[0];
+                    cls = PsiUtil.resolveClassInType(setter.getParameterList().getParameters()[0].getType());
+                } catch (Exception e) {
+                    cls = null;
+                    break;
+                }
+            }
+        }
+
+        if (null == cls) return PsiReference.EMPTY_ARRAY;
+
+        List<String> properties = getProperties(cls);
+        List<Object> variants = new ArrayList<Object>(properties.size());
         for (String property : properties) {
-            variants.add(LookupValueFactory.createLookupValue(property, StripesConstants.FIELD_ICON));
+            variants.add(LookupValueFactory.createLookupValue(prefix + property, StripesConstants.FIELD_ICON));
         }
         return variants.toArray();
+    }
+
+
+    private List<String> getProperties(PsiClass psiClass) {
+        List<String> methodNames = new ArrayList<String>(16);
+        if (null == psiClass) return methodNames;
+
+        PsiMethod[] psiMethods = psiClass.getAllMethods();
+        for (PsiMethod psiMethod : psiMethods) {
+            String methodName = psiMethod.getName();
+            if (methodName.startsWith("set")
+                    && psiMethod.getParameterList().getParametersCount() == 1
+                    && !isActionBeanCointextSetter(psiMethod)) {
+                methodNames.add(StringUtil.decapitalize(methodName.replaceFirst("set", "")));
+            }
+        }
+
+        return methodNames;
+    }
+
+    private Boolean isActionBeanCointextSetter(PsiMethod method) {
+        PsiClass propertyClass = PsiUtil.resolveClassInType(method.getParameterList().getParameters()[0].getType());
+        return StripesUtil.isSubclass(propertyClass, StripesConstants.STRIPES_ACTION_BEAN_CONTEXT);
     }
 }
