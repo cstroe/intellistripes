@@ -1,12 +1,11 @@
-#Some release notes for future
 = What is planning to do in release before Stripes 1.5 goes final =
 
 ==Intentions/Inspections==
-
-  * ActionBean with more than one Resolution method not define @DefaultHandler
-  * ActionBean with more than one @DefaultHandler
-  * ActionBean with only one Resolution Method define @DefaultHandler
-  * Duplicated definition on @HandlesEvent
+{{{
+  * {{{ActionBean}}} with more than one Resolution method not define {{{@DefaultHandler}}}
+  * {{{ActionBean}}} with more than one @DefaultHandler
+  * {{{ActionBean}}} with only one Resolution Method define {{{@DefaultHandler}}}
+  * Duplicated definition on {{{@HandlesEvent}}}
   * @SpringBean Annotated method start with "set" preffix
 
 ==Auto complete==
@@ -16,5 +15,5 @@
 
 ==Editor==
 
-  * Gutters for ActionBean classes allowing navigation to form that use certain ActionBean
-  * Register @UrlBinding path on starup so they can be used from ordinary HTML. _mmm not sure if it feature not existing yet :))_
+  * Gutters for {{{ActionBean}}} classes allowing navigation to form that use certain {{{ActionBean}}}
+  * Register {{{@UrlBinding}}} path on starup so they can be used from ordinary HTML. _mmm not sure if it feature not existing yet :))_
