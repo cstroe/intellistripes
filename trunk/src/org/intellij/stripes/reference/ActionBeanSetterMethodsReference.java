@@ -63,8 +63,7 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
         List<String> arr = StringUtil.split(getCanonicalText(), ".");
         try {
             if (arr.size() == 1) {
-                PsiMethod[] psiMethods = actionBeanPsiClass.findMethodsByName("set" + StringUtil.capitalize(getCanonicalText()), true);
-                return psiMethods[0];
+                return actionBeanPsiClass.findMethodsByName("set" + StringUtil.capitalize(getCanonicalText()), true)[0];
             } else if (arr.size() > 1) {
                 PsiClass cls = actionBeanPsiClass;
                 for (int i = 1; i < arr.size(); i++) {
@@ -138,6 +137,12 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
             variants.add(LookupValueFactory.createLookupValue(prefix + property, StripesConstants.FIELD_ICON));
         }
         return variants.toArray();
+//        actionBeanPsiClass.accept(new PsiRecursiveElementVisitor() {
+//            public void visitMethod(PsiMethod method) {
+//                System.out.println(method.getName());
+//            }
+//        });
+//        return EMPTY_ARRAY;
     }
 
 
