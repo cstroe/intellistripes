@@ -17,6 +17,7 @@
 
 package org.intellij.stripes.reference;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.jsp.JspFile;
@@ -151,8 +152,24 @@ public abstract class StripesReference implements PsiReference {
     }
 
     protected static String resolveHandlesEventAnnotation(PsiMethod method) {
+        String retval = null;
         PsiAnnotation a = method.getModifierList().findAnnotation(StripesConstants.STRIPES_HANDLES_EVENT_ANNOTATION);
-        return null != a ? StringUtil.stripQuotesAroundValue(a.findAttributeValue("value").getText()) : null;
+        try {
+            if (a != null) {
+                PsiAnnotationMemberValue psvm = a.findAttributeValue("value");
+                if (psvm instanceof PsiLiteralExpression) {
+                    retval = StringUtil.stripQuotesAroundValue(psvm.getText());
+                } else if (psvm instanceof PsiReferenceExpression) {
+                    PsiElement el = psvm.getReference().resolve();
+                    if (el instanceof PsiField) {
+                        retval = StringUtil.stripQuotesAroundValue(((PsiField) el).getInitializer().getText());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Logger.getInstance("IntelliStripes").error("Error resolving annotation", e);
+        }
+        return retval;
     }
 
     /**
@@ -191,15 +208,12 @@ public abstract class StripesReference implements PsiReference {
     protected static List<XmlTag> getLayoutComponentsTags(XmlTag xmlTag, String name) {
         List<XmlTag> retval = new ArrayList<XmlTag>();
 
-        XmlTag[] subTags = xmlTag.getSubTags();
-        if (subTags.length > 0) {
+        if (name.equals(xmlTag.getName())) {
+            retval.add(xmlTag);
+        } else {
             for (XmlTag tag : xmlTag.getSubTags()) {
                 retval.addAll(getLayoutComponentsTags(tag, name));
             }
-        }
-
-        if (name.equals(xmlTag.getName())) {
-            retval.add(xmlTag);
         }
 
         return retval;
