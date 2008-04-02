@@ -1,3 +1,4 @@
+#Some release notes for future
 = What is planning to do in release before Stripes 1.5 goes final =
 
 ==Intentions/Inspections==
