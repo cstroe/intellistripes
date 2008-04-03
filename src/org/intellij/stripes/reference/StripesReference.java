@@ -30,9 +30,7 @@ import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 4/07/2007 Time: 12:57:24 AM
@@ -109,17 +107,11 @@ public abstract class StripesReference implements PsiReference {
      */
 
     protected static List<String> getResolutionMethodsNames(PsiClass psiClass) {
-        PsiMethod[] psiMethods = getResolutionMethods(psiClass);
         List<String> methodNames = new ArrayList<String>(16);
-        for (PsiMethod method : psiMethods) {
+        for (PsiMethod method : getResolutionMethods(psiClass).values()) {
             String s = resolveHandlesEventAnnotation(method);
             //add the @HandlesEvent value
-            if (null != s) {
-                methodNames.add(s);
-            } else {
-                //add the method name
-                methodNames.add(method.getName());
-            }
+            methodNames.add(null == s ? method.getName() : s);
         }
         return methodNames;
     }
@@ -130,25 +122,28 @@ public abstract class StripesReference implements PsiReference {
      * @param psiClass an ActionBean PsiClass
      * @return List with all Resolution Methods
      */
-    protected static PsiMethod[] getResolutionMethods(PsiClass psiClass) {
-        List<PsiMethod> psiMethods = new ArrayList<PsiMethod>(16);
-        PsiMethod[] methods = psiClass.getMethods();
-        for (PsiMethod method : methods) {
-            //method return Resolution and have 0 parameters
+    protected static Map<String, PsiMethod> getResolutionMethods(PsiClass psiClass) {
+        Map<String, PsiMethod> psiMethods = new HashMap<String, PsiMethod>(8);
+
+//Add Resultion methods for super classes
+        PsiClass superClass = psiClass.getSuperClass();
+        assert superClass != null;
+
+        if (!("java.lang.Object".equals(superClass.getQualifiedName()))) {
+            psiMethods.putAll(getResolutionMethods(superClass));
+        }
+
+        for (PsiMethod method : psiClass.getMethods()) {
+//method return Resolution and have 0 parameters
             PsiType returnType = method.getReturnType();
             if (returnType != null) {
                 if (returnType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS) && method.getParameterList().getParametersCount() == 0) {
-                    psiMethods.add(method);
+                    psiMethods.put(method.getName(), method);
                 }
             }
         }
-        //Add Resultion methods for super classes
-        PsiClass superClass = psiClass.getSuperClass();
-        assert superClass != null;
-        if (!(superClass.getQualifiedName().equals("java.lang.Object"))) {
-            psiMethods.addAll(Arrays.asList(getResolutionMethods(superClass)));
-        }
-        return psiMethods.toArray(PsiMethod.EMPTY_ARRAY);
+
+        return psiMethods;
     }
 
     protected static String resolveHandlesEventAnnotation(PsiMethod method) {
@@ -191,11 +186,11 @@ public abstract class StripesReference implements PsiReference {
             assert rootTag != null;
             //this tag is the layout-definition?
             if (rootTag.getName().equals(layoutDefinition)) {// get all layout-component tags inside
-                return getLayoutComponentsTags(rootTag, layoutComponent);
+                return getLayoutComponentTags(rootTag, layoutComponent);
             } else {//get the layout-definition tag
                 XmlTag[] tags = rootTag.findSubTags(layoutDefinition);
                 try {// get all layout-component tags inside
-                    return getLayoutComponentsTags(tags[0], layoutComponent);
+                    return getLayoutComponentTags(tags[0], layoutComponent);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     return null;
                 }
@@ -205,14 +200,14 @@ public abstract class StripesReference implements PsiReference {
         return null;
     }
 
-    protected static List<XmlTag> getLayoutComponentsTags(XmlTag xmlTag, String name) {
+    protected static List<XmlTag> getLayoutComponentTags(XmlTag xmlTag, String name) {
         List<XmlTag> retval = new ArrayList<XmlTag>();
 
         if (name.equals(xmlTag.getName())) {
             retval.add(xmlTag);
         } else {
             for (XmlTag tag : xmlTag.getSubTags()) {
-                retval.addAll(getLayoutComponentsTags(tag, name));
+                retval.addAll(getLayoutComponentTags(tag, name));
             }
         }
 

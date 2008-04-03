@@ -73,16 +73,12 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
     @Nullable
     @Override
     public PsiElement resolve() {
-
-        PsiMethod[] methods = getResolutionMethods(actionBeanPsiClass);
-        for (PsiMethod method : methods) {
-            if (getCanonicalText().equals(method.getName())) {
-                return method;
-            } else if (getCanonicalText().equals(resolveHandlesEventAnnotation(method))) {
+        for (PsiMethod method : getResolutionMethods(actionBeanPsiClass).values()) {
+            if (getCanonicalText().equals(method.getName())
+                    || getCanonicalText().equals(resolveHandlesEventAnnotation(method))) {
                 return method;
             }
         }
-
         return null;
     }
 
