@@ -17,8 +17,9 @@
   * Method names in @After/@Before annotations
   * Auto complete in validation annotation (needs stripes docs review)
   * JSP Path references in Resolution one argument constructors
+  * CSS language injection on all stripes:tags in style attribute when is defined  
 
 ==Editor==
 
-  * Gutters for {{{ActionBean}}} classes allowing navigation to form that use certain {{{ActionBean}}}
+  * Gutters for {{{ActionBean}}} classes allowing navigation to form, link, useActionBean or URL that use certain {{{ActionBean}}}
   * Register {{{@UrlBinding}}} path on starup so they can be used from ordinary HTML. _mmm not sure if it feature not existing yet :))_
