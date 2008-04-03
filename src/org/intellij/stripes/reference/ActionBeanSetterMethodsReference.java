@@ -111,12 +111,14 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
         PsiClass cls = actionBeanPsiClass;
         String prefix = "";
         String cText = getCanonicalText().replaceAll("IntellijIdeaRulezzz", "");
-        cText = cText.substring(0, cText.indexOf(" "));
+        cText = cText.substring(0, cText.indexOf(' '));
 
         if (cText.contains(".")) {
             List<String> arr = StringUtil.split(cText, ".");
             if (!cText.endsWith(".")) arr.remove(arr.size() - 1);
-            prefix = StringUtil.join(arr, ".") + ".";
+            prefix = StringUtil.join(arr, ".") + '.'/*Why Char ??:One Single Character String already
+            creates an Object String in the Memory Heap, A char is a primitive value, with less memory footprint
+            and have the same funcionality (not in every case)*/;
 
             for (String field : arr) {
                 try {
@@ -145,8 +147,10 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
 //        return EMPTY_ARRAY;
     }
 
-
-    private List<String> getProperties(PsiClass psiClass) {
+    //Why Static??? static methods (in other languages Class Methods) have a minor memory footprint
+    //cause they only have one instance (each method have an Instance of Method Class) for ClassLoader
+    //Instead Normal Methods (or instance Methods) that have one instace for each Class Instance
+    private static List<String> getProperties(PsiClass psiClass) {
         List<String> methodNames = new ArrayList<String>(16);
         if (null == psiClass) return methodNames;
 
@@ -163,7 +167,7 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
         return methodNames;
     }
 
-    private Boolean isActionBeanCointextSetter(PsiMethod method) {
+    private static Boolean isActionBeanCointextSetter(PsiMethod method) {
         PsiClass propertyClass = PsiUtil.resolveClassInType(method.getParameterList().getParameters()[0].getType());
         return StripesUtil.isSubclass(propertyClass, StripesConstants.STRIPES_ACTION_BEAN_CONTEXT);
     }

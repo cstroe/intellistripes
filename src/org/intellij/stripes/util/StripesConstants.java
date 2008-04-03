@@ -48,6 +48,8 @@ public interface StripesConstants {
     String STRIPES_ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
     String SPRING_BEAN = "net.sourceforge.stripes.integration.spring.SpringBean";
     String STRIPES_HANDLES_EVENT_ANNOTATION = "net.sourceforge.stripes.action.HandlesEvent";
+    String FORWARD_RESOLUTION = "net.sourceforge.stripes.action.ForwardResolution";
+    String REDIRECT_RESOLUTION = "net.sourceforge.stripes.action.RedirectResolution";
     //Others
     String STRIPES_SERVLET_NAME = "StripesDispatcher";
     String DEFAULT_STRIPES_MAPPING = "*.action";
