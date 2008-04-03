@@ -27,6 +27,8 @@
   <component name="CodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
       <value>
+        <option name="OPTIMIZE_IMPORTS_ON_THE_FLY" value="true" />
+        <option name="ADD_UNAMBIGIOUS_IMPORTS_ON_THE_FLY" value="true" />
         <ADDITIONAL_INDENT_OPTIONS fileType="js">
           <option name="INDENT_SIZE" value="4" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />

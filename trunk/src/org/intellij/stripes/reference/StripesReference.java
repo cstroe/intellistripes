@@ -18,6 +18,7 @@
 package org.intellij.stripes.reference;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.jsp.JspFile;
@@ -161,7 +162,12 @@ public abstract class StripesReference implements PsiReference {
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (ProcessCanceledException e) {
+            //Do nothig, this exception is very common and can be throw for intellij
+            //Logger don't be reported or just raise an ugly error
+        }
+        catch (Exception e) {
             Logger.getInstance("IntelliStripes").error("Error resolving annotation", e);
         }
         return retval;
@@ -201,7 +207,7 @@ public abstract class StripesReference implements PsiReference {
     }
 
     protected static List<XmlTag> getLayoutComponentTags(XmlTag xmlTag, String name) {
-        List<XmlTag> retval = new ArrayList<XmlTag>();
+        List<XmlTag> retval = new ArrayList<XmlTag>(16);
 
         if (name.equals(xmlTag.getName())) {
             retval.add(xmlTag);

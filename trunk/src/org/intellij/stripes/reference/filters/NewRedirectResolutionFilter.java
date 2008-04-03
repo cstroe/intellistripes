@@ -17,22 +17,16 @@
 
 package org.intellij.stripes.reference.filters;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.filters.ElementFilter;
+import org.intellij.stripes.util.StripesConstants;
 
 /**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 22/03/2008 Time: 10:45:50 PM
+ * Created by IntelliJ IDEA.
+ * User: Mario Arias
+ * Date: 3/04/2008
+ * Time: 12:56:40 AM
  */
-public class ForwardResolutionFilter implements ElementFilter {
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface ElementFilter ---------------------
-
-    public boolean isAcceptable(Object o, PsiElement psiElement) {
-        return false;
-    }
-
-    public boolean isClassAcceptable(Class aClass) {
-        return true;
+public class NewRedirectResolutionFilter extends NewOnwardResolutionFilter {
+    protected String getResolutionClassName() {
+        return StripesConstants.REDIRECT_RESOLUTION;
     }
 }
