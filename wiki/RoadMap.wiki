@@ -10,6 +10,7 @@
   * {{{ActionBean}}} with only one Resolution Method define {{{@DefaultHandler}}}
   * Duplicated definition on {{{@HandlesEvent}}}
   * {{{@SpringBean}}} Annotated method start with "set" preffix
+  * @Validation having field attribute when not inside {{{@ValidateNestedProperties}}}
 
 ==Auto complete==
 
