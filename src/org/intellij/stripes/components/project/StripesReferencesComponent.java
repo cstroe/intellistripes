@@ -87,7 +87,6 @@ public class StripesReferencesComponent implements ProjectComponent {
         //css
         registerTags(new CssInHtmlClassOrIdReferenceProvider(), stripesNamespaceFilter, StripesConstants.CLASS_ATTRIBUTE, StripesConstants.CLASS_TAGS);
         registerSpringBeanReference();
-        registerForwardResolutionEventReference();
     }
 
     public void disposeComponent() {
