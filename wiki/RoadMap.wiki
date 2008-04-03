@@ -16,6 +16,7 @@
 
   * Method names in @After/@Before annotations
   * Auto complete in validation annotation (needs stripes docs review)
+  * JSP Path references in Resolution one argument constructors
 
 ==Editor==
 
