@@ -22,10 +22,7 @@ import com.intellij.javaee.web.facet.WebFacet;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiReference;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.jsp.WebDirectoryUtil;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceType;
@@ -60,6 +57,11 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider 
     @Nullable
     protected static PsiClass getFormBeanClass(XmlTag xmlTag) {
         return getBeanClassFromParentTag(xmlTag, StripesConstants.FORM_TAG);
+    }
+
+    protected static PsiClass getPsiClassFromExpressionList(PsiExpressionList list, int position) {
+        PsiExpression psiExpression = list.getExpressions()[position];
+        return null;
     }
 
     /**
