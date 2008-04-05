@@ -47,7 +47,11 @@ public interface StripesConstants {
     String STRIPES_ACTION_BEAN_CLASS = "net.sourceforge.stripes.action.ActionBean";
     String STRIPES_ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
     String SPRING_BEAN = "net.sourceforge.stripes.integration.spring.SpringBean";
+
     String STRIPES_HANDLES_EVENT_ANNOTATION = "net.sourceforge.stripes.action.HandlesEvent";
+    String STRIPES_VALIDATE_ANNOTATION = "net.sourceforge.stripes.validation.Validate";
+    String STRIPES_VALIDATE_NESTED_PROPERTIES_ANNOTATION = "net.sourceforge.stripes.validation.ValidateNestedProperties";
+
     String FORWARD_RESOLUTION = "net.sourceforge.stripes.action.ForwardResolution";
     String REDIRECT_RESOLUTION = "net.sourceforge.stripes.action.RedirectResolution";
     //Others
