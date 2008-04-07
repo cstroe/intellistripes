@@ -49,7 +49,7 @@ public class LayoutComponentReference extends StripesJspAttributeReference {
 
     @Override
     public Object[] getVariants() {
-        List<XmlTag> tags = getLayoutComponents(jspFile);
+        List<XmlTag> tags = StripesReferenceUtil.getLayoutComponents(jspFile);
         if (tags == null) {
             return EMPTY_OBJECT;
         }
@@ -70,7 +70,7 @@ public class LayoutComponentReference extends StripesJspAttributeReference {
     @Override
     @Nullable
     public PsiElement resolve() {
-        List<XmlTag> tags = getLayoutComponents(jspFile);
+        List<XmlTag> tags = StripesReferenceUtil.getLayoutComponents(jspFile);
         if (tags == null) {
             return null;
         }

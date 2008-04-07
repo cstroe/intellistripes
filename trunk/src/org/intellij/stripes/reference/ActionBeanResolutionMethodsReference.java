@@ -53,7 +53,7 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
      */
     @Override
     public Object[] getVariants() {
-        List<String> names = getResolutionMethodsNames(actionBeanPsiClass);
+        List<String> names = StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass);
         Object[] variants = new Object[names.size()];
         for (int i = 0; i < variants.length; i++) {
             variants[i] = LookupValueFactory.createLookupValue(names.get(i), StripesConstants.RESOLUTION_ICON);
@@ -73,9 +73,9 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
     @Nullable
     @Override
     public PsiElement resolve() {
-        for (PsiMethod method : getResolutionMethods(actionBeanPsiClass).values()) {
+        for (PsiMethod method : StripesReferenceUtil.getResolutionMethods(actionBeanPsiClass).values()) {
             if (getCanonicalText().equals(method.getName())
-                    || getCanonicalText().equals(resolveHandlesEventAnnotation(method))) {
+                    || getCanonicalText().equals(StripesReferenceUtil.resolveHandlesEventAnnotation(method))) {
                 return method;
             }
         }
