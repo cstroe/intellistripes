@@ -25,7 +25,6 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
-import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,42 +132,11 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
 
         if (null == cls) return PsiReference.EMPTY_ARRAY;
 
-        List<String> properties = getProperties(cls);
+        List<String> properties = StripesReferenceUtil.getWritableProperties(cls);
         List<Object> variants = new ArrayList<Object>(properties.size());
         for (String property : properties) {
             variants.add(LookupValueFactory.createLookupValue(prefix + property, StripesConstants.FIELD_ICON));
         }
         return variants.toArray();
-//        actionBeanPsiClass.accept(new PsiRecursiveElementVisitor() {
-//            public void visitMethod(PsiMethod method) {
-//                System.out.println(method.getName());
-//            }
-//        });
-//        return EMPTY_ARRAY;
-    }
-
-    //Why Static??? static methods (in other languages Class Methods) have a minor memory footprint
-    //cause they only have one instance (each method have an Instance of Method Class) for ClassLoader
-    //Instead Normal Methods (or instance Methods) that have one instace for each Class Instance
-    private static List<String> getProperties(PsiClass psiClass) {
-        List<String> methodNames = new ArrayList<String>(16);
-        if (null == psiClass) return methodNames;
-
-        PsiMethod[] psiMethods = psiClass.getAllMethods();
-        for (PsiMethod psiMethod : psiMethods) {
-            String methodName = psiMethod.getName();
-            if (methodName.startsWith("set")
-                    && psiMethod.getParameterList().getParametersCount() == 1
-                    && !isActionBeanCointextSetter(psiMethod)) {
-                methodNames.add(StringUtil.decapitalize(methodName.replaceFirst("set", "")));
-            }
-        }
-
-        return methodNames;
-    }
-
-    private static Boolean isActionBeanCointextSetter(PsiMethod method) {
-        PsiClass propertyClass = PsiUtil.resolveClassInType(method.getParameterList().getParameters()[0].getType());
-        return StripesUtil.isSubclass(propertyClass, StripesConstants.STRIPES_ACTION_BEAN_CONTEXT);
     }
 }
