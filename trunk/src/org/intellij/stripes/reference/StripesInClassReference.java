@@ -18,6 +18,7 @@
 package org.intellij.stripes.reference;
 
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLiteralExpression;
 
@@ -45,6 +46,6 @@ public class StripesInClassReference extends StripesReference {
 
     @Override
     public String getCanonicalText() {
-        return expression.getText();
+        return StringUtil.stripQuotesAroundValue(expression.getText());
     }
 }
