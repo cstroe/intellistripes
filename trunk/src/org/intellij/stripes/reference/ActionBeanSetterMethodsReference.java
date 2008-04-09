@@ -75,7 +75,6 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
                 return cls.findMethodsByName("set" + StringUtil.capitalize(arr.get(arr.size() - 1)), true)[0];
             }
         } catch (Exception e) {
-            //e.printStackTrace(System.out);
             return null;
         }
         return null;
@@ -130,13 +129,6 @@ public class ActionBeanSetterMethodsReference extends StripesJspAttributeReferen
             }
         }
 
-        if (null == cls) return PsiReference.EMPTY_ARRAY;
-
-        List<String> properties = StripesReferenceUtil.getWritableProperties(cls);
-        List<Object> variants = new ArrayList<Object>(properties.size());
-        for (String property : properties) {
-            variants.add(LookupValueFactory.createLookupValue(prefix + property, StripesConstants.FIELD_ICON));
-        }
-        return variants.toArray();
+        return StripesPsiReferenceHelper.getVariants(StripesReferenceUtil.getWritableProperties(cls), prefix, StripesConstants.FIELD_ICON);
     }
 }
