@@ -17,7 +17,6 @@
 
 package org.intellij.stripes.reference;
 
-import com.intellij.codeInsight.lookup.LookupValueFactory;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
@@ -26,8 +25,6 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 21/09/2007 Time: 01:28:16 AM
@@ -53,12 +50,7 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
      */
     @Override
     public Object[] getVariants() {
-        List<String> names = StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass);
-        Object[] variants = new Object[names.size()];
-        for (int i = 0; i < variants.length; i++) {
-            variants[i] = LookupValueFactory.createLookupValue(names.get(i), StripesConstants.RESOLUTION_ICON);
-        }
-        return variants;
+        return StripesPsiReferenceHelper.getVariants(StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass), "", StripesConstants.RESOLUTION_ICON);
     }
 
 // ------------------------ INTERFACE METHODS ------------------------
