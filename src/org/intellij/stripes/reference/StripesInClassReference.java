@@ -40,7 +40,7 @@ public class StripesInClassReference extends StripesReference {
     }
 
     public TextRange getRangeInElement() {
-        return new TextRange(1, expression.getText().length() + 1);
+        return new TextRange(1, expression.getText().length() - 1);
     }
 
     @Override
