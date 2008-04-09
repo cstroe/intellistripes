@@ -41,46 +41,7 @@ public final class StripesReferenceUtil {
     private StripesReferenceUtil() {
     }
 
-    public static List<String> getWritableProperties(PsiClass psiClass) {
-        List<String> methodNames = new ArrayList<String>(16);
-
-        if (null == psiClass) return methodNames;
-
-        PsiMethod[] psiMethods = psiClass.getMethods();
-        for (PsiMethod psiMethod : psiMethods) {
-            String methodName = psiMethod.getName();
-            //method start with set and have only one parameter
-            if (methodName.startsWith("set") && psiMethod.getParameterList().getParametersCount() == 1) {
-                String mName = StringUtil.decapitalize(methodName.replaceFirst("set", ""));
-
-                PsiType paramType = psiMethod.getParameterList().getParameters()[0].getType();
-                if (paramType instanceof PsiClassType) {
-
-                    PsiClass propertyClass = PsiUtil.resolveClassInType(paramType);
-                    //Don't show ActionBeanContext Properties, maybe result in a security flaw
-                    if (!StripesUtil.isSubclass(propertyClass, StripesConstants.STRIPES_ACTION_BEAN_CONTEXT)) {
-                        List<String> props = getWritableProperties(propertyClass);
-                        if (!props.isEmpty()) {
-                            for (String prop : props) methodNames.add(mName + '.' + prop);
-                        } else {
-                            methodNames.add(mName);
-                        }
-                    }
-                } else {
-                    methodNames.add(mName);
-                }
-            }
-        }
-
-        //to recover the super class methods
-        PsiClass superClass = psiClass.getSuperClass();
-        assert superClass != null;
-        if (!(superClass.getQualifiedName().equals("java.lang.Object"))) {
-            methodNames.addAll(getWritableProperties(superClass));
-        }
-
-        return methodNames;
-    }
+    private static List<String> EMPTY_STRING_LIST = new ArrayList<String>();
 
     /**
      * get all the methos that match with the given List
@@ -216,5 +177,33 @@ public final class StripesReferenceUtil {
         }
 
         return retval;
+    }
+
+    public static Boolean isActionBeanCointextSetter(PsiMethod method) {
+        PsiClass propertyClass = PsiUtil.resolveClassInType(method.getParameterList().getParameters()[0].getType());
+        return StripesUtil.isSubclass(propertyClass, StripesConstants.STRIPES_ACTION_BEAN_CONTEXT);
+    }
+
+    /**
+     * Returns list of properties for certain class and its superclasses that have setter method
+     *
+     * @param psiClass class to examine
+     * @return {@link java.util.List java.util.List} of property names
+     */
+    public static List<String> getWritableProperties(PsiClass psiClass) {
+        if (null == psiClass) return EMPTY_STRING_LIST;
+
+        List<String> methodNames = new ArrayList<String>(16);
+        PsiMethod[] psiMethods = psiClass.getAllMethods();
+        for (PsiMethod psiMethod : psiMethods) {
+            String methodName = psiMethod.getName();
+            if (methodName.startsWith("set")
+                    && psiMethod.getParameterList().getParametersCount() == 1
+                    && !isActionBeanCointextSetter(psiMethod)) {
+                methodNames.add(StringUtil.decapitalize(methodName.replaceFirst("set", "")));
+            }
+        }
+
+        return methodNames;
     }
 }
