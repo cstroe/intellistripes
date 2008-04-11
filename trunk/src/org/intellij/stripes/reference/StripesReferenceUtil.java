@@ -206,4 +206,8 @@ public final class StripesReferenceUtil {
 
         return methodNames;
     }
+
+    static ElementManipulator<PsiLiteralExpression> getManipulator(PsiLiteralExpression expression) {
+        return PsiManager.getInstance(expression.getProject()).getElementManipulatorsRegistry().getManipulator(expression);
+    }
 }

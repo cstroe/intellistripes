@@ -7,14 +7,17 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.List;
 
-public class StripesPsiReferenceHelper {
+public final class StripesPsiReferenceHelper {
     public static Object[] getVariants(@NotNull List<String> list, String prefix, @NotNull Icon icon) {
-        if (list.size() == 0) return PsiReferenceBase.EMPTY_ARRAY;
+        if (list.isEmpty()) return PsiReferenceBase.EMPTY_ARRAY;
 
         Object[] retval = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
             retval[i] = LookupValueFactory.createLookupValue(prefix + list.get(i), icon);
         }
         return retval;
+    }
+
+    private StripesPsiReferenceHelper() {
     }
 }

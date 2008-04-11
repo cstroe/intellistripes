@@ -35,6 +35,8 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassRe
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.WebPathReferenceProvider;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
+import org.intellij.stripes.reference.filters.NewForwardResolutionFilter;
+import org.intellij.stripes.reference.filters.NewRedirectResolutionFilter;
 import org.intellij.stripes.reference.filters.SpringBeanAnnotationFilter;
 import org.intellij.stripes.reference.providers.*;
 import org.intellij.stripes.util.StripesConstants;
@@ -114,6 +116,15 @@ public class StripesReferencesComponent implements ProjectComponent {
         //css
         registerTags(new CssInHtmlClassOrIdReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.CLASS_ATTRIBUTE, StripesConstants.CLASS_TAGS);
         registerSpringBeanReference();
+        registerOnwardResolutionReference();
+    }
+
+    private void registerOnwardResolutionReference() {
+        NewOnwardResolutionMethodsReferenceProvider referenceProvider = new NewOnwardResolutionMethodsReferenceProvider();
+        registry.registerReferenceProvider(new ParentElementFilter(new NewForwardResolutionFilter()),//Our Filter
+                PsiLiteralExpression.class, referenceProvider);
+        registry.registerReferenceProvider(new ParentElementFilter(new NewRedirectResolutionFilter()),
+                PsiLiteralExpression.class, referenceProvider);
     }
 
     public void disposeComponent() {
