@@ -59,9 +59,17 @@ public abstract class AbstractReferenceProvider implements PsiReferenceProvider 
         return getBeanClassFromParentTag(xmlTag, StripesConstants.FORM_TAG);
     }
 
+    /**
+     * Gets s PsiClass from a ExressionList of type com.foo.MyClass.class
+     *
+     * @param list
+     * @param position
+     * @return
+     */
     protected static PsiClass getPsiClassFromExpressionList(PsiExpressionList list, int position) {
         PsiExpression psiExpression = list.getExpressions()[position];
-        return null;
+        String className = ((PsiJavaCodeReferenceElement) list.getExpressions()[position].getFirstChild().getFirstChild()).getQualifiedName();
+        return getPsiClass(psiExpression, className);
     }
 
     /**
