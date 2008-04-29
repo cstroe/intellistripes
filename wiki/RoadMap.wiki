@@ -10,12 +10,13 @@
   * {{{ActionBean}}} with only one Resolution Method define {{{@DefaultHandler}}}
   * Duplicated definition on {{{@HandlesEvent}}}
   * {{{@SpringBean}}} Annotated method start with "set" preffix
-  * @Validation having field attribute when not inside {{{@ValidateNestedProperties}}}
+  * {{{@Validate}}} annotation having field attribute when not inside {{{@ValidateNestedProperties}}}
+  * {{{@Validate}}}, {{{@DefaultHandler}}}, {{{@HandlesEvent}}} annotations applied to invalid class member
 
 ==Auto complete==
 
-  * Method names in @After/@Before annotations
-  * Auto complete in validation annotation (needs stripes docs review)
+  * Method names in {{{@ValidationMethod}}} annotation
+  * Auto complete of field attribute in {{{@Validate}}} annotation within {{{@ValidateNestedProperties}}}
   * JSP Path references in Resolution one argument constructors
   * Enums in stripes:options-enumeration tag 
   * ~~CSS language injection on all stripes:tags in style attribute when is defined~~  
@@ -24,4 +25,4 @@
 ==Editor==
 
   * Gutters for {{{ActionBean}}} classes allowing navigation to form, link, useActionBean or URL that use certain {{{ActionBean}}}
-  * Register {{{@UrlBinding}}} path on starup so they can be used from ordinary HTML. _mmm not sure if it feature not existing yet :))_
+  * Register {{{@UrlBinding}}} path on starup so they can be used from ordinary HTML
