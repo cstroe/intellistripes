@@ -11,7 +11,8 @@
   * Duplicated definition on {{{@HandlesEvent}}}
   * {{{@SpringBean}}} Annotated method start with "set" preffix
   * {{{@Validate}}} annotation having field attribute when not inside {{{@ValidateNestedProperties}}}
-  * {{{@Validate}}}, {{{@DefaultHandler}}}, {{{@HandlesEvent}}}, {{{@ValidationMethod}}} annotations applied to invalid class member
+  * {{{@Validate}}}, {{{@DefaultHandler}}}, {{{@HandlesEvent}}} annotations applied to invalid class member
+  * Add regexp validation into mask attribute of {{{@Validate}}} annotation
 
 ==Auto complete==
 
