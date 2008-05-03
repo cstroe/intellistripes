@@ -22,30 +22,27 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
-import org.intellij.stripes.reference.ActionBeanResolutionMethodsReference;
+import org.intellij.stripes.reference.JspTagAttrResolutionMethodsReference;
+import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This class Provide References to Resolution Methods in stripes:submmit, image or button tags
+ * This class Provide References to Resolution methods in stripes:link, url or useActionBean tags in
  * <p/>
- * Created by IntelliJ IDEA. User: Mario Arias Date: 14/07/2007 Time: 10:34:11 PM
+ * Created by IntelliJ IDEA. User: Mario Arias Date: 18/09/2007 Time: 01:01:55 AM
  */
-public class ActionBeanResolutionMethodsReferenceProvider extends AbstractReferenceProvider {
+public class EventAttrResolutionMethodsReferenceProvider extends AbstractReferenceProvider {
 // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface PsiReferenceProvider ---------------------
 
     @NotNull
     public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-        //the attribute
-        XmlAttributeValue value = (XmlAttributeValue) psiElement;
-        //the tag
-        XmlTag tag = (XmlTag) value.getParent().getParent();
-        //the class
-        final PsiClass actionBeanPsiClass = getFormBeanClass(tag);
-        if (actionBeanPsiClass == null) {
-            return PsiReference.EMPTY_ARRAY;
-        }
-        return new PsiReference[]{new ActionBeanResolutionMethodsReference(value, actionBeanPsiClass)};
+        XmlTag tag = (XmlTag) psiElement.getParent().getParent();
+        final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), psiElement.getProject());
+        return actionBeanPsiClass == null
+                ? PsiReference.EMPTY_ARRAY
+                : new PsiReference[]{new JspTagAttrResolutionMethodsReference((XmlAttributeValue) psiElement, actionBeanPsiClass)};
     }
 }

@@ -21,59 +21,37 @@ import com.intellij.facet.FacetManager;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.jsp.JspDirectiveKind;
 import com.intellij.psi.jsp.JspFile;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.ui.HyperlinkLabel;
 import org.intellij.stripes.facet.StripesFacet;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 02:04:03 AM
  */
 public final class StripesUtil {
-// -------------------------- STATIC METHODS --------------------------
 
-    public static boolean isSubclass(PsiClass clazz, String superClass) {
-        if (clazz == null) {
-            return false;
-        }
-        boolean b = false;
-        try {
-            b = clazz.getQualifiedName().equals(superClass);
-        }
-        catch (NullPointerException e) {
-            //
-        }
-        if (b) {
+    public static PsiElementFilter ALL_FILTER = new PsiElementFilter() {
+        public boolean isAccepted(PsiElement element) {
             return true;
-        } else {
-            if (isSubclass(clazz.getSupers(), superClass)) {
-                return true;
-            } else if (isSubclass(clazz.getInterfaces(), superClass)) {
-                return true;
-            }
         }
-        return false;
-    }
+    };
 
-    protected static boolean isSubclass(PsiClass[] supers, String superClass) {
-        for (PsiClass aSuper : supers) {
-            if (isSubclass(aSuper, superClass)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static String[] getStringsArray(String... strings) {
-        return strings;
-    }
+// -------------------------- STATIC METHODS --------------------------
 
     public static <T> T[] makeArray(T... parameters) {
         return parameters;
@@ -117,8 +95,7 @@ public final class StripesUtil {
     public static Module getModule(PsiElement psiElement) {
         try {
             return ModuleUtil.findModuleForPsiElement(psiElement);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -141,58 +118,80 @@ public final class StripesUtil {
     }
 
     /**
-     * get the stripes namespace for a JspFile
-     *
-     * @param jspFile JspFile
-     * @return the namespace, null if this page don't have stripes taglib
-     */
-    public static String getStripesNamespace(JspFile jspFile) {
-        if (isStripesPage(jspFile)) {
-            XmlTag[] tags = jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true);
-            for (XmlTag tag : tags) {
-                String uri = tag.getAttributeValue("uri");
-                assert uri != null;
-                if (uri.equals(StripesConstants.STRIPES_DYNAMIC_TLD) || uri.equals(StripesConstants.STRIPES_TLD)) {
-                    return tag.getAttributeValue("prefix");
-                }
-            }
-            return null;
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * This Jsp have a Stripes Taglib declared
      *
      * @param jspFile JspFile
      * @return true or false
      */
     public static boolean isStripesPage(JspFile jspFile) {
-        XmlTag[] tags = jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true);
-        boolean[] isStripesPageList = new boolean[tags.length];
-        for (int i = 0; i < tags.length; i++) {
-            XmlTag tag = tags[i];
-            String uri = tag.getAttributeValue("uri");
-            try {
-                //this tag is a Stripes declaration taglib?
-                isStripesPageList[i] = uri.equals(StripesConstants.STRIPES_DYNAMIC_TLD) || uri.equals(StripesConstants.STRIPES_TLD);
-            }
-            catch (Exception e) {
-                //
-            }
-        }
-
-        for (boolean isStripes : isStripesPageList) {
-            if (isStripes) {
+        for (XmlTag tag : jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true)) {
+            if (tag.getAttributeValue("uri").startsWith(StripesConstants.TAGLIB_PREFIX)) {
                 return true;
             }
         }
         return false;
     }
 
-// --------------------------- CONSTRUCTORS ---------------------------
+    private static Map<String, PsiClass> PSI_CLASS_MAP = new Hashtable<String, PsiClass>();
 
-    private StripesUtil() {
+    public static PsiClass findPsiClassByName(String className, Project project) {
+        if (className == null) return null;
+
+        PsiClass retval = PSI_CLASS_MAP.get(className);
+        if (null == retval) {
+            retval = PsiManager.getInstance(project).findClass(className, GlobalSearchScope.allScope(project));
+            if (null != retval) PSI_CLASS_MAP.put(className, retval);
+        }
+        return retval;
+    }
+
+    public static Boolean isSubclass(String baseClassName, PsiClass cls) {
+        if (cls == null) return false;
+        PsiClass baseClass = findPsiClassByName(baseClassName, cls.getProject());
+        return cls.isInheritor(baseClass, true) || cls.equals(baseClass);
+    }
+
+    public static XmlTag findParent(XmlTag childTag, PsiElementFilter stopFilter, PsiElementFilter returnFilter) {
+        for (XmlTag tag = childTag.getParentTag(); tag != null; tag = tag.getParentTag()) {
+            if (stopFilter.isAccepted(tag)) {
+                return returnFilter.isAccepted(tag) ? tag : null;
+            }
+        }
+        return null;
+    }
+
+    public static XmlTag findTag(XmlTag rootTag, PsiElementFilter filter) {
+        if (filter.isAccepted(rootTag)) {
+            return rootTag;
+        } else {
+            for (XmlTag tag : rootTag.getSubTags()) {
+                XmlTag t = findTag(tag, filter);
+                if (null != t) return t;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Processes XML tree and collects element matched defined criteria.
+     *
+     * @param rootTag      root of XML tree
+     * @param stopFilter   filter triggering stop current tag children processing
+     * @param incudeFilter filter triggering collecting of current tag
+     * @param container    container to collect tags that matches criteria
+     * @return container
+     */
+    public static <T> XmlTagContainer<T> collectTags(@NotNull XmlTag rootTag, @NotNull PsiElementFilter stopFilter,
+                                                     @NotNull PsiElementFilter incudeFilter, @NotNull XmlTagContainer<T> container) {
+        if (stopFilter.isAccepted(rootTag)) {
+            if (incudeFilter.isAccepted(rootTag)) {
+                container.add(rootTag);
+            }
+        } else {
+            for (XmlTag tag : rootTag.getSubTags()) {
+                collectTags(tag, stopFilter, incudeFilter, container);
+            }
+        }
+        return container;
     }
 }

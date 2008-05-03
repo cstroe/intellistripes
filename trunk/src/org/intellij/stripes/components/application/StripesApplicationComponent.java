@@ -67,17 +67,10 @@ public class StripesApplicationComponent implements ApplicationComponent, IconPr
         //Change Icons?
         if (facet.getConfiguration().isChangeIcons()) {
             //is JSP's?
-            if (element instanceof JspFile) {
-                JspFile jspFile = (JspFile) element;
-                //get tags like page, taglib...
-                if (StripesUtil.isStripesPage(jspFile)) {
-                    return StripesConstants.STRIPES_JSP_ICON;
-                }
-            }
-            //is class?
-            else if (element instanceof PsiClass) {
+            if (element instanceof JspFile && StripesUtil.isStripesPage((JspFile) element)) {//get tags like page, taglib...
+                return StripesConstants.STRIPES_JSP_ICON;
+            } else if (element instanceof PsiClass) { //is class?
                 PsiClass clazz = (PsiClass) element;
-
                 boolean isActionBean = false;
                 try {
                     PsiModifierList list = clazz.getModifierList();
@@ -85,18 +78,12 @@ public class StripesApplicationComponent implements ApplicationComponent, IconPr
                     //is abstract?
                     if (!isAbstract) {
                         //Is an implementation of ActionBean?
-                        isActionBean = StripesUtil.isSubclass(clazz, StripesConstants.STRIPES_ACTION_BEAN_CLASS);
+                        isActionBean = StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, clazz);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     //
                 }
-
-                if (isActionBean) {
-                    return StripesConstants.ACTION_BEAN_ICON;
-                } else {
-                    return null;
-                }
+                return isActionBean ? StripesConstants.ACTION_BEAN_ICON : null;
             } else {
                 return null;
             }

@@ -17,11 +17,12 @@
 
 package org.intellij.stripes.reference;
 
+import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.Nullable;
@@ -29,15 +30,15 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 21/09/2007 Time: 01:28:16 AM
  */
-public class ActionBeanResolutionMethodsReference extends StripesJspAttributeReference {
+public class JavaStringResolutionMethodsReference extends JavaStringReference {
 // ------------------------------ FIELDS ------------------------------
 
     private PsiClass actionBeanPsiClass;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    public ActionBeanResolutionMethodsReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass) {
-        super(xmlAttributeValue);
+    public JavaStringResolutionMethodsReference(PsiLiteralExpression expression, PsiClass actionBeanPsiClass) {
+        super(expression);
         this.actionBeanPsiClass = actionBeanPsiClass;
     }
 
@@ -50,7 +51,7 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
      */
     @Override
     public Object[] getVariants() {
-        return StripesPsiReferenceHelper.getVariants(StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass), "", StripesConstants.RESOLUTION_ICON);
+        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass), "", StripesConstants.RESOLUTION_ICON);
     }
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -84,7 +85,17 @@ public class ActionBeanResolutionMethodsReference extends StripesJspAttributeRef
      */
     @Override
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        ((XmlAttribute) xmlAttributeValue.getParent()).setValue(newElementName);
-        return resolve();
+        return StripesReferenceUtil.getManipulator(expression).handleContentChange(expression, newElementName);
+    }
+
+    @Override
+    public String getCanonicalText() {
+        return StringUtil.stripQuotesAroundValue(
+                expression.getText().charAt(1) == '!' ? expression.getText().replaceFirst("!", "") : expression.getText()
+        );
+    }
+
+    public TextRange getRangeInElement() {
+        return new TextRange(expression.getText().charAt(1) == '!' ? 2 : 1, expression.getText().length() - 1);
     }
 }

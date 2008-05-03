@@ -18,7 +18,8 @@
 package org.intellij.stripes.reference.providers;
 
 import com.intellij.psi.*;
-import org.intellij.stripes.reference.InClassResolutionMethodsReference;
+import org.intellij.stripes.reference.JavaStringResolutionMethodsReference;
+import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,13 +31,9 @@ import org.jetbrains.annotations.NotNull;
 public class NewOnwardResolutionMethodsReferenceProvider extends AbstractReferenceProvider {
     @NotNull
     public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-        PsiExpressionList expressionList = (PsiExpressionList) psiElement.getParent();
-        PsiClass psiClass = null;
-        try {
-            psiClass = getPsiClassFromExpressionList(expressionList, 0);
-        } catch (NullPointerException e) {
-            return PsiReference.EMPTY_ARRAY;
-        }
-        return new PsiReference[]{new InClassResolutionMethodsReference((PsiLiteralExpression) psiElement, psiClass)};
+        final PsiClass psiClass = StripesReferenceUtil.getPsiClassFromExpressionList((PsiExpressionList) psiElement.getParent());
+        return psiClass == null
+                ? PsiReference.EMPTY_ARRAY
+                : new PsiReference[]{new JavaStringResolutionMethodsReference((PsiLiteralExpression) psiElement, psiClass)};
     }
 }

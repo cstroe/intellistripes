@@ -28,11 +28,11 @@ import com.intellij.psi.PsiLiteralExpression;
  * Date: 4/04/2008
  * Time: 04:43:28 AM
  */
-public class StripesInClassReference extends StripesReference {
+public abstract class JavaStringReference extends StripesReference {
 
     protected PsiLiteralExpression expression;
 
-    public StripesInClassReference(PsiLiteralExpression expression) {
+    public JavaStringReference(PsiLiteralExpression expression) {
         this.expression = expression;
     }
 

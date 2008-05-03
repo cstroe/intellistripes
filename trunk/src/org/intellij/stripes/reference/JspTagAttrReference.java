@@ -24,14 +24,14 @@ import com.intellij.psi.xml.XmlAttributeValue;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 11/07/2007 Time: 10:49:45 PM
  */
-public class StripesJspAttributeReference extends StripesReference {
+public abstract class JspTagAttrReference extends StripesReference {
 // ------------------------------ FIELDS ------------------------------
 
     protected XmlAttributeValue xmlAttributeValue;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    public StripesJspAttributeReference(XmlAttributeValue xmlAttributeValue) {
+    public JspTagAttrReference(XmlAttributeValue xmlAttributeValue) {
         this.xmlAttributeValue = xmlAttributeValue;
     }
 
