@@ -17,72 +17,61 @@
 
 package org.intellij.stripes.reference;
 
-import com.intellij.codeInsight.lookup.LookupValueFactory;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.jsp.JspFile;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 8/11/2007 Time: 11:14:26 PM
+ * Created by IntelliJ IDEA. User: Mario Arias Date: 21/09/2007 Time: 01:28:16 AM
  */
-public class LayoutComponentReference extends StripesJspAttributeReference {
+public class JspTagAttrResolutionMethodsReference extends JspTagAttrReference {
 // ------------------------------ FIELDS ------------------------------
 
-    private static final Object[] EMPTY_OBJECT = new Object[]{};
-    private JspFile jspFile;
+    private PsiClass actionBeanPsiClass;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    public LayoutComponentReference(XmlAttributeValue xmlAttributeValue, JspFile jspFile) {
+    public JspTagAttrResolutionMethodsReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass) {
         super(xmlAttributeValue);
-        this.jspFile = jspFile;
+        this.actionBeanPsiClass = actionBeanPsiClass;
     }
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
+    /**
+     * Get all Posible Resolution Methods for an ActionBean Class
+     *
+     * @return an Array with References to Resolution Methods
+     */
     @Override
     public Object[] getVariants() {
-        List<XmlTag> tags = StripesReferenceUtil.getLayoutComponents(jspFile);
-        if (tags == null) {
-            return EMPTY_OBJECT;
-        }
-        Object[] variants = new Object[tags.size()];
-        for (int i = 0; i < variants.length; i++) {
-            XmlTag tag = tags.get(i);
-            String name = tag.getAttributeValue(StripesConstants.NAME_ATTRIBUTE);
-            assert name != null;
-            variants[i] = LookupValueFactory.createLookupValue(name, StripesConstants.LAYOUT_COMPONENT_ICON);
-        }
-        return variants;
+        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass), "", StripesConstants.RESOLUTION_ICON);
     }
 
 // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface PsiReference ---------------------
 
-    @Override
+    /**
+     * Ctrl + Click in the attribute name will be resolved
+     *
+     * @return Element
+     */
     @Nullable
+    @Override
     public PsiElement resolve() {
-        List<XmlTag> tags = StripesReferenceUtil.getLayoutComponents(jspFile);
-        if (tags == null) {
-            return null;
-        }
-        XmlTag component = null;
-        for (XmlTag tag : tags) {
-            String name = tag.getAttributeValue("name");
-            assert name != null;
-            if (name.equals(getCanonicalText())) {
-                component = tag;
+        for (PsiMethod method : StripesReferenceUtil.getResolutionMethods(actionBeanPsiClass).values()) {
+            if (getCanonicalText().equals(method.getName())
+                    || getCanonicalText().equals(StripesReferenceUtil.resolveHandlesEventAnnotation(method))) {
+                return method;
             }
         }
-        return component;
+        return null;
     }
 
     /**

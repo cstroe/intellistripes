@@ -17,26 +17,35 @@
 
 package org.intellij.stripes.components.project;
 
+import com.intellij.javaee.web.ServletPathReferenceProvider;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.css.impl.util.CssInHtmlClassOrIdReferenceProvider;
 import com.intellij.psi.filters.*;
 import com.intellij.psi.filters.position.NamespaceFilter;
 import com.intellij.psi.filters.position.ParentElementFilter;
+import com.intellij.psi.filters.position.SuperParentFilter;
 import com.intellij.psi.impl.source.jsp.el.ELLanguage;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProvider;
+import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
+import com.intellij.psi.impl.source.resolve.reference.ReferenceType;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReferenceProvider;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.JspxIncludePathReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.WebPathReferenceProvider;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
+import org.intellij.stripes.reference.JavaStringResolutionMethodsReference;
 import org.intellij.stripes.reference.filters.NewForwardResolutionFilter;
 import org.intellij.stripes.reference.filters.NewRedirectResolutionFilter;
+import org.intellij.stripes.reference.filters.ResolutionConstructorFilter;
 import org.intellij.stripes.reference.filters.SpringBeanAnnotationFilter;
 import org.intellij.stripes.reference.providers.*;
 import org.intellij.stripes.util.StripesConstants;
@@ -54,6 +63,10 @@ public class StripesReferencesComponent implements ProjectComponent {
     // ------------------------------ FIELDS ------------------------------
     private ReferenceProvidersRegistry registry;
     final public static NamespaceFilter STRIPES_NAMESPACE_FILTER = new NamespaceFilter(StripesConstants.STRIPES_TLDS);
+
+    public static PsiClass LIST_PSI_CLASS;
+    public static PsiClass MAP_PSI_CLASS;
+
 // --------------------------- CONSTRUCTORS ---------------------------
 
     public StripesReferencesComponent(Project project) {
@@ -65,7 +78,7 @@ public class StripesReferencesComponent implements ProjectComponent {
             public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
                 PsiElement ann = context.getParent().getParent().getParent();
                 if (ann instanceof PsiAnnotation
-                        && StripesConstants.STRIPES_VALIDATE_ANNOTATION.equals(((PsiAnnotation) ann).getNameReferenceElement().getCanonicalText())
+                        && StripesConstants.VALIDATE_ANNOTATION.equals(((PsiAnnotation) ann).getNameReferenceElement().getCanonicalText())
                         && "expression".equals(((PsiNameValuePair) context.getParent()).getName())) {
                     final TextRange range = new TextRange(1, context.getTextLength() - 1);
                     registrar.startInjecting(ELLanguage.INSTANCE)
@@ -80,7 +93,6 @@ public class StripesReferencesComponent implements ProjectComponent {
             }
         });
     }
-
 // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface BaseComponent ---------------------
@@ -94,51 +106,112 @@ public class StripesReferencesComponent implements ProjectComponent {
     public void initComponent() {
         String[] tags = StripesConstants.ACTION_BEAN_TAGS;
         for (String tag : tags) {
-            //all stripes tags with beanclass parameter add Reference provider for implementations od Stripes ActionBean
-            registerSubclass(STRIPES_NAMESPACE_FILTER, tag, StripesConstants.BEAN_CLASS_ATTRIBUTE, StripesConstants.STRIPES_ACTION_BEAN_CLASS);
+//            all stripes tags with beanclass parameter add Reference provider for implementations od Stripes ActionBean
+            registerSubclass(tag, StripesConstants.BEANCLASS_ATTR, StripesConstants.ACTION_BEAN);
         }
-        //errors tag add Reference Provider for Setters Method on parameter field
-        registerTags(new ActionBeanSetterMethodsReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.FIELD_ATTRIBUTE, StripesConstants.ERRORS_TAG);
-        //all stripes tags for input form add Reference Provider for Setters Method
-        registerTags(new ActionBeanSetterMethodsReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTRIBUTE, StripesConstants.INPUT_TAGS);
-        //link-param tag add Reference Provider for Setters Methods
-        registerTags(new LinkParamSetterMethodsReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LINK_PARAM_TAG);
-        //param tag add Reference Provider for Setter Methods
-        registerTags(new ParamSetterMethodsReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTRIBUTE, StripesConstants.PARAMS_TAGS);
-        //all stripes tags for submit form add Reference Provider for Event(Resolution Method)
-        registerTags(new ActionBeanResolutionMethodsReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTRIBUTE, StripesConstants.RESOLUTION_TAGS);
-        //all stripes special tags with event parameter add Reference Provider for Event(Resolution Method)
-        registerTags(new TagResolutionMethodsReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.EVENT, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
-        //layout-render
-        registerTags(new WebPathReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_RENDER_TAG);
-        //layout-component
-        registerTags(new LayoutComponentReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTRIBUTE, StripesConstants.LAYOUT_COMPONENT);
-        //css
+
+//errors tag add Reference Provider for Setters Method on parameter field
+        registerTags(new SetterMethodsReferenceProvider(new String[]{StripesConstants.FORM_TAG}),
+                STRIPES_NAMESPACE_FILTER, StripesConstants.FIELD_ATTR, StripesConstants.ERRORS_TAG);
+//all stripes tags for input form add Reference Provider for Setters Method
+        registerTags(new SetterMethodsReferenceProvider(new String[]{StripesConstants.FORM_TAG}),
+                STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.INPUT_TAGS);
+//file upload input
+        registerTags(new FileBeanSetterMethodsReferenceProvider(),
+                STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.FILE_TAG);
+//param and link-param tag add Reference Provider for Setter Methods
+        registerTags(new SetterMethodsReferenceProvider(new String[]{StripesConstants.LINK_TAG,
+                StripesConstants.URL_TAG}), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.PARAMS_TAGS);
+//all stripes tags for submit form add Reference Provider for Event(Resolution Method)
+        registerTags(new TagResolutionMethodsReferenceProvider(), STRIPES_NAMESPACE_FILTER,
+                StripesConstants.NAME_ATTR, StripesConstants.RESOLUTION_TAGS);
+//all stripes special tags with event parameter add Reference Provider for Event(Resolution Method)
+        registerTags(new EventAttrResolutionMethodsReferenceProvider(), STRIPES_NAMESPACE_FILTER,
+                StripesConstants.EVENT, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
+
+//layout-render
+        registerTags(new WebPathReferenceProvider() {
+            @NotNull
+            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+                return super.getReferencesByElement(psiElement);
+            }
+        }, STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_RENDER_TAG);
+//layout-component
+        registerTags(new LayoutComponentReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_COMPONENT_TAG);
+//css
         registerTags(new CssInHtmlClassOrIdReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.CLASS_ATTRIBUTE, StripesConstants.CLASS_TAGS);
+
         registerSpringBeanReference();
         registerOnwardResolutionReference();
+
+        registry.registerReferenceProvider(
+                new AndFilter(new SuperParentFilter(new ClassFilter(PsiNameValuePair.class) {
+                    public boolean isAcceptable(Object o, PsiElement psiElement) {
+                        return super.isAcceptable(o, psiElement) && ((PsiNameValuePair) o).getName().equals("on");
+                    }
+                }), new SuperParentFilter(new ClassFilter(PsiAnnotation.class) {
+                    public boolean isAcceptable(Object o, PsiElement psiElement) {
+                        return super.isAcceptable(o, psiElement) && StripesConstants.VALIDATION_METHOD_ANNOTATION.equals(((PsiAnnotation) o).getQualifiedName());
+                    }
+                })), PsiLiteralExpression.class, new PsiReferenceProviderBase() {
+            @NotNull
+            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+                PsiClass cls = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
+                return null == cls
+                        ? PsiReference.EMPTY_ARRAY
+                        : new PsiReference[]{new JavaStringResolutionMethodsReference((PsiLiteralExpression) psiElement, cls)};
+            }
+        });
+
+        registry.registerReferenceProvider(new ResolutionConstructorFilter(1), PsiLiteralExpression.class, new JspxIncludePathReferenceProvider() {
+            private ServletPathReferenceProvider servletPathProvider = new ServletPathReferenceProvider();
+
+            @NotNull
+            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+                return getReferencesByString(StringUtil.stripQuotesAroundValue(psiElement.getText()), psiElement, ReferenceType.FILE_TYPE, 1);
+//                List<PsiReference> servletRefs = new ArrayList<PsiReference>();
+//                servletPathProvider.createReferences(psiElement, servletRefs, false);
+//
+//                int cnt = Math.max(fileRefs.length, servletRefs.size());
+//                PsiReference[] retval = new PsiReference[cnt];
+//                PsiReference fileRef = null;
+//                PsiReference servletRef = null;
+//                for (int i = 0;i<cnt;i++) {
+//                    if (i < fileRefs.length) fileRef = fileRefs[i];
+//                    if (i < servletRefs.size()) servletRef = servletRefs.get(i);
+//
+//                    if (fileRef != null && servletRef != null) {
+//                        PsiDynaReference dynaRef = new PsiDynaReference(psiElement, true);
+//                        dynaRef.addReference(fileRef);
+//                        dynaRef.addReference(servletRef);
+//                        retval[i] = dynaRef;
+//                    } else if (fileRef != null) {
+//                        retval[i] = fileRef;
+//                    } else if (servletRef != null) {
+//                        retval[i] = servletRef;
+//                    }
+//                }
+//                return retval;
+            }
+        });
+
     }
 
     private void registerOnwardResolutionReference() {
         NewOnwardResolutionMethodsReferenceProvider referenceProvider = new NewOnwardResolutionMethodsReferenceProvider();
-        registry.registerReferenceProvider(new ParentElementFilter(new NewForwardResolutionFilter()),//Our Filter
-                PsiLiteralExpression.class, referenceProvider);
-        registry.registerReferenceProvider(new ParentElementFilter(new NewRedirectResolutionFilter()),
-                PsiLiteralExpression.class, referenceProvider);
+        registry.registerReferenceProvider(new ParentElementFilter(new NewForwardResolutionFilter()), PsiLiteralExpression.class, referenceProvider);
+        registry.registerReferenceProvider(new ParentElementFilter(new NewRedirectResolutionFilter()), PsiLiteralExpression.class, referenceProvider);
     }
 
     public void disposeComponent() {
-
     }
 
 // --------------------- Interface ProjectComponent ---------------------
 
     public void projectOpened() {
-
     }
 
     public void projectClosed() {
-
     }
 
 // -------------------------- OTHER METHODS --------------------------
@@ -151,11 +224,11 @@ public class StripesReferencesComponent implements ProjectComponent {
         );
     }
 
-    private void registerSubclass(NamespaceFilter namespaceFilter, String tagName, String attributName, String... classes) {
+    private void registerSubclass(String tagName, String attributName, String... classes) {
         JavaClassReferenceProvider provider = new JavaClassReferenceProvider();
         provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, classes);
         provider.setOption(JavaClassReferenceProvider.INSTANTIATABLE, true);
-        registerTags(provider, namespaceFilter, attributName, tagName);
+        registerTags(provider, STRIPES_NAMESPACE_FILTER, attributName, tagName);
     }
 
     private void registerTags(PsiReferenceProvider provider, NamespaceFilter namespaceFilter, String attributeName, String... tagNames) {

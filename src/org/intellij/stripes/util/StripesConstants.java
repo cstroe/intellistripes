@@ -44,14 +44,15 @@ public interface StripesConstants {
     String SPRING_LISTENER = "org.springframework.web.context.ContextLoaderListener";
     String SPRING_INTERCEPTOR_CLASS = "net.sourceforge.stripes.integration.spring.SpringInterceptor";
     String BEFORE_AFTER_METHOD_INTERCEPTOR_CLASS = "net.sourceforge.stripes.controller.BeforeAfterMethodInterceptor";
-    String STRIPES_ACTION_BEAN_CLASS = "net.sourceforge.stripes.action.ActionBean";
-    String STRIPES_ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
+    String ACTION_BEAN = "net.sourceforge.stripes.action.ActionBean";
+    String FILE_BEAN = "net.sourceforge.stripes.action.FileBean";
+    String ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
     String SPRING_BEAN = "net.sourceforge.stripes.integration.spring.SpringBean";
 
-    String STRIPES_HANDLES_EVENT_ANNOTATION = "net.sourceforge.stripes.action.HandlesEvent";
-    String STRIPES_VALIDATE_ANNOTATION = "net.sourceforge.stripes.validation.Validate";
-    String STRIPES_VALIDATE_NESTED_PROPERTIES_ANNOTATION = "net.sourceforge.stripes.validation.ValidateNestedProperties";
-
+    String HANDLES_EVENT_ANNOTATION = "net.sourceforge.stripes.action.HandlesEvent";
+    String VALIDATE_ANNOTATION = "net.sourceforge.stripes.validation.Validate";
+    String VALIDATE_NESTED_PROPERTIES_ANNOTATION = "net.sourceforge.stripes.validation.ValidateNestedProperties";
+    String VALIDATION_METHOD_ANNOTATION = "net.sourceforge.stripes.validation.ValidationMethod";
     String FORWARD_RESOLUTION = "net.sourceforge.stripes.action.ForwardResolution";
     String REDIRECT_RESOLUTION = "net.sourceforge.stripes.action.RedirectResolution";
     //Others
@@ -63,28 +64,39 @@ public interface StripesConstants {
     String ACTION_RESOLVER_URL_FILTER = "ActionResolver.UrlFilters";
     String STRIPES_FILTER_MAPPING = "*.jsp";
     String REQUEST = "REQUEST";
+    String TAGLIB_PREFIX = "http://stripes.sourceforge.net/stripes";
     String STRIPES_TLD = "http://stripes.sourceforge.net/stripes.tld";
     String STRIPES_DYNAMIC_TLD = "http://stripes.sourceforge.net/stripes-dynattr.tld";
     String[] STRIPES_TLDS = {STRIPES_DYNAMIC_TLD, STRIPES_TLD};
     String CLASS_ATTRIBUTE = "class";
     String[] CLASS_TAGS = {"button", "checkbox", "file", "form", "image", "label", "link", "hidden", "option", "options-collection",
             "options-enumeration", "password", "radio", "reset", "select", "submit", "text", "textarea"};
+
     String FORM_TAG = "form";
+    String FILE_TAG = "file";
+    String URL_TAG = "url";
     String LINK_TAG = "link";
     String ERRORS_TAG = "errors";
     String LINK_PARAM_TAG = "link-param";
     String PARAM_TAG = "param";
-    String BEAN_CLASS_ATTRIBUTE = "beanclass";
+    String USE_ACTION_BEAN_TAG = "useActionBean";
     String LAYOUT_RENDER_TAG = "layout-render";
-    String URL_TAG = "url";
-    String FIELD_ATTRIBUTE = "field";
-    String[] ACTION_BEAN_TAGS = {"form", "errors", "link", "url", "useActionBean"};
-    String[] ACTION_BEAN_TAGS_WITH_EVENT = {"link", "url", "useActionBean"};
-    String[] PARAMS_TAGS = {"param", "link-param"};
+    String LAYOUT_COMPONENT_TAG = "layout-component";
+    String LAYOUT_DEFINITION_TAG = "layout-definition";
+
+    String BEANCLASS_ATTR = "beanclass";
+    String ID_ATTR = "id";
+    String VAR_ATTR = "var";
+    String FIELD_ATTR = "field";
+    String NAME_ATTR = "name";
+
+    String[] ACTION_BEAN_TAGS = {FORM_TAG, ERRORS_TAG, LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
+    String[] ACTION_BEAN_TAGS_WITH_EVENT = {LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
+    String[] PARAMS_TAGS = {PARAM_TAG, LINK_PARAM_TAG};
+
     String EVENT = "event";
     String[] RESOLUTION_TAGS = {"button", "image", "submit"};
-    String[] INPUT_TAGS = {"checkbox", "file", "hidden", "password", "radio", "select", "text", "textarea"};
-    String NAME_ATTRIBUTE = "name";
+    String[] INPUT_TAGS = {"checkbox", "hidden", "password", "radio", "select", "text", "textarea"};
 
     //facet configuration
     String SPRING_INTEGRATION = "springIntegration";
@@ -109,11 +121,6 @@ public interface StripesConstants {
 
 
     String STRIPES = "Stripes";
-    //layouts
-    String LAYOUT_RENDER = "layout-render";
-    String LAYOUT_COMPONENT = "layout-component";
-    String LAYOUT_DEFINITION = "layout-definition";
-
     LibraryInfo[] STRIPES_LIBRARY_INFO = {MavenLibraryUtil.createMavenJarInfo("stripes", "1.4.3", "net.sourceforge.stripes.action.ActionBean"),
             MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.0", "org.apache.commons.logging.Log"),
             MavenLibraryUtil.createMavenJarInfo("cos", "1.3.1", "com.oreilly.servlet.multipart.FilePart")};

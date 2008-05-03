@@ -22,27 +22,38 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
-import org.intellij.stripes.reference.ActionBeanSetterMethodsReference;
+import org.intellij.stripes.reference.JspTagAttrSetterMethodsReference;
+import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This Class provide References for Setter methods in stripes:link-param tag on name parameter
+ * This class provide References to Setter Methods for an Action Bean Class, in tags atripes:[input]
  * <p/>
- * Created by IntelliJ IDEA. User: Mario Arias Date: 22/09/2007 Time: 10:43:04 PM
+ * Created by IntelliJ IDEA. User: Mario Arias Date: 4/07/2007 Time: 12:45:02 AM
  */
-public class LinkParamSetterMethodsReferenceProvider extends AbstractReferenceProvider {
-// ------------------------ INTERFACE METHODS ------------------------
+public class SetterMethodsReferenceProvider extends AbstractReferenceProvider {
+
+    private String[] parentTags;
+
+    public SetterMethodsReferenceProvider(String[] parentTags) {
+        this.parentTags = parentTags;
+    }
+
+    // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface PsiReferenceProvider ---------------------
 
     @NotNull
     public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-        XmlAttributeValue value = (XmlAttributeValue) psiElement;
-        XmlTag tag = (XmlTag) value.getParent().getParent();
-        final PsiClass actionBeanPsiClass = getLinkBeanClass(tag);
-        if (actionBeanPsiClass == null) {
-            return PsiReference.EMPTY_ARRAY;
+
+        PsiClass actionBeanPsiClass = null;
+        for (String parentTag : parentTags) {
+            actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) psiElement.getParent().getParent(), parentTag);
+            if (actionBeanPsiClass != null) break;
         }
-        return new PsiReference[]{new ActionBeanSetterMethodsReference(value, actionBeanPsiClass)};
+
+        return actionBeanPsiClass == null
+                ? PsiReference.EMPTY_ARRAY
+                : new PsiReference[]{new JspTagAttrSetterMethodsReference((XmlAttributeValue) psiElement, actionBeanPsiClass)};
     }
 }
