@@ -13,7 +13,8 @@ public class QualifiedNameElementFilter implements ElementFilter {
     }
 
     public boolean isAcceptable(Object element, PsiElement context) {
-        return qName.equals(((PsiAnnotation) element).getQualifiedName());
+        return element instanceof PsiAnnotation
+                && qName.equals(((PsiAnnotation) element).getQualifiedName());
     }
 
     public boolean isClassAcceptable(Class hintClass) {
