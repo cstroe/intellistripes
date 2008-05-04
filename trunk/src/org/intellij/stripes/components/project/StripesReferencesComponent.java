@@ -127,12 +127,7 @@ public class StripesReferencesComponent implements ProjectComponent {
                 StripesConstants.EVENT, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
 
 //layout-render
-        registerTags(new WebPathReferenceProvider() {
-            @NotNull
-            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-                return super.getReferencesByElement(psiElement);
-            }
-        }, STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_RENDER_TAG);
+        registerTags(new WebPathReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_RENDER_TAG);
 //layout-component
         registerTags(new LayoutComponentReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_COMPONENT_TAG);
 //css
@@ -142,14 +137,15 @@ public class StripesReferencesComponent implements ProjectComponent {
         registerOnwardResolutionReference();
 
         registry.registerReferenceProvider(
-                new AndFilter(new SuperParentFilter(new ClassFilter(PsiNameValuePair.class) {
-                    public boolean isAcceptable(Object o, PsiElement psiElement) {
-                        return super.isAcceptable(o, psiElement) && ((PsiNameValuePair) o).getName().equals("on");
-                    }
-                }), new SuperParentFilter(new OrFilter(
+                new AndFilter(
+                    new SuperParentFilter(new OrFilter(
                         new QualifiedNameElementFilter(StripesConstants.VALIDATION_METHOD_ANNOTATION),
                         new QualifiedNameElementFilter(StripesConstants.VALIDATE_ANNOTATION)
-                )))
+                    )), new SuperParentFilter(new ClassFilter(PsiNameValuePair.class) {
+                         public boolean isAcceptable(Object o, PsiElement psiElement) {
+                            return super.isAcceptable(o, psiElement) && "on".equals(((PsiNameValuePair) o).getName());
+                        }
+                }))
             , PsiLiteralExpression.class, new PsiReferenceProviderBase() {
             @NotNull
             public PsiReference[] getReferencesByElement(PsiElement psiElement) {
@@ -192,6 +188,22 @@ public class StripesReferencesComponent implements ProjectComponent {
             }
         });
 
+//        registry.registerReferenceProvider(
+//                new AndFilter(
+//                        new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION)),
+//                        new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.VALIDATE_ANNOTATION, "field")
+//                ), PsiLiteralExpression.class, new PsiReferenceProviderBase() {
+//            @NotNull
+//            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+//                PsiMethod method = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
+//                PsiClass cls = PsiUtil.resolveClassInType(method.getReturnType());
+//
+//                return new PsiReference[0]{new SetterMethodsReference<PsiLiteralExpression>() {
+//
+//                }};
+//            }
+//        }
+//        );
     }
 
     private void registerOnwardResolutionReference() {
