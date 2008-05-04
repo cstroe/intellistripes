@@ -16,7 +16,8 @@
 
 ==Auto complete==
 
-  * ~~Method names in {{{@ValidationMethod}}} annotation~~
+  * ~~Method names in on attribute of {{{@ValidationMethod}}} annotation~~
+  * ~~Method names in on attribute of {{{@Validate}}} annotation~~  
   * Auto complete of field attribute in {{{@Validate}}} annotation within {{{@ValidateNestedProperties}}}
   * JSP Path references in Resolution one argument constructors
   * Enums in stripes:options-enumeration tag 
