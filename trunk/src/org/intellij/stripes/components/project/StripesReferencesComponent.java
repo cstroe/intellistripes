@@ -133,6 +133,10 @@ public class StripesReferencesComponent implements ProjectComponent {
 //css
         registerTags(new CssInHtmlClassOrIdReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.CLASS_ATTRIBUTE, StripesConstants.CLASS_TAGS);
 
+        JavaClassReferenceProvider provider = new JavaClassReferenceProvider();
+        provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{"java.lang.Enum"});
+        registerTags(provider, STRIPES_NAMESPACE_FILTER, "enum", "options-enumeration");
+
         registerSpringBeanReference();
         registerOnwardResolutionReference();
 
