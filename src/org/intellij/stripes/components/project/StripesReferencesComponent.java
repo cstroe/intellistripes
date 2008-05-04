@@ -43,10 +43,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
 import org.intellij.stripes.reference.JavaStringResolutionMethodsReference;
-import org.intellij.stripes.reference.filters.NewForwardResolutionFilter;
-import org.intellij.stripes.reference.filters.NewRedirectResolutionFilter;
-import org.intellij.stripes.reference.filters.ResolutionConstructorFilter;
-import org.intellij.stripes.reference.filters.SpringBeanAnnotationFilter;
+import org.intellij.stripes.reference.filters.*;
 import org.intellij.stripes.reference.providers.*;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesMultiHostInjector;
@@ -149,11 +146,11 @@ public class StripesReferencesComponent implements ProjectComponent {
                     public boolean isAcceptable(Object o, PsiElement psiElement) {
                         return super.isAcceptable(o, psiElement) && ((PsiNameValuePair) o).getName().equals("on");
                     }
-                }), new SuperParentFilter(new ClassFilter(PsiAnnotation.class) {
-                    public boolean isAcceptable(Object o, PsiElement psiElement) {
-                        return super.isAcceptable(o, psiElement) && StripesConstants.VALIDATION_METHOD_ANNOTATION.equals(((PsiAnnotation) o).getQualifiedName());
-                    }
-                })), PsiLiteralExpression.class, new PsiReferenceProviderBase() {
+                }), new SuperParentFilter(new OrFilter(
+                        new QualifiedNameElementFilter(StripesConstants.VALIDATION_METHOD_ANNOTATION),
+                        new QualifiedNameElementFilter(StripesConstants.VALIDATE_ANNOTATION)
+                )))
+            , PsiLiteralExpression.class, new PsiReferenceProviderBase() {
             @NotNull
             public PsiReference[] getReferencesByElement(PsiElement psiElement) {
                 PsiClass cls = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
