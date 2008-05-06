@@ -19,7 +19,7 @@
   * ~~Method names in on attribute of {{{@ValidationMethod}}} annotation~~
   * ~~Method names in on attribute of {{{@Validate}}} annotation~~  
   * Auto complete of field attribute in {{{@Validate}}} annotation within {{{@ValidateNestedProperties}}}
-  * JSP Path references in Resolution one argument constructors
+  * ~~JSP Path references in Resolution one argument constructors~~ (basic support, having some usability issues)
   * ~~Enums in stripes:options-enumeration tag~~
   * ~~CSS language injection on all stripes:tags in style attribute when is defined~~  
   * ~~JS language injection on all stripes:tags in onXXX attribute~~  
