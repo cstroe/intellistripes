@@ -20,6 +20,7 @@ package org.intellij.stripes.reference;
 import com.intellij.codeInsight.lookup.LookupValueFactory;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
@@ -90,7 +91,7 @@ public final class StripesReferenceUtil {
         PsiClass superClass = psiClass.getSuperClass();
         assert superClass != null;
 
-        if (!("java.lang.Object".equals(superClass.getQualifiedName()))) {
+        if (!(Object.class.getName().equals(superClass.getQualifiedName()))) {
             psiMethods.putAll(getResolutionMethods(superClass));
         }
 
@@ -139,27 +140,29 @@ public final class StripesReferenceUtil {
      * Returns list of properties for certain class and its superclasses that have setter method
      *
      * @param psiClass class to examine
+     * @param braces append square braces to the property name or not
      * @return {@link java.util.List java.util.List} of property names
      */
-    public static List<String> getWritableProperties(PsiClass psiClass) {
+    public static List<String> getWritableProperties(PsiClass psiClass, Boolean braces) {
         if (null == psiClass) return EMPTY_STRING_LIST;
 
         List<String> methodNames = new ArrayList<String>(16);
         for (PsiMethod psiMethod : psiClass.getAllMethods()) {
-            String methodName = psiMethod.getName();
-            if (methodName.startsWith("set") && psiMethod.getParameterList().getParametersCount() == 1) {
+            String name = psiMethod.getName();
+            if (name.startsWith("set") && psiMethod.getParameterList().getParametersCount() == 1) {
                 PsiType propertyType = psiMethod.getParameterList().getParameters()[0].getType();
                 PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
 
-                if (StripesUtil.isSubclass(StripesConstants.ACTION_BEAN_CONTEXT, propertyClass)) continue;
+                if (StripesUtil.isSubclass(StripesConstants.ACTION_BEAN_CONTEXT, propertyClass)
+                        || StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass)) continue;
 
+                name = StringUtil.decapitalize(name.replaceFirst("set", ""));
                 if (propertyType instanceof PsiArrayType
-                        || StripesUtil.isSubclass("java.util.List", propertyClass)
-                        || StripesUtil.isSubclass("java.util.Map", propertyClass)) {
-                    methodNames.add(StringUtil.decapitalize(methodName.replaceFirst("set", "")) + "[]");
-                } else {
-                    methodNames.add(StringUtil.decapitalize(methodName.replaceFirst("set", "")));
+                        || StripesUtil.isSubclass(List.class.getName(), propertyClass)
+                        || StripesUtil.isSubclass(Map.class.getName(), propertyClass)) {
+                    name += (braces ? "[]" : "");
                 }
+                methodNames.add(name);
             }
         }
 
@@ -177,11 +180,10 @@ public final class StripesReferenceUtil {
 
         List<String> methodNames = new ArrayList<String>(16);
         for (PsiMethod psiMethod : psiClass.getAllMethods()) {
-            String methodName = psiMethod.getName();
-            if (methodName.startsWith("set") && psiMethod.getParameterList().getParametersCount() == 1) {
+            if (StripesUtil.isSetter(psiMethod)) {
                 PsiClass propertyClass = PsiUtil.resolveClassInType(psiMethod.getParameterList().getParameters()[0].getType());
                 if (StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass)) {
-                    methodNames.add(StringUtil.decapitalize(methodName.replaceFirst("set", "")));
+                    methodNames.add(StringUtil.decapitalize(psiMethod.getName().replaceFirst("set", "")));
                 }
             }
         }
@@ -214,19 +216,29 @@ public final class StripesReferenceUtil {
         try {
             PsiMethod setter = host.findMethodsByName("set" + StringUtil.capitalize(field.replaceAll("\\[.*?\\]", "")), true)[0];
             PsiType propertyType = setter.getParameterList().getParameters()[0].getType();
-            PsiClass propertyClass = PsiUtil.resolveClassInType(setter.getParameterList().getParameters()[0].getType());
+            cls = resolveClassInType(propertyType, host.getProject());
+        } catch (Exception e) {
+            cls = null;
+        }
 
-            if (StripesUtil.isSubclass("java.util.List", propertyClass)) {
+        return cls;
+    }
+
+    public static PsiClass resolveClassInType(PsiType propertyType, Project project) {
+        PsiClass cls = null;
+        try {
+            PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
+            if (StripesUtil.isSubclass(List.class.getName(), propertyClass)) {
                 if (((PsiClassReferenceType) propertyType).getParameters().length == 1) {
                     cls = PsiUtil.resolveClassInType(((PsiClassReferenceType) propertyType).getParameters()[0]);
                 } else {
-                    cls = StripesUtil.findPsiClassByName("java.lang.Object", host.getProject());
+                    cls = StripesUtil.findPsiClassByName(Object.class.getName(), project);
                 }
-            } else if (StripesUtil.isSubclass("java.util.Map", propertyClass)) {
+            } else if (StripesUtil.isSubclass(Map.class.getName(), propertyClass)) {
                 if (((PsiClassReferenceType) propertyType).getParameters().length == 2) {
                     cls = PsiUtil.resolveClassInType(((PsiClassReferenceType) propertyType).getParameters()[1]);
                 } else {
-                    cls = StripesUtil.findPsiClassByName("java.lang.Object", host.getProject());
+                    cls = StripesUtil.findPsiClassByName(Object.class.getName(), project);
                 }
             } else {
                 cls = propertyClass;

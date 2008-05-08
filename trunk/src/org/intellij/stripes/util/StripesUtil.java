@@ -22,9 +22,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.*;
 import com.intellij.psi.jsp.JspDirectiveKind;
 import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -193,5 +191,14 @@ public final class StripesUtil {
             }
         }
         return container;
+    }
+
+    public static Boolean isSetter(PsiMethod method) {
+        return null != method && method.getName().startsWith("set") && method.getParameterList().getParametersCount() == 1;
+    }
+
+    public static Boolean isGetter(PsiMethod method) {
+        return null != method && method.getName().startsWith("get")
+                && method.getParameterList().getParametersCount() == 0 && !PsiType.VOID.equals(method.getReturnType());
     }
 }
