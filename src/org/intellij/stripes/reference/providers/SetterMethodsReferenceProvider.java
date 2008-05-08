@@ -22,7 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
-import org.intellij.stripes.reference.JspTagAttrSetterMethodsReference;
+import org.intellij.stripes.reference.SetterMethodReference;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,6 +54,6 @@ public class SetterMethodsReferenceProvider extends AbstractReferenceProvider {
 
         return actionBeanPsiClass == null
                 ? PsiReference.EMPTY_ARRAY
-                : new PsiReference[]{new JspTagAttrSetterMethodsReference((XmlAttributeValue) psiElement, actionBeanPsiClass)};
+                : new PsiReference[]{new SetterMethodReference<XmlAttributeValue>((XmlAttributeValue) psiElement, actionBeanPsiClass, true)};
     }
 }

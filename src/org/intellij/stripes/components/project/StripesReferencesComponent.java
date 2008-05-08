@@ -43,6 +43,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
 import org.intellij.stripes.reference.JavaStringResolutionMethodsReference;
+import org.intellij.stripes.reference.SetterMethodReference;
+import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.intellij.stripes.reference.filters.*;
 import org.intellij.stripes.reference.providers.*;
 import org.intellij.stripes.util.StripesConstants;
@@ -61,10 +63,7 @@ public class StripesReferencesComponent implements ProjectComponent {
     private ReferenceProvidersRegistry registry;
     final public static NamespaceFilter STRIPES_NAMESPACE_FILTER = new NamespaceFilter(StripesConstants.STRIPES_TLDS);
 
-    public static PsiClass LIST_PSI_CLASS;
-    public static PsiClass MAP_PSI_CLASS;
-
-// --------------------------- CONSTRUCTORS ---------------------------
+    // --------------------------- CONSTRUCTORS ---------------------------
 
     public StripesReferencesComponent(Project project) {
         registry = ReferenceProvidersRegistry.getInstance(project);
@@ -192,22 +191,29 @@ public class StripesReferencesComponent implements ProjectComponent {
             }
         });
 
-//        registry.registerReferenceProvider(
-//                new AndFilter(
-//                        new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION)),
-//                        new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.VALIDATE_ANNOTATION, "field")
-//                ), PsiLiteralExpression.class, new PsiReferenceProviderBase() {
-//            @NotNull
-//            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-//                PsiMethod method = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
-//                PsiClass cls = PsiUtil.resolveClassInType(method.getReturnType());
-//
-//                return new PsiReference[0]{new SetterMethodsReference<PsiLiteralExpression>() {
-//
-//                }};
-//            }
-//        }
-//        );
+        registry.registerReferenceProvider(
+                new AndFilter(
+                        new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION)),
+                        new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.VALIDATE_ANNOTATION, "field")
+                ), PsiLiteralExpression.class, new PsiReferenceProviderBase() {
+            @NotNull
+            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+                PsiMethod method = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
+                PsiClass cls = null;
+                if (StripesUtil.isSetter(method)) {
+                    cls = StripesReferenceUtil.resolveClassInType(method.getParameterList().getParameters()[0].getType(), psiElement.getProject());
+                } else if (StripesUtil.isGetter(method)) {
+                    cls = StripesReferenceUtil.resolveClassInType(method.getReturnType(), psiElement.getProject());
+                } else {
+                    PsiField fld = PsiTreeUtil.getParentOfType(psiElement, PsiField.class);
+                    if (null != fld) cls = StripesReferenceUtil.resolveClassInType(fld.getType(), psiElement.getProject());
+                }
+
+                return null == cls
+                        ? PsiReference.EMPTY_ARRAY
+                        : new PsiReference[]{new SetterMethodReference<PsiLiteralExpression>((PsiLiteralExpression) psiElement, cls, false)};
+            }
+        });
     }
 
     private void registerOnwardResolutionReference() {
