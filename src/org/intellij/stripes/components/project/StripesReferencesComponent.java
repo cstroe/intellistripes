@@ -21,7 +21,11 @@ import com.intellij.javaee.web.ServletPathReferenceProvider;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.editor.EditorModificationUtil;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -141,15 +145,15 @@ public class StripesReferencesComponent implements ProjectComponent {
 
         registry.registerReferenceProvider(
                 new AndFilter(
-                    new SuperParentFilter(new OrFilter(
-                        new QualifiedNameElementFilter(StripesConstants.VALIDATION_METHOD_ANNOTATION),
-                        new QualifiedNameElementFilter(StripesConstants.VALIDATE_ANNOTATION)
-                    )), new SuperParentFilter(new ClassFilter(PsiNameValuePair.class) {
-                         public boolean isAcceptable(Object o, PsiElement psiElement) {
-                            return super.isAcceptable(o, psiElement) && "on".equals(((PsiNameValuePair) o).getName());
-                        }
+                        new SuperParentFilter(new OrFilter(
+                                new QualifiedNameElementFilter(StripesConstants.VALIDATION_METHOD_ANNOTATION),
+                                new QualifiedNameElementFilter(StripesConstants.VALIDATE_ANNOTATION)
+                        )), new SuperParentFilter(new ClassFilter(PsiNameValuePair.class) {
+                    public boolean isAcceptable(Object o, PsiElement psiElement) {
+                        return super.isAcceptable(o, psiElement) && "on".equals(((PsiNameValuePair) o).getName());
+                    }
                 }))
-            , PsiLiteralExpression.class, new PsiReferenceProviderBase() {
+                , PsiLiteralExpression.class, new PsiReferenceProviderBase() {
             @NotNull
             public PsiReference[] getReferencesByElement(PsiElement psiElement) {
                 PsiClass cls = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
@@ -163,8 +167,22 @@ public class StripesReferencesComponent implements ProjectComponent {
             private ServletPathReferenceProvider servletPathProvider = new ServletPathReferenceProvider();
 
             @NotNull
-            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-                return getReferencesByString(StringUtil.stripQuotesAroundValue(psiElement.getText()), psiElement, ReferenceType.FILE_TYPE, 1);
+            public PsiReference[] getReferencesByElement(final PsiElement psiElement) {
+                String text = StringUtil.stripQuotesAroundValue(psiElement.getText());
+                if ("".equals(text)) {
+                    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                        public void run() {
+                            CommandProcessor.getInstance().executeCommand(psiElement.getProject(),
+                                    new Runnable() {
+                                        public void run() {
+                                            EditorModificationUtil.insertStringAtCaret(FileEditorManager.getInstance(psiElement.getProject()).getSelectedTextEditor(), "/");
+                                        }
+                                    }, "Inserting /", null
+                            );
+                        }
+                    });
+                }
+                return getReferencesByString(text, psiElement, ReferenceType.FILE_TYPE, 1);
 //                List<PsiReference> servletRefs = new ArrayList<PsiReference>();
 //                servletPathProvider.createReferences(psiElement, servletRefs, false);
 //
@@ -206,7 +224,8 @@ public class StripesReferencesComponent implements ProjectComponent {
                     cls = StripesReferenceUtil.resolveClassInType(method.getReturnType(), psiElement.getProject());
                 } else {
                     PsiField fld = PsiTreeUtil.getParentOfType(psiElement, PsiField.class);
-                    if (null != fld) cls = StripesReferenceUtil.resolveClassInType(fld.getType(), psiElement.getProject());
+                    if (null != fld)
+                        cls = StripesReferenceUtil.resolveClassInType(fld.getType(), psiElement.getProject());
                 }
 
                 return null == cls
