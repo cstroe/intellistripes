@@ -194,7 +194,8 @@ public final class StripesUtil {
     }
 
     public static Boolean isSetter(PsiMethod method) {
-        return null != method && method.getName().startsWith("set") && method.getParameterList().getParametersCount() == 1;
+        return null != method && method.getName().startsWith("set")
+                && method.getParameterList().getParametersCount() == 1 && PsiType.VOID.equals(method.getReturnType());
     }
 
     public static Boolean isGetter(PsiMethod method) {

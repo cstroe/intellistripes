@@ -53,6 +53,8 @@ public interface StripesConstants {
     String VALIDATE_ANNOTATION = "net.sourceforge.stripes.validation.Validate";
     String VALIDATE_NESTED_PROPERTIES_ANNOTATION = "net.sourceforge.stripes.validation.ValidateNestedProperties";
     String VALIDATION_METHOD_ANNOTATION = "net.sourceforge.stripes.validation.ValidationMethod";
+    String URL_BINDING_ANNOTATION = "net.sourceforge.stripes.action.UrlBinding";
+
     String FORWARD_RESOLUTION = "net.sourceforge.stripes.action.ForwardResolution";
     String REDIRECT_RESOLUTION = "net.sourceforge.stripes.action.RedirectResolution";
     //Others

@@ -292,4 +292,13 @@ public final class StripesReferenceUtil {
         }
         return retval;
     }
+
+    private static UrlBindingSearcher URL_BINDING_SEARCHER;
+
+    public static Map<String, PsiClass> getUrlBindings(Project project) {
+        if (URL_BINDING_SEARCHER == null) {
+            URL_BINDING_SEARCHER = new UrlBindingSearcher(StripesUtil.findPsiClassByName(StripesConstants.URL_BINDING_ANNOTATION, project));
+        }
+        return URL_BINDING_SEARCHER.execute();
+    }
 }

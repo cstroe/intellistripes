@@ -38,6 +38,7 @@
         <fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
         <javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>
         <annotator language="JAVA" annotatorClass="org.intellij.stripes.util.StripesAnnotator"/>
+        <pathReferenceProvider implementation="org.intellij.stripes.reference.providers.UrlBindingPathReferenceProvider"/>
     </extensions>
     <application-components>
         <component>
