@@ -12,7 +12,6 @@
   * {{{@SpringBean}}} Annotated method start with "set" preffix
   * {{{@Validate}}} annotation having field attribute when not inside {{{@ValidateNestedProperties}}}
   * {{{@Validate}}}, {{{@DefaultHandler}}}, {{{@HandlesEvent}}} annotations applied to invalid class member
-  * Add regexp validation into mask attribute of {{{@Validate}}} annotation
 
 ==Auto complete==
 
@@ -28,3 +27,4 @@
 
   * ~~Gutters for {{{ActionBean}}} classes allowing navigation to form, link, useActionBean or URL that use certain {{{ActionBean}}}~~
   * ~~Register {{{@UrlBinding}}} path on starup so they can be used from ordinary HTML~~
+  * Add regexp validation into mask attribute of {{{@Validate}}} annotation
