@@ -34,11 +34,14 @@
     <idea-version since-build="7757" until-build="7999"/>
     <depends>com.intellij.javaee</depends>
     <depends>com.intellij.spring</depends>
+    <depends>JavaScript</depends>
+
     <extensions xmlns="com.intellij">
         <fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
         <javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>
-        <annotator language="JAVA" annotatorClass="org.intellij.stripes.util.StripesGutterAnnotator"/>
+        <annotator language="JAVA" annotatorClass="org.intellij.stripes.annotator.ActionBeanUsageAnnotator"/>
         <pathReferenceProvider implementation="org.intellij.stripes.reference.providers.UrlBindingPathReferenceProvider"/>
+        <inspectionToolProvider implementation="org.intellij.stripes.annotator.StripesInspectionToolProvider"/>        
     </extensions>
     <application-components>
         <component>
@@ -48,8 +51,7 @@
     </application-components>
     <project-components>
         <component>
-            <implementation-class>org.intellij.stripes.components.project.StripesReferencesComponent
-            </implementation-class>
+            <implementation-class>org.intellij.stripes.components.project.StripesReferencesComponent</implementation-class>
         </component>
     </project-components>
     <actions>
