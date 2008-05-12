@@ -1,6 +1,7 @@
-package org.intellij.stripes.util;
+package org.intellij.stripes.annotator;
 
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
+import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
@@ -13,11 +14,15 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Processor;
+import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesTagFilter;
+import org.intellij.stripes.util.StripesUtil;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class StripesGutterAnnotator implements Annotator {
+public class ActionBeanUsageAnnotator implements Annotator {
     private static PsiElementFilter FILTER_TAG = new StripesTagFilter() {
         protected boolean isDetailsAccepted(XmlTag tag) {
             return true;
@@ -35,7 +40,7 @@ public class StripesGutterAnnotator implements Annotator {
         private Collection<XmlTag> tags = new ArrayList<XmlTag>();
         public boolean process(PsiReference ref) {
             PsiElement el = ref.getElement();
-            if (StripesGutterAnnotator.FILTER_ATTR.isAccepted(el) && StripesGutterAnnotator.FILTER_TAG.isAccepted(el.getParent().getParent())) {
+            if (ActionBeanUsageAnnotator.FILTER_ATTR.isAccepted(el) && ActionBeanUsageAnnotator.FILTER_TAG.isAccepted(el.getParent().getParent())) {
                 tags.add((XmlTag) el.getParent().getParent());
             }
             return true;
@@ -50,9 +55,26 @@ public class StripesGutterAnnotator implements Annotator {
             XmlTagProcessor proc = new XmlTagProcessor();
             ReferencesSearch.search(psiElement).forEach(proc);
 
-            NavigationGutterIconBuilder.create(StripesConstants.STRIPES_JSP_ICON)
+            NavigationGutterIconBuilder.create(StripesConstants.STRIPES_ICON)
                 .setTargets(proc.getTags()).setTooltipText("ActionBean usages").setPopupTitle("ActionBean usages")
                 .setAlignment(GutterIconRenderer.Alignment.LEFT)
+                .setCellRenderer(new PsiElementListCellRenderer<XmlTag>() {
+                    public String getElementText(XmlTag psiElement) {
+                        return psiElement.getName();
+                    }
+
+                    protected String getContainerText(PsiElement psiElement, String s) {
+                        return "in " + psiElement.getContainingFile().getName();
+                    }
+
+                    protected int getIconFlags() {
+                        return 0;
+                    }
+
+                    protected Icon getIcon(PsiElement psiElement) {
+                        return null;
+                    }
+                })
                 .install(holder, ((PsiClass)psiElement).getNameIdentifier());
         }
     }
