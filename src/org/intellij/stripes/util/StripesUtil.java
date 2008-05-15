@@ -146,7 +146,8 @@ public final class StripesUtil {
     public static Boolean isSubclass(String baseClassName, PsiClass cls) {
         if (cls == null) return false;
         PsiClass baseClass = findPsiClassByName(baseClassName, cls.getProject());
-        return cls.isInheritor(baseClass, true) || cls.equals(baseClass);
+
+        return null != baseClass && (cls.isInheritor(baseClass, true) || cls.equals(baseClass));
     }
 
     public static XmlTag findParent(XmlTag childTag, PsiElementFilter stopFilter, PsiElementFilter returnFilter) {
