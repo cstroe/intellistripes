@@ -20,9 +20,8 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
-import org.intellij.stripes.reference.SetterMethodReference;
+import org.intellij.stripes.reference.SetterMethodsReferenceSet;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,14 +45,14 @@ public class SetterMethodsReferenceProvider extends AbstractReferenceProvider {
     @NotNull
     public PsiReference[] getReferencesByElement(PsiElement psiElement) {
 
-        PsiClass actionBeanPsiClass = null;
+        PsiClass psiClass = null;
         for (String parentTag : parentTags) {
-            actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) psiElement.getParent().getParent(), parentTag);
-            if (actionBeanPsiClass != null) break;
+            psiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) psiElement.getParent().getParent(), parentTag);
+            if (psiClass != null) break;
         }
 
-        return actionBeanPsiClass == null
+        return psiClass == null
                 ? PsiReference.EMPTY_ARRAY
-                : new PsiReference[]{new SetterMethodReference<XmlAttributeValue>((XmlAttributeValue) psiElement, actionBeanPsiClass, true)};
+                : new SetterMethodsReferenceSet(psiElement, psiClass).getPsiReferences();
     }
 }
