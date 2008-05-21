@@ -105,7 +105,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                     holder.registerProblem(annotation, "Applied to wrong member");
                 } else if (StripesConstants.SPRING_BEAN_ANNOTATION.equals(annotation.getQualifiedName())) {
                     PsiElement m = annotation.getParent().getParent();
-                    if (m instanceof PsiMethod && StripesUtil.isActionBeanSetter((PsiMethod)m, true)) {
+                    if (m instanceof PsiMethod && StripesUtil.isActionBeanPropertySetter((PsiMethod)m, true)) {
                         holder.registerProblem(annotation, "Applied to public setter");
                     }
                 }
