@@ -47,10 +47,8 @@ public interface StripesConstants {
     String ACTION_BEAN = "net.sourceforge.stripes.action.ActionBean";
     String FILE_BEAN = "net.sourceforge.stripes.action.FileBean";
     String ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
-    String SPRING_BEAN = "net.sourceforge.stripes.integration.spring.SpringBean";
-
-
-
+    
+    String SPRING_BEAN_ANNOTATION = "net.sourceforge.stripes.integration.spring.SpringBean";
     String HANDLES_EVENT_ANNOTATION = "net.sourceforge.stripes.action.HandlesEvent";
     String DEFAULT_HANDLER_ANNOTATION = "net.sourceforge.stripes.action.DefaultHandler";
     String VALIDATE_ANNOTATION = "net.sourceforge.stripes.validation.Validate";
@@ -95,6 +93,8 @@ public interface StripesConstants {
     String VAR_ATTR = "var";
     String FIELD_ATTR = "field";
     String NAME_ATTR = "name";
+    String URI_ATTR = "uri";
+
 
     String[] ACTION_BEAN_TAGS = {FORM_TAG, ERRORS_TAG, LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
     String[] ACTION_BEAN_TAGS_WITH_EVENT = {LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
