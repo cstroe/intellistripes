@@ -26,7 +26,9 @@ import com.intellij.psi.*;
 import com.intellij.psi.jsp.JspDirectiveKind;
 import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiElementFilter;
+import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.ui.HyperlinkLabel;
 import org.intellij.stripes.facet.StripesFacet;
@@ -123,7 +125,8 @@ public final class StripesUtil {
      */
     public static boolean isStripesPage(JspFile jspFile) {
         for (XmlTag tag : jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true)) {
-            if (tag.getAttributeValue("uri").startsWith(StripesConstants.TAGLIB_PREFIX)) {
+            if (tag.getAttributeValue(StripesConstants.URI_ATTR) != null
+                    && tag.getAttributeValue(StripesConstants.URI_ATTR).startsWith(StripesConstants.TAGLIB_PREFIX)) {
                 return true;
             }
         }
@@ -202,5 +205,15 @@ public final class StripesUtil {
     public static Boolean isGetter(PsiMethod method) {
         return null != method && method.getName().startsWith("get")
                 && method.getParameterList().getParametersCount() == 0 && !PsiType.VOID.equals(method.getReturnType());
+    }
+
+    public static Boolean isActionBeanPropertySetter(PsiMethod method, Boolean full) {
+        if (method == null
+                || (full && PropertyUtil.isSimplePropertySetter(method))) return false;
+
+        PsiClass propertyClass = PsiUtil.resolveClassInType(method.getParameterList().getParameters()[0].getType());
+        return method.hasModifierProperty(PsiModifier.PUBLIC)
+                && !StripesUtil.isSubclass(StripesConstants.ACTION_BEAN_CONTEXT, propertyClass)
+                && !StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass);
     }
 }
