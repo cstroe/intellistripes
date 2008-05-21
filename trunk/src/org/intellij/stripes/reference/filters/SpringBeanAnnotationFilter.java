@@ -44,10 +44,10 @@ public class SpringBeanAnnotationFilter implements ElementFilter {
                 PsiAnnotation annotation = (PsiAnnotation) annotationParameterList.getParent();
                 try {
                     //Is @SpringBean Annotation??
-                    return annotation.getQualifiedName().equals(StripesConstants.SPRING_BEAN);
+                    return annotation.getQualifiedName().equals(StripesConstants.SPRING_BEAN_ANNOTATION);
                 }
                 catch (NullPointerException e) {
-                    //OOPS 
+                    //OOPS
                     return false;
                 }
             } else {
