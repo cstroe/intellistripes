@@ -1,4 +1,4 @@
-package org.intellij.stripes.annotator;
+package org.intellij.stripes.highlighting;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.InspectionManager;
@@ -53,7 +53,7 @@ public class ResolutionMethodsInspection extends LocalInspectionTool {
             if (method.getModifierList().findAnnotation(StripesConstants.DEFAULT_HANDLER_ANNOTATION) != null) {
                 defHndlCnt++;
             }
-            
+
         }
         return super.checkClass(aClass, manager, isOnTheFly);
     }

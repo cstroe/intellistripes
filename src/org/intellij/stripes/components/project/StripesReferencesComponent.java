@@ -171,17 +171,21 @@ public class StripesReferencesComponent implements ProjectComponent {
             public PsiReference[] getReferencesByElement(final PsiElement psiElement) {
                 String text = StringUtil.stripQuotesAroundValue(psiElement.getText());
                 if ("".equals(text)) {
-                    ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                        public void run() {
-                            CommandProcessor.getInstance().executeCommand(psiElement.getProject(),
-                                    new Runnable() {
-                                        public void run() {
-                                            EditorModificationUtil.insertStringAtCaret(FileEditorManager.getInstance(psiElement.getProject()).getSelectedTextEditor(), "/");
-                                        }
-                                    }, "Inserting /", null
-                            );
-                        }
-                    });
+                    try {
+                        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                            public void run() {
+                                CommandProcessor.getInstance().executeCommand(psiElement.getProject(),
+                                        new Runnable() {
+                                            public void run() {
+                                                EditorModificationUtil.insertStringAtCaret(FileEditorManager.getInstance(psiElement.getProject()).getSelectedTextEditor(), "/");
+                                            }
+                                        }, "Inserting /", null
+                                );
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 return getReferencesByString(text, psiElement, ReferenceType.FILE_TYPE, 1);
 //                List<PsiReference> servletRefs = new ArrayList<PsiReference>();
