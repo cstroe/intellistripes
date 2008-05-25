@@ -102,7 +102,7 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
 
         public Object[] getVariants() {
             return StripesReferenceUtil.getVariants(StripesReferenceUtil.getWritableProperties(
-                    getHostPsiClass(), referenceSet.isSupportsBraces()), "", StripesConstants.FIELD_ICON
+                    getHostPsiClass(), referenceSet.isSupportsBraces()), StripesConstants.FIELD_ICON
             );
         }
 

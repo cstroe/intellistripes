@@ -32,10 +32,7 @@ import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Util Class
@@ -283,12 +280,13 @@ public final class StripesReferenceUtil {
         return null;
     }
 
-    public static Object[] getVariants(@NotNull List<String> list, String prefix, @NotNull Icon icon) {
+    public static Object[] getVariants(@NotNull Collection<String> list, @NotNull Icon icon) {
         if (list.isEmpty()) return PsiReferenceBase.EMPTY_ARRAY;
 
         Object[] retval = new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            retval[i] = LookupValueFactory.createLookupValue(prefix + list.get(i), icon);
+        Integer i = 0;
+        for (String s : list) {
+            retval[i++] = LookupValueFactory.createLookupValue(s, icon);
         }
         return retval;
     }

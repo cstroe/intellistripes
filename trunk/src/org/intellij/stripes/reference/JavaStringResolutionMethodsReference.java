@@ -51,7 +51,7 @@ public class JavaStringResolutionMethodsReference extends JavaStringReference {
      */
     @Override
     public Object[] getVariants() {
-        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass), "", StripesConstants.RESOLUTION_ICON);
+        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass), StripesConstants.RESOLUTION_ICON);
     }
 
 // ------------------------ INTERFACE METHODS ------------------------

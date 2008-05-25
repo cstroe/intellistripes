@@ -24,6 +24,6 @@ public class JspTagAttrFileBeanSetterMethodsReference extends JspTagAttrReferenc
     }
 
     public Object[] getVariants() {
-        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getFileBeanProperties(actionBeanPsiClass), "", StripesConstants.FIELD_ICON);
+        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getFileBeanProperties(actionBeanPsiClass), StripesConstants.FIELD_ICON);
     }
 }

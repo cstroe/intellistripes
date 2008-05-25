@@ -3,6 +3,7 @@ package org.intellij.stripes.reference;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.xml.XmlAttributeValue;
+import org.intellij.stripes.util.StripesConstants;
 
 public class UrlBindingReference extends PsiReferenceBase<XmlAttributeValue> {
 
@@ -15,6 +16,6 @@ public class UrlBindingReference extends PsiReferenceBase<XmlAttributeValue> {
     }
 
     public Object[] getVariants() {
-        return StripesReferenceUtil.getUrlBindings(getElement().getProject()).keySet().toArray();
+        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getUrlBindings(getElement().getProject()).keySet(), StripesConstants.ACTION_BEAN_ICON);
     }
 }
