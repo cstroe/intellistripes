@@ -1,4 +1,4 @@
-package org.intellij.stripes.annotator;
+package org.intellij.stripes.highlighting;
 
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.ide.util.PsiElementListCellRenderer;

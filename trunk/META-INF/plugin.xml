@@ -39,9 +39,9 @@
     <extensions xmlns="com.intellij">
         <fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
         <javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>
-        <annotator language="JAVA" annotatorClass="org.intellij.stripes.annotator.ActionBeanUsageAnnotator"/>
+        <annotator language="JAVA" annotatorClass="org.intellij.stripes.highlighting.ActionBeanUsageAnnotator"/>
         <pathReferenceProvider implementation="org.intellij.stripes.reference.providers.UrlBindingPathReferenceProvider"/>
-        <inspectionToolProvider implementation="org.intellij.stripes.annotator.StripesInspectionToolProvider"/>        
+        <inspectionToolProvider implementation="org.intellij.stripes.highlighting.StripesInspectionToolProvider"/>
     </extensions>
     <application-components>
         <component>
