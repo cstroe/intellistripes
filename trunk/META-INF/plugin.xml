@@ -16,13 +16,13 @@
   -->
 
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
-<idea-plugin url="http://www.jroller.com/neuronica/">
+<idea-plugin url="http://code.google.com/p/intellistripes/">
     <name>IntelliStripes</name>
     <description>Stripes even more easy!!!</description>
-    <version>0.9.0.577</version>
+    <version>1.0.RC1.577</version>
     <vendor email="mario.arias.c@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">
-        Mario Arias
+        Mario Arias and Evgeny Shepelyuk
     </vendor>
     <change-notes>
         <![CDATA[
