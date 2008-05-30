@@ -100,8 +100,10 @@ public interface StripesConstants {
     String[] ACTION_BEAN_TAGS_WITH_EVENT = {LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
     String[] PARAMS_TAGS = {PARAM_TAG, LINK_PARAM_TAG};
 
-    String EVENT = "event";
-    String[] RESOLUTION_TAGS = {"button", "image", "submit"};
+    String EVENT_ATTR = "event";
+    String SRC_ATTR = "src";
+    String IMAGE_TAG = "image";
+    String[] RESOLUTION_TAGS = {"button", IMAGE_TAG, "submit"};
     String[] INPUT_TAGS = {"checkbox", "hidden", "password", "radio", "select", "text", "textarea"};
 
     //facet configuration
@@ -130,4 +132,5 @@ public interface StripesConstants {
     LibraryInfo[] STRIPES_LIBRARY_INFO = {MavenLibraryUtil.createMavenJarInfo("stripes", "1.4.3", "net.sourceforge.stripes.action.ActionBean"),
             MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.0", "org.apache.commons.logging.Log"),
             MavenLibraryUtil.createMavenJarInfo("cos", "1.3.1", "com.oreilly.servlet.multipart.FilePart")};
+
 }

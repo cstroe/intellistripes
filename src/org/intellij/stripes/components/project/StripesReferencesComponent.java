@@ -128,7 +128,7 @@ public class StripesReferencesComponent implements ProjectComponent {
                 StripesConstants.NAME_ATTR, StripesConstants.RESOLUTION_TAGS);
 //all stripes special tags with event parameter add Reference Provider for Event(Resolution Method)
         registerTags(new EventAttrResolutionMethodsReferenceProvider(), STRIPES_NAMESPACE_FILTER,
-                StripesConstants.EVENT, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
+                StripesConstants.EVENT_ATTR, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
 
 //layout-render
         registerTags(new WebPathReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_RENDER_TAG);
@@ -136,7 +136,8 @@ public class StripesReferencesComponent implements ProjectComponent {
         registerTags(new LayoutComponentReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_COMPONENT_TAG);
 //css
         registerTags(new CssInHtmlClassOrIdReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.CLASS_ATTRIBUTE, StripesConstants.CLASS_TAGS);
-
+//src on stripes:image
+        registerTags(new WebPathReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.SRC_ATTR, StripesConstants.IMAGE_TAG);        
         JavaClassReferenceProvider provider = new JavaClassReferenceProvider();
         provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{"java.lang.Enum"});
         registerTags(provider, STRIPES_NAMESPACE_FILTER, "enum", "options-enumeration");
