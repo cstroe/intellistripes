@@ -5,10 +5,10 @@
 
 ==Intentions/Inspections==
 
-  * {{{ActionBean}}} with more than one Resolution method not define {{{@DefaultHandler}}}
-  * {{{ActionBean}}} with more than one {{{@DefaultHandler}}}
-  * {{{ActionBean}}} with only one Resolution Method define {{{@DefaultHandler}}}
-  * Duplicated definition on {{{@HandlesEvent}}}
+  * ~~{{{ActionBean}}} with more than one Resolution method not define {{{@DefaultHandler}}}~~
+  * ~~{{{ActionBean}}} with more than one {{{@DefaultHandler}}}~~
+  * ~~{{{ActionBean}}} with only one Resolution Method define {{{@DefaultHandler}}}~~
+  * ~~Duplicated definition on {{{@HandlesEvent}}}~~
   * ~~{{{@SpringBean}}} Annotated method start with "set" preffix~~
   * ~~{{{@Validate}}} annotation having field attribute when not inside {{{@ValidateNestedProperties}}}~~
   * ~~{{{@Validate}}}, {{{@DefaultHandler}}}, {{{@HandlesEvent}}} annotations applied to invalid class member~~
@@ -22,6 +22,7 @@
   * ~~Enums in stripes:options-enumeration tag~~
   * ~~CSS language injection on all stripes:tags in style attribute when is defined~~  
   * ~~JS language injection on all stripes:tags in onXXX attribute~~  
+  * ~~Path auto-complete/resolve in src attribute of stripes:image tag~~
 
 ==Editor==
 
