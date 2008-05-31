@@ -1,0 +1,11 @@
+This inspection indicates incorrect work with methods returning Resolution.
+Several cases can cause trigger of warning:
+
+1. Action bean class declares several Resolution methods without any @DefaultHandler annotation.
+(Tip: annotate one of method with @DefaultHandler)
+2. Action bean class declares several Resolution methods and few of them are annotated with @DefaultHandler.
+(Tip: remove one of @DefaultHandler)
+3. Action bean has one Resolution method and it's annotated with @DefaultHandler.
+(Tip: remove @DefaultHandler annotation)
+4. Action bean has several Resolution methods annotated with @HandlesEvent with the same value.
+(Tip: remove one of @HandlesEvent or rename value of annotation)
