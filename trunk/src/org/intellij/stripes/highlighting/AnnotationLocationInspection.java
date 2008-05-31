@@ -32,19 +32,19 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
     @Nls
     @NotNull
     public String getGroupDisplayName() {
-        return "Stripes Inspection";
+        return StripesUtil.message("inspection.groupDisplayName");
     }
 
     @Nls
     @NotNull
     public String getDisplayName() {
-        return "Annotation Locations";
+        return StripesUtil.message("inspection.annotationLocations");
     }
 
     @NonNls
     @NotNull
     public String getShortName() {
-        return "StripesInspections";
+        return StripesUtil.message("inspection.annotationLocations.shortName");
     }
 
     public boolean isEnabledByDefault() {
@@ -54,7 +54,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
 
     @NotNull
     public HighlightDisplayLevel getDefaultLevel() {
-        return HighlightDisplayLevel.DO_NOT_SHOW;
+        return HighlightDisplayLevel.WARNING;
     }
 
     @NotNull
@@ -66,7 +66,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
             public void visitAnnotation(PsiAnnotation annotation) {
                 if (StripesConstants.VALIDATE_ANNOTATION.equals(annotation.getQualifiedName())) {
                     if (annotation.getParameterList().getAttributes().length == 0) {
-                        holder.registerProblem(annotation, "No validation attributes provided", ProblemHighlightType.J2EE_PROBLEM);
+                        holder.registerProblem(annotation, StripesUtil.message("inspection.noAttributes"), ProblemHighlightType.J2EE_PROBLEM);
                     }
 
                     PsiAnnotation parent = PsiTreeUtil.getParentOfType(annotation, PsiAnnotation.class, true, PsiMethod.class);
@@ -75,14 +75,14 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                     if (null != parent) {
                         if (StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION.equals(parent.getQualifiedName())) {
                             if (null == value) {
-                                holder.registerProblem(annotation, "Missing field attribute");
+                                holder.registerProblem(annotation, StripesUtil.message("inspection.noFieldAttribute"));
                             }
                             return;
                         }
                     }
 // no @ValidateNestedProperties at top level, so field attribute doesn't make sense
                     if (null != value) {
-                        holder.registerProblem(value.getParent(), "Makes sense only within @ValidateNestedProperties",
+                        holder.registerProblem(value.getParent(), StripesUtil.message("inspection.validWithingNested"),
                                 ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveElementAction(value.getParent()));
                     }
 
@@ -92,7 +92,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                             || p instanceof PsiField) {
                         return;
                     }
-                    holder.registerProblem(annotation, "Applied to wrong member", ProblemHighlightType.GENERIC_ERROR_OR_WARNING, p instanceof PsiModifierListOwner
+                    holder.registerProblem(annotation, StripesUtil.message("inspection.wrongMember"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, p instanceof PsiModifierListOwner
                             ? new LocalQuickFix[] {new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) p)}
                             : LocalQuickFix.EMPTY_ARRAY);
                 } else if (StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION.equals(annotation.getQualifiedName())) {
@@ -101,7 +101,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                             || p instanceof PsiField) {
                         return;
                     }
-                    holder.registerProblem(annotation, "Applied to wrong member", ProblemHighlightType.GENERIC_ERROR_OR_WARNING, p instanceof PsiModifierListOwner
+                    holder.registerProblem(annotation, StripesUtil.message("inspection.wrongMember"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, p instanceof PsiModifierListOwner
                             ? new LocalQuickFix[] {new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) p)}
                             : LocalQuickFix.EMPTY_ARRAY);
                 } else if (StripesConstants.HANDLES_EVENT_ANNOTATION.equals(annotation.getQualifiedName())
@@ -110,7 +110,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                     if (m instanceof PsiMethod && ((PsiMethod) m).getReturnType().equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS)) {
                         return;
                     }
-                    holder.registerProblem(annotation, "Applied to non Resolution method", m instanceof PsiModifierListOwner
+                    holder.registerProblem(annotation, StripesUtil.message("inspection.appliedToNonResolution"), m instanceof PsiModifierListOwner
                             ? new LocalQuickFix[] {new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) m)}
                             : LocalQuickFix.EMPTY_ARRAY);
                 } else if (StripesConstants.VALIDATION_METHOD_ANNOTATION.equals(annotation.getQualifiedName())) {
@@ -122,13 +122,13 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                             return;
                         }
                     }
-                    holder.registerProblem(annotation, "Applied to wrong member", m instanceof PsiModifierListOwner
+                    holder.registerProblem(annotation, StripesUtil.message("inspection.wrongMember"), m instanceof PsiModifierListOwner
                             ? new LocalQuickFix[] {new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) m)}
                             : LocalQuickFix.EMPTY_ARRAY);
                 } else if (StripesConstants.SPRING_BEAN_ANNOTATION.equals(annotation.getQualifiedName())) {
                     PsiElement m = annotation.getParent().getParent();
                     if (m instanceof PsiMethod && !StripesUtil.isActionBeanPropertySetter((PsiMethod)m, true)) {
-                        holder.registerProblem(annotation, "Applied to public setter", new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner)m));
+                        holder.registerProblem(annotation, StripesUtil.message("inspection.appliedToPubSetter"), new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner)m));
                     }
                 }
             }

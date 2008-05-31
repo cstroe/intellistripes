@@ -39,6 +39,8 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.ResourceBundle;
+import java.text.MessageFormat;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 02:04:03 AM
@@ -215,5 +217,15 @@ public final class StripesUtil {
         return method.hasModifierProperty(PsiModifier.PUBLIC)
                 && !StripesUtil.isSubclass(StripesConstants.ACTION_BEAN_CONTEXT, propertyClass)
                 && !StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass);
+    }
+
+    private static ResourceBundle stripesBundle = ResourceBundle.getBundle("resources.Stripes");
+
+    public static String message(String template) {
+        return stripesBundle.getString(template);
+    }
+
+    public static String message(String template, Object... params) {
+        return MessageFormat.format(stripesBundle.getString(template), params);
     }
 }

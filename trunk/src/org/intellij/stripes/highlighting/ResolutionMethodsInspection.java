@@ -18,37 +18,41 @@
 package org.intellij.stripes.highlighting;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInspection.InspectionManager;
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.*;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ResolutionMethodsInspection extends LocalInspectionTool {
+
     @Nls
     @NotNull
     public String getGroupDisplayName() {
-        return "Stripes Inspection";
+        return StripesUtil.message("inspection.groupDisplayName");
     }
 
     @Nls
     @NotNull
     public String getDisplayName() {
-        return "Resolution Methods";
+        return StripesUtil.message("inspection.resolutionMethods");
     }
 
     @NonNls
     @NotNull
     public String getShortName() {
-        return "StripesInspections";
+        return StripesUtil.message("inspection.resolutionMethods.shortName");
     }
 
     public boolean isEnabledByDefault() {
@@ -58,20 +62,56 @@ public class ResolutionMethodsInspection extends LocalInspectionTool {
 
     @NotNull
     public HighlightDisplayLevel getDefaultLevel() {
-        return HighlightDisplayLevel.DO_NOT_SHOW;
+        return HighlightDisplayLevel.WARNING;
     }
 
     @Nullable
     public ProblemDescriptor[] checkClass(@NotNull PsiClass aClass, @NotNull InspectionManager manager, boolean isOnTheFly) {
-        Map<String, PsiMethod> methods = StripesReferenceUtil.getResolutionMethods(aClass);
-        Integer defHndlCnt = 0;
-        Integer resHndlCnt = 0;
-        for (PsiMethod method : methods.values()) {
-            if (method.getModifierList().findAnnotation(StripesConstants.DEFAULT_HANDLER_ANNOTATION) != null) {
-                defHndlCnt++;
-            }
+        List<ProblemDescriptor> retval = new ArrayList<ProblemDescriptor>();
 
+        Map<String, Integer> handlesEventMap = new HashMap<String, Integer>();
+        Map<String, PsiMethod> resolutionMethods = StripesReferenceUtil.getResolutionMethods(aClass);
+        Integer defHndlCnt = 0;
+
+        for (PsiMethod method : resolutionMethods.values()) {
+            PsiModifierList mList = method.getModifierList();
+            if (mList.findAnnotation(StripesConstants.DEFAULT_HANDLER_ANNOTATION) != null) {
+                defHndlCnt++;
+            } else if (mList.findAnnotation(StripesConstants.HANDLES_EVENT_ANNOTATION) != null) {
+                String s = StripesReferenceUtil.resolveHandlesEventAnnotation(method);
+                Integer cnt = handlesEventMap.get(s);
+                handlesEventMap.put(s, cnt == null ? 1 : ++cnt);
+            }
         }
-        return super.checkClass(aClass, manager, isOnTheFly);
+
+        if (resolutionMethods.size() > 1 && defHndlCnt == 0) {
+            retval.add(
+                    manager.createProblemDescriptor(aClass, StripesUtil.message("inspection.noDefaultHandler"),
+                            LocalQuickFix.EMPTY_ARRAY, ProblemHighlightType.GENERIC_ERROR_OR_WARNING)
+            );
+        }
+
+        if (resolutionMethods.size() > 1 && defHndlCnt > 1) {
+            retval.add(
+                    manager.createProblemDescriptor(aClass, StripesUtil.message("inspection.moreThanOneDefaultHandler"),
+                            LocalQuickFix.EMPTY_ARRAY, ProblemHighlightType.GENERIC_ERROR_OR_WARNING)
+            );
+        }
+
+        if (resolutionMethods.size() == 1 && defHndlCnt == 1) {
+            retval.add(
+                    manager.createProblemDescriptor(aClass, StripesUtil.message("inspection.unnecessaryDefaultHandler"),
+                            LocalQuickFix.EMPTY_ARRAY, ProblemHighlightType.GENERIC_ERROR_OR_WARNING)
+            );
+        }
+
+        for (String method : handlesEventMap.keySet()) {
+            if (handlesEventMap.get(method) > 1) {
+                retval.add(manager.createProblemDescriptor(aClass, StripesUtil.message("inspection.duplicatedHandlesEvent", method),
+                        LocalQuickFix.EMPTY_ARRAY, ProblemHighlightType.GENERIC_ERROR_OR_WARNING));
+            }
+        }
+
+        return retval.toArray(new ProblemDescriptor[retval.size()]);
     }
 }
