@@ -1,0 +1,11 @@
+This inspections indicated incorrect placement of Stripes annotations within action bean class.
+Those cases are:
+
+1. @SpringBean annotation is applied to public setter.
+(Tip: rename method or make it private, or remove annotation to valid method)
+2. @Validate annotation has field attribute, but is located outside of @ValidateNestedProperties.
+(Tip: enclose annotation inside @ValidateNestedProperties or remove field attribute)
+3. @Validate annotation hasn't field attribute and located within@ValidateNestedProperties.
+(Tip: add field attribute to @ValidateNestedProperties)
+4. @Validate, @ValidateNestedProperties, @ValidationMethod, @DefaultHandler, @HandlesEvent annotations are applied to invalid class member.
+(Tip: remove annotations from member or annotate correct element according to Stripes docimentation)
