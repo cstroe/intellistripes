@@ -41,10 +41,18 @@ import java.util.Map;
 
 public class StripesELVarProvider extends JspElVariablesProvider {
 
+    private static String ACTION_BEAN = "actionBean";
+    private static String USE_ACTION_BEAN = "useActionBean";
+
     private static PsiElementFilter ACTION_BEAN_PROVIDER_FILTER = new StripesTagFilter() {
         protected boolean isDetailsAccepted(XmlTag tag) {
             return StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())
                     || StripesConstants.FORM_TAG.equals(tag.getLocalName());
+        }
+    };
+    public static PsiElementFilter BEANCLASS_ATTR_FILTER = new StripesTagFilter() {
+        protected boolean isDetailsAccepted(XmlTag tag) {
+            return tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR) != null;
         }
     };
 
@@ -52,26 +60,26 @@ public class StripesELVarProvider extends JspElVariablesProvider {
         if (!StripesUtil.isStripesPage(jspFile)) return true;
 
         Map<String, String> actionBeans = StripesUtil.collectTags(jspFile.getDocument().getRootTag(),
-                ACTION_BEAN_PROVIDER_FILTER, StripesReferenceUtil.BEANCLASS_ATTR_FILTER,
+                ACTION_BEAN_PROVIDER_FILTER, BEANCLASS_ATTR_FILTER,
                 new XmlTagContainer<Map<String, String>>(new Hashtable<String, String>()) {
                     public void add(XmlTag tag) {
                         if (StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())) {
                             if (tag.getAttributeValue(StripesConstants.ID_ATTR) == null && tag.getAttributeValue(StripesConstants.VAR_ATTR) == null) {
-                                container.put("useActionBean", tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
+                                container.put(USE_ACTION_BEAN, tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
                             } else if (tag.getAttributeValue(StripesConstants.ID_ATTR) != null) {
                                 container.put(tag.getAttributeValue(StripesConstants.ID_ATTR), tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
                             } else if (tag.getAttributeValue(StripesConstants.VAR_ATTR) != null) {
                                 container.put(tag.getAttributeValue(StripesConstants.VAR_ATTR), tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
                             }
                         } else if (StripesConstants.FORM_TAG.equals(tag.getLocalName())) {
-                            container.put("actionBean", tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
+                            container.put(ACTION_BEAN, tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
                         }
                     }
                 }).getContainer();
 
-        String clsName = actionBeans.remove("useActionBean");
+        String clsName = actionBeans.remove(USE_ACTION_BEAN);
         if (null != clsName) {
-            actionBeans.put("actionBean", clsName);
+            actionBeans.put(ACTION_BEAN, clsName);
         }
 
         for (String actionBeanName : actionBeans.keySet()) {

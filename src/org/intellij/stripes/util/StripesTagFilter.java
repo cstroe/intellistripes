@@ -21,6 +21,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.xml.XmlTag;
 
+/**
+ * Base class for filters that can process stripes tags.
+ *
+ * <br>Implements filtering by taglib declaration uri.
+ * Checks if taglib uri starts with valid prefix.<br>
+ *
+ * To implement custom filtering one need overriding {@link #isDetailsAccepted(com.intellij.psi.xml.XmlTag)} method.
+ */
 public abstract class StripesTagFilter implements PsiElementFilter {
     public boolean isAccepted(PsiElement element) {
         return element instanceof XmlTag
@@ -28,5 +36,11 @@ public abstract class StripesTagFilter implements PsiElementFilter {
                 && isDetailsAccepted((XmlTag) element);
     }
 
+    /**
+     * Implement this method to extend filter functionality.
+     *
+     * @param tag tag to be checked
+     * @return true if tag match conditions, false otherwise.
+     */
     protected abstract boolean isDetailsAccepted(XmlTag tag);
 }

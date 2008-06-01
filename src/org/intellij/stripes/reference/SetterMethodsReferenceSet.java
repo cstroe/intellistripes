@@ -59,7 +59,7 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
                 wEnd = i;
             }
 
-            if (i == (var.length() - 1)) {
+            if (i == (var.length() - 1) && wStart < wEnd) {
                 retval.add(createReference(new TextRange(offset + wStart, offset + wEnd + 1), index++, wEnd != i));
             }
         }
