@@ -37,7 +37,8 @@ public interface StripesConstants {
     Icon RESOLUTION_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/Resolution.png");
     Icon LAYOUT_COMPONENT_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/LayoutComponent.png");
     //Strings
-    //Class Name
+
+    //Class Names
     String STRIPES_SERVLET_CLASS = "net.sourceforge.stripes.controller.DispatcherServlet";
     String STRIPES_FILTER_CLASS = "net.sourceforge.stripes.controller.StripesFilter";
     String STRIPES_RESOLUTION_CLASS = "net.sourceforge.stripes.action.Resolution";
@@ -47,7 +48,11 @@ public interface StripesConstants {
     String ACTION_BEAN = "net.sourceforge.stripes.action.ActionBean";
     String FILE_BEAN = "net.sourceforge.stripes.action.FileBean";
     String ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
-    
+    String FORWARD_RESOLUTION = "net.sourceforge.stripes.action.ForwardResolution";
+    String REDIRECT_RESOLUTION = "net.sourceforge.stripes.action.RedirectResolution";
+    String VALIDATION_ERRORS = "net.sourceforge.stripes.validation.ValidationErrors";
+
+    //stripes annotations names
     String SPRING_BEAN_ANNOTATION = "net.sourceforge.stripes.integration.spring.SpringBean";
     String HANDLES_EVENT_ANNOTATION = "net.sourceforge.stripes.action.HandlesEvent";
     String DEFAULT_HANDLER_ANNOTATION = "net.sourceforge.stripes.action.DefaultHandler";
@@ -56,10 +61,7 @@ public interface StripesConstants {
     String VALIDATION_METHOD_ANNOTATION = "net.sourceforge.stripes.validation.ValidationMethod";
     String URL_BINDING_ANNOTATION = "net.sourceforge.stripes.action.UrlBinding";
 
-    String FORWARD_RESOLUTION = "net.sourceforge.stripes.action.ForwardResolution";
-    String REDIRECT_RESOLUTION = "net.sourceforge.stripes.action.RedirectResolution";
-    String VALIDATION_ERRORS = "net.sourceforge.stripes.validation.ValidationErrors";
-    //Others
+    //stripes configuration
     String STRIPES_SERVLET_NAME = "StripesDispatcher";
     String DEFAULT_STRIPES_MAPPING = "*.action";
     String STRIPES_FILTER_NAME = "StripesFilter";
@@ -68,14 +70,17 @@ public interface StripesConstants {
     String ACTION_RESOLVER_URL_FILTER = "ActionResolver.UrlFilters";
     String STRIPES_FILTER_MAPPING = "*.jsp";
     String REQUEST = "REQUEST";
+
+    //stripes taglibs
     String TAGLIB_PREFIX = "http://stripes.sourceforge.net/stripes";
     String STRIPES_TLD = "http://stripes.sourceforge.net/stripes.tld";
     String STRIPES_DYNAMIC_TLD = "http://stripes.sourceforge.net/stripes-dynattr.tld";
+
+    //stripes tags
     String[] STRIPES_TLDS = {STRIPES_DYNAMIC_TLD, STRIPES_TLD};
     String CLASS_ATTRIBUTE = "class";
     String[] CLASS_TAGS = {"button", "checkbox", "file", "form", "image", "label", "link", "hidden", "option", "options-collection",
             "options-enumeration", "password", "radio", "reset", "select", "submit", "text", "textarea"};
-
     String FORM_TAG = "form";
     String FILE_TAG = "file";
     String URL_TAG = "url";
@@ -87,24 +92,23 @@ public interface StripesConstants {
     String LAYOUT_RENDER_TAG = "layout-render";
     String LAYOUT_COMPONENT_TAG = "layout-component";
     String LAYOUT_DEFINITION_TAG = "layout-definition";
+    String IMAGE_TAG = "image";
 
+    String[] ACTION_BEAN_TAGS = {FORM_TAG, ERRORS_TAG, LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
+    String[] ACTION_BEAN_TAGS_WITH_EVENT = {LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
+    String[] PARAMS_TAGS = {PARAM_TAG, LINK_PARAM_TAG};
+    String[] RESOLUTION_TAGS = {"button", IMAGE_TAG, "submit"};
+    String[] INPUT_TAGS = {"checkbox", "hidden", "password", "radio", "select", "text", "textarea"};
+
+    //stripes tag attributes
     String BEANCLASS_ATTR = "beanclass";
     String ID_ATTR = "id";
     String VAR_ATTR = "var";
     String FIELD_ATTR = "field";
     String NAME_ATTR = "name";
     String URI_ATTR = "uri";
-
-
-    String[] ACTION_BEAN_TAGS = {FORM_TAG, ERRORS_TAG, LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
-    String[] ACTION_BEAN_TAGS_WITH_EVENT = {LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
-    String[] PARAMS_TAGS = {PARAM_TAG, LINK_PARAM_TAG};
-
     String EVENT_ATTR = "event";
     String SRC_ATTR = "src";
-    String IMAGE_TAG = "image";
-    String[] RESOLUTION_TAGS = {"button", IMAGE_TAG, "submit"};
-    String[] INPUT_TAGS = {"checkbox", "hidden", "password", "radio", "select", "text", "textarea"};
 
     //facet configuration
     String SPRING_INTEGRATION = "springIntegration";
@@ -114,10 +118,11 @@ public interface StripesConstants {
     String URL_FILTER = "urlFilter";
     String FILTER_VALUE = "filterValue";
     String CHANGE_ICONS = "changeIcons";
-    //Integers
 
+    //Integers
     Integer LOAD_ON_STARTUP = 1;
 
+    //file templates
     String STRIPES_TEMPLATES = "Stripes Templates";
     String COMMONS_LOGGING_PROPERTIES = "commons-logging.properties";
     String STRIPES_RESOURCES_PROPERTIES = "StripesResources.properties";

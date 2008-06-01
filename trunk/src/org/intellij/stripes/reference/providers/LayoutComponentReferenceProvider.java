@@ -17,7 +17,6 @@
 
 package org.intellij.stripes.reference.providers;
 
-import com.intellij.openapi.paths.PsiDynaReference;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.jsp.JspFile;
@@ -55,11 +54,9 @@ public class LayoutComponentReferenceProvider extends AbstractReferenceProvider 
         if (layoutRenderTag != null) {
             PsiReference[] refs = layoutRenderTag.getAttribute("name").getValueElement().getReferences();
             for (PsiReference ref : refs) {
-                if (ref instanceof PsiDynaReference) {
-                    PsiElement el = ref.resolve();
-                    if (el instanceof JspFile) {
-                        return StripesUtil.isStripesPage((JspFile) el) ? (JspFile) el : null;
-                    }
+                PsiElement el = ref.resolve();
+                if (el instanceof JspFile) {
+                    return StripesUtil.isStripesPage((JspFile) el) ? (JspFile) el : null;
                 }
             }
         }

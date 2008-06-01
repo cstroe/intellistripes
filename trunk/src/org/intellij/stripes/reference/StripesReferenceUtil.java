@@ -28,6 +28,7 @@ import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.xml.XmlTag;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesTagFilter;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,17 +46,9 @@ public final class StripesReferenceUtil {
 
     private static List<String> EMPTY_STRING_LIST = new ArrayList<String>();
 
-    public static PsiElementFilter NAME_ATTR_FILTER = new PsiElementFilter() {
-        public boolean isAccepted(PsiElement element) {
-            return element instanceof XmlTag
-                    && ((XmlTag) element).getAttributeValue(StripesConstants.NAME_ATTR) != null;
-        }
-    };
-
-    public static PsiElementFilter BEANCLASS_ATTR_FILTER = new PsiElementFilter() {
-        public boolean isAccepted(PsiElement element) {
-            return element instanceof XmlTag
-                    && ((XmlTag) element).getAttributeValue(StripesConstants.BEANCLASS_ATTR) != null;
+    public static PsiElementFilter NAME_ATTR_FILTER = new StripesTagFilter() {
+        protected boolean isDetailsAccepted(XmlTag tag) {
+            return tag.getAttributeValue(StripesConstants.NAME_ATTR) != null;
         }
     };
 

@@ -19,6 +19,13 @@ package org.intellij.stripes.util;
 
 import com.intellij.psi.xml.XmlTag;
 
+/**
+ * Container for various containers :).
+ *
+ * Main purpose is hiding certain implementation of backend storage.
+ * Customer can create instances of container with various backends and then pass them to same processing algorithm for uniform processing.
+ *
+ */
 public abstract class XmlTagContainer<T> {
     protected T container;
 
@@ -30,5 +37,9 @@ public abstract class XmlTagContainer<T> {
         return container;
     }
 
+    /**
+     * Override this method to implement container-dependent storage.
+     * @param tag tag to be stored in internal container.
+     */
     public abstract void add(XmlTag tag);
 }

@@ -43,17 +43,9 @@ import java.util.ResourceBundle;
 import java.text.MessageFormat;
 
 /**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 02:04:03 AM
+ * Various utility methods collection.
  */
 public final class StripesUtil {
-
-    public static PsiElementFilter ALL_FILTER = new PsiElementFilter() {
-        public boolean isAccepted(PsiElement element) {
-            return true;
-        }
-    };
-
-// -------------------------- STATIC METHODS --------------------------
 
     public static <T> T[] makeArray(T... parameters) {
         return parameters;
@@ -63,7 +55,7 @@ public final class StripesUtil {
      * Is Stripes Facet Configured
      *
      * @param module Module
-     * @return true or false (D'oh)
+     * @return true or false
      */
     public static boolean isStripesFacetConfigured(Module module) {
         if (module == null) {
@@ -137,6 +129,15 @@ public final class StripesUtil {
 
     private static Map<String, PsiClass> PSI_CLASS_MAP = new Hashtable<String, PsiClass>();
 
+    /**
+     * Finds instance of {@link PsiClass} corresponding to string, passed as parameter.
+     *
+     * Method uses internal caching for speeding search up.
+     *
+     * @param className fully qualified class name to search for
+     * @param project current project
+     * @return instance of {@link PsiClass} if search succesfull, null otherwise
+     */
     public static PsiClass findPsiClassByName(String className, Project project) {
         if (className == null) return null;
 
@@ -148,6 +149,13 @@ public final class StripesUtil {
         return retval;
     }
 
+    /**
+     * Checks if class presented by {@link PsiClass} instance of another class.
+     *
+     * @param baseClassName fully qualified name of parent class
+     * @param cls {@links PsiClass} that will be checked for parent
+     * @return true of subclass, false otherwise
+     */
     public static Boolean isSubclass(String baseClassName, PsiClass cls) {
         if (cls == null) return false;
         PsiClass baseClass = findPsiClassByName(baseClassName, cls.getProject());
@@ -219,6 +227,8 @@ public final class StripesUtil {
                 && !StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass);
     }
 
+//  Methods for workign with i18n and formatting.
+    
     private static ResourceBundle stripesBundle = ResourceBundle.getBundle("resources.Stripes");
 
     public static String message(String template) {
