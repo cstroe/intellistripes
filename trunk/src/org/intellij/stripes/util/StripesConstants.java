@@ -36,9 +36,8 @@ public interface StripesConstants {
     Icon FIELD_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/Field.png");
     Icon RESOLUTION_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/Resolution.png");
     Icon LAYOUT_COMPONENT_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/LayoutComponent.png");
-    //Strings
 
-    //Class Names
+    //stripes class names
     String STRIPES_SERVLET_CLASS = "net.sourceforge.stripes.controller.DispatcherServlet";
     String STRIPES_FILTER_CLASS = "net.sourceforge.stripes.controller.StripesFilter";
     String STRIPES_RESOLUTION_CLASS = "net.sourceforge.stripes.action.Resolution";
@@ -75,12 +74,9 @@ public interface StripesConstants {
     String TAGLIB_PREFIX = "http://stripes.sourceforge.net/stripes";
     String STRIPES_TLD = "http://stripes.sourceforge.net/stripes.tld";
     String STRIPES_DYNAMIC_TLD = "http://stripes.sourceforge.net/stripes-dynattr.tld";
+    String[] STRIPES_TLDS = {STRIPES_DYNAMIC_TLD, STRIPES_TLD};
 
     //stripes tags
-    String[] STRIPES_TLDS = {STRIPES_DYNAMIC_TLD, STRIPES_TLD};
-    String CLASS_ATTRIBUTE = "class";
-    String[] CLASS_TAGS = {"button", "checkbox", "file", "form", "image", "label", "link", "hidden", "option", "options-collection",
-            "options-enumeration", "password", "radio", "reset", "select", "submit", "text", "textarea"};
     String FORM_TAG = "form";
     String FILE_TAG = "file";
     String URL_TAG = "url";
@@ -93,14 +89,32 @@ public interface StripesConstants {
     String LAYOUT_COMPONENT_TAG = "layout-component";
     String LAYOUT_DEFINITION_TAG = "layout-definition";
     String IMAGE_TAG = "image";
+    String BUTTON_TAG = "button";
+    String SUBMIT_TAG = "submit";
+    String PASSWORD_TAG = "password";
+    String HIDDEN_TAG = "hidden";
+    String RADIO_TAG = "radio";
+    String CHECKBOX_TAG = "checkbox";
+    String TEXT_TAG = "text";
+    String TEXTAREA_TAG = "textarea";
+    String SELECT_TAG = "select";
+    String LABEL_TAG = "label";
+    String RESET_TAG = "reset";
+    String OPTION_TAG = "option";
+    String OPTIONS_ENUMERATION_TAG = "options-enumeration";
+    String OPTIONS_COLLECTION_TAG = "options-collection";
 
+    String[] CLASS_TAGS = {BUTTON_TAG, CHECKBOX_TAG, FILE_TAG, FORM_TAG, IMAGE_TAG, LABEL_TAG, LINK_TAG, HIDDEN_TAG, OPTION_TAG, OPTIONS_COLLECTION_TAG,
+            OPTIONS_ENUMERATION_TAG, PASSWORD_TAG, RADIO_TAG, RESET_TAG, SELECT_TAG, SUBMIT_TAG, TEXT_TAG, TEXTAREA_TAG};
     String[] ACTION_BEAN_TAGS = {FORM_TAG, ERRORS_TAG, LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
     String[] ACTION_BEAN_TAGS_WITH_EVENT = {LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
     String[] PARAMS_TAGS = {PARAM_TAG, LINK_PARAM_TAG};
-    String[] RESOLUTION_TAGS = {"button", IMAGE_TAG, "submit"};
-    String[] INPUT_TAGS = {"checkbox", "hidden", "password", "radio", "select", "text", "textarea"};
+    String[] RESOLUTION_TAGS = {BUTTON_TAG, IMAGE_TAG, SUBMIT_TAG};
+    String[] INPUT_TAGS = {CHECKBOX_TAG, HIDDEN_TAG, PASSWORD_TAG, RADIO_TAG, SELECT_TAG, TEXT_TAG, TEXTAREA_TAG};
 
     //stripes tag attributes
+    String ENUM_ATTR = "enum";
+    String CLASS_ATTR = "class";
     String BEANCLASS_ATTR = "beanclass";
     String ID_ATTR = "id";
     String VAR_ATTR = "var";

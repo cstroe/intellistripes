@@ -73,7 +73,8 @@ public class ActionBeanUsageAnnotator implements Annotator {
             ReferencesSearch.search(psiElement).forEach(proc);
 
             NavigationGutterIconBuilder.create(StripesConstants.STRIPES_ICON)
-                .setTargets(proc.getTags()).setTooltipText("ActionBean usages").setPopupTitle("ActionBean usages")
+                .setTargets(proc.getTags()).setTooltipText(StripesUtil.message("annotator.actionBeanUsages"))
+                .setPopupTitle(StripesUtil.message("annotator.actionBeanUsages"))
                 .setAlignment(GutterIconRenderer.Alignment.LEFT)
                 .setCellRenderer(new PsiElementListCellRenderer<XmlTag>() {
                     public String getElementText(XmlTag psiElement) {
@@ -91,8 +92,7 @@ public class ActionBeanUsageAnnotator implements Annotator {
                     protected Icon getIcon(PsiElement psiElement) {
                         return null;
                     }
-                })
-                .install(holder, ((PsiClass)psiElement).getNameIdentifier());
+                }).install(holder, ((PsiClass)psiElement).getNameIdentifier());
         }
     }
 }

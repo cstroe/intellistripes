@@ -82,7 +82,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                     }
 // no @ValidateNestedProperties at top level, so field attribute doesn't make sense
                     if (null != value) {
-                        holder.registerProblem(value.getParent(), StripesUtil.message("inspection.validWithingNested"),
+                        holder.registerProblem(value.getParent(), StripesUtil.message("inspection.validWithinNested"),
                                 ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveElementAction(value.getParent()));
                     }
 
