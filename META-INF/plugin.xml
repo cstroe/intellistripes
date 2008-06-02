@@ -30,11 +30,12 @@
                 http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes
                 </a>
         ]]>
-    </change-notes>
+    </change-notes>                                                         
     <idea-version since-build="7757" until-build="7999"/>
     <depends>com.intellij.javaee</depends>
     <depends>com.intellij.spring</depends>
     <depends>JavaScript</depends>
+    <depends>IntelliLang</depends>
 
     <extensions xmlns="com.intellij">
         <fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>

@@ -55,6 +55,7 @@ import org.intellij.stripes.reference.providers.*;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesMultiHostInjector;
 import org.intellij.stripes.util.StripesUtil;
+import org.intellij.lang.regexp.RegExpLanguage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -78,13 +79,18 @@ public class StripesReferencesComponent implements ProjectComponent {
         InjectedLanguageManager.getInstance(project).registerMultiHostInjector(new MultiHostInjector() {
             public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
                 PsiElement ann = context.getParent().getParent().getParent();
-                if (ann instanceof PsiAnnotation
-                        && StripesConstants.VALIDATE_ANNOTATION.equals(((PsiAnnotation) ann).getNameReferenceElement().getCanonicalText())
-                        && "expression".equals(((PsiNameValuePair) context.getParent()).getName())) {
-                    final TextRange range = new TextRange(1, context.getTextLength() - 1);
-                    registrar.startInjecting(ELLanguage.INSTANCE)
+                if (ann instanceof PsiAnnotation && StripesConstants.VALIDATE_ANNOTATION.equals(((PsiAnnotation) ann).getQualifiedName())) {
+                    if (StripesConstants.EXPRESSION_ATTR.equals(((PsiNameValuePair) context.getParent()).getName())) {
+                        final TextRange range = new TextRange(1, context.getTextLength() - 1);
+                        registrar.startInjecting(ELLanguage.INSTANCE)
                             .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
                             .doneInjecting();
+                    } else if (StripesConstants.MASK_ATTR.equals(((PsiNameValuePair) context.getParent()).getName())) {
+                        final TextRange range = new TextRange(1, context.getTextLength() - 1);
+                        registrar.startInjecting(RegExpLanguage.INSTANCE)
+                            .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
+                            .doneInjecting();
+                    }
                 }
             }
 

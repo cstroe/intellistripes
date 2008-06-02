@@ -60,6 +60,10 @@ public interface StripesConstants {
     String VALIDATION_METHOD_ANNOTATION = "net.sourceforge.stripes.validation.ValidationMethod";
     String URL_BINDING_ANNOTATION = "net.sourceforge.stripes.action.UrlBinding";
 
+    //stripes annotation attribute names
+    String EXPRESSION_ATTR = "expression";
+    String MASK_ATTR = "mask";
+
     //stripes configuration
     String STRIPES_SERVLET_NAME = "StripesDispatcher";
     String DEFAULT_STRIPES_MAPPING = "*.action";
