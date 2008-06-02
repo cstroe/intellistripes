@@ -28,4 +28,4 @@
 
   * ~~Gutters for {{{ActionBean}}} classes allowing navigation to form, link, useActionBean or URL that use certain {{{ActionBean}}}~~
   * ~~Register {{{@UrlBinding}}} path on starup so they can be used from ordinary HTML~~
-  * Add regexp validation into mask attribute of {{{@Validate}}} annotation
+  * ~~Add regexp validation into mask attribute of {{{@Validate}}} annotation~~
