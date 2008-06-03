@@ -84,11 +84,17 @@ public class ResolutionMethodsInspection extends LocalInspectionTool {
 
             ann = mList.findAnnotation(StripesConstants.HANDLES_EVENT_ANNOTATION);
             if (ann != null) {
-                String s = StripesReferenceUtil.resolveHandlesEventAnnotation(method);
-                List<PsiAnnotation> methods = handlesEvents.get(s);
+                String eventName = StripesReferenceUtil.resolveHandlesEventAnnotation(method);
+
+                if (method.getName().equals(eventName)) {
+                    retval.add(manager.createProblemDescriptor(ann, StripesUtil.message("inspection.duplicatesMethodName"),
+                        new RemoveAnnotationQuickFix(ann, method), ProblemHighlightType.GENERIC_ERROR_OR_WARNING));
+                }
+
+                List<PsiAnnotation> methods = handlesEvents.get(eventName);
                 if (null == methods) methods = new ArrayList<PsiAnnotation>();
                 methods.add(ann);
-                handlesEvents.put(s, methods);
+                handlesEvents.put(eventName, methods);
             }
         }
 
@@ -126,7 +132,7 @@ public class ResolutionMethodsInspection extends LocalInspectionTool {
                 }
             }
         }
-        
+
         if (fixes.size() > 0) {
             retval.add(manager.createProblemDescriptor(aClass.getNameIdentifier(), StripesUtil.message("inspection.duplicatedHandlesEvent"),
                     fixes.toArray(new LocalQuickFix[fixes.size()]), ProblemHighlightType.GENERIC_ERROR_OR_WARNING));
