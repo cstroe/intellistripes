@@ -72,7 +72,7 @@ public class ActionBeanUsageAnnotator implements Annotator {
             XmlTagProcessor proc = new XmlTagProcessor();
             ReferencesSearch.search(psiElement).forEach(proc);
 
-            NavigationGutterIconBuilder.create(StripesConstants.STRIPES_ICON)
+            NavigationGutterIconBuilder.create(StripesConstants.ACTION_BEAN_GUTTER_ICON)
                 .setTargets(proc.getTags()).setTooltipText(StripesUtil.message("annotator.actionBeanUsages"))
                 .setPopupTitle(StripesUtil.message("annotator.actionBeanUsages"))
                 .setAlignment(GutterIconRenderer.Alignment.LEFT)
