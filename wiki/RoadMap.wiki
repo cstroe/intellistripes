@@ -12,7 +12,7 @@
   * ~~{{{@SpringBean}}} Annotated method start with "set" preffix~~
   * ~~{{{@Validate}}} annotation having field attribute when not inside {{{@ValidateNestedProperties}}}~~
   * ~~{{{@Validate}}}, {{{@DefaultHandler}}}, {{{@HandlesEvent}}} annotations applied to invalid class member~~
-  * {{{@HandlesEvent}}} declared with same name as Resolution method
+  * ~~{{{@HandlesEvent}}} declared with same name as Resolution method~~
 
 ==Auto complete==
 
