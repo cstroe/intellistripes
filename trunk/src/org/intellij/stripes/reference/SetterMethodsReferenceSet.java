@@ -59,8 +59,8 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
                 wEnd = i;
             }
 
-            if (i == (var.length() - 1) && wStart < wEnd) {
-                retval.add(createReference(new TextRange(offset + wStart, offset + wEnd + 1), index++, wEnd != i));
+            if (i == (var.length() - 1)) {
+                retval.add(createReference(new TextRange(offset + wStart, offset + (wStart < wEnd ? wEnd + 1 : i + 1)), index++, wEnd != i));
             }
         }
         return retval;
