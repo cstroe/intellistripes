@@ -75,7 +75,7 @@ _Deleted from repository_
     * name attribute on (JSP) 
     * layout-render
   * Remove Icon for !ActionBean Abstract Classes
-  * Add Configuration Option to Configure !ActionResolver.UrlFilters
+  * Add Configuration Option to Configure !ActionResolver.!UrlFilters
   * Fixed Auto Completion for Setter methods inherited from Super Class
 
 ===Version 0.4.4.364 (2007-11-08)===
@@ -93,7 +93,7 @@ _Deleted from repository_
   * Add Option to Change Icons on Facet Configuration (*Thanks to Evgeny Shepelyuk for the idea*)
 
 ===Version 0.6.2.364 (2007-11-18)===
-  * Bug Fix Not-Deterministic Assertion Failed Related with New ActionBean Action
+  * Bug Fix Not-Deterministic Assertion Failed Related with New !ActionBean Action
 
 ===Version 0.7.1.576 (2007-11-29)===
   * Stripes Libraries Configured through Facet
