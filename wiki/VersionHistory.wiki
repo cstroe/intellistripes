@@ -91,3 +91,47 @@ _Deleted from repository_
     * name attribute on (layout-component name defined inside layout-definition) 
     * layout-component
   * Add Option to Change Icons on Facet Configuration (*Thanks to Evgeny Shepelyuk for the idea*)
+
+===Version 0.6.2.364 (2007-11-18)===
+  * Bug Fix Not-Deterministic Assertion Failed Related with New ActionBean Action
+
+===Version 0.7.1.576 (2007-11-29)===
+  * Stripes Libraries Configured through Facet
+  * Correct misspelling in "Plugin Configuration" Tab (*Thanks to Evgeny Shepelyuk for the feed back*)
+
+===Version 0.7.5.584 (2007-12-08)===
+  * Auto Completion in Stripes JSP tags 
+    * name attribute on (setter method) 
+    * param
+
+===Version 0.7.6.584 (2007-12-11)===
+  * Bug Fix Not-Deterministic Exception when editing ANT files (*Thanks to David Castañeda for the feed back*)
+
+===Version 0.7.7.626 (2008-01-08)===
+  * Auto Completion in Stripes JSP tags 
+    * class attribute on (CSS) 
+    * button
+    * checkbox
+    * file
+    * form
+    * image
+    * label
+    * link
+    * hidden
+    * option
+    * options-collection
+    * options-enumeration
+    * password
+    * radio
+    * reset
+    * select
+    * submit
+    * text
+    * textarea
+
+===Version 1.0.beta.757 (2008-01-08)===
+  * CSS and JavaScript support for all tags
+  * @HandlesEvent support
+  * AutoCompletion on new ForwardResolution(FooActionBean.class,"event") (and RedirectResolution too) on the event parameter
+  * Nested Properties support
+  * Bug-Fix on stripes:layout-component
