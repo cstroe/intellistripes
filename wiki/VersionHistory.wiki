@@ -131,7 +131,7 @@ _Deleted from repository_
 
 ===Version 1.0.beta.757 (2008-01-08)===
   * CSS and JavaScript support for all tags
-  * @HandlesEvent support
-  * AutoCompletion on new ForwardResolution(FooActionBean.class,"event") (and RedirectResolution too) on the event parameter
+  * {{{@HandlesEvent}}} support
+  * AutoCompletion on {{{new ForwardResolution(FooActionBean.class,"event")}}} (and {{{RedirectResolution}}} too) on the event parameter
   * Nested Properties support
   * Bug-Fix on stripes:layout-component
