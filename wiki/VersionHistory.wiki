@@ -69,3 +69,25 @@ _Deleted from repository_
  * Auto Completion in ActionBean Class on
   * @SpringBean Annotation (Only works when the module have a Spring Facet configured)
  * IntelliStripes code available on [http://intellistripes.googlecode.com]
+
+===Version 0.4.3.364 (2007-11-01)===
+  * Auto Completion in Stripes JSP tags 
+    * name attribute on (JSP) 
+    * layout-render
+  * Remove Icon for ActionBean Abstract Classes
+  * Add Configuration Option to Configure ActionReslver.UrlFiltersgo
+  * Fixed Auto Completion for Setter methods inherited from Super Class
+
+===Version 0.4.4.364 (2007-11-08)===
+  * Bug Fix NPE In Event (Resolution Methods) Auto Completion When the ActionBean Class have Explicit Constructors (*Thanks to Marijan J Milicevic for the feed back*)
+  * Fixed Auto Completion for Event (Resolution Methods) inherited from Super Class
+
+===Version 0.6.1.364 (2007-11-12)===
+  _Deleted From Repository_
+  * File Templates 
+  * ActionBean.java
+  * Add Action for create New ActionBean Class
+  * Auto Completion in Stripes JSP tags 
+    * name attribute on (layout-component name defined inside layout-definition) 
+    * layout-component
+  * Add Option to Change Icons on Facet Configuration (*Thanks to Evgeny Shepelyuk for the idea*)
