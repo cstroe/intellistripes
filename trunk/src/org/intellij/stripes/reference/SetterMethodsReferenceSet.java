@@ -84,7 +84,7 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
         return getElement() instanceof XmlAttributeValue;
     }
 
-    private static final class SetterReference extends PsiReferenceBase<PsiElement> {
+    public static final class SetterReference extends PsiReferenceBase<PsiElement> {
         final private SetterMethodsReferenceSet referenceSet;
         final private Integer index;
         final private Boolean hasBraces;
