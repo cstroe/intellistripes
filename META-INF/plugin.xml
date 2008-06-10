@@ -19,7 +19,7 @@
 <idea-plugin url="http://code.google.com/p/intellistripes/">
     <name>IntelliStripes</name>
     <description>Stripes even more easy!!!</description>
-    <version>1.0.RC1.577</version>
+    <version>1.0.RC1.757</version>
     <vendor email="mario.arias.c@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">
         Mario Arias and Evgeny Shepelyuk
@@ -42,7 +42,9 @@
 <br/>
 Recent Changes : <a href="http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes">
     http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes
-</a>
+</a> or
+<br/>
+<a href="http://code.google.com/p/intellistripes/wiki/VersionHistory">http://code.google.com/p/intellistripes/wiki/VersionHistory</a>
         ]]>
     </change-notes>                                                         
     <idea-version since-build="7757" until-build="7999"/>
