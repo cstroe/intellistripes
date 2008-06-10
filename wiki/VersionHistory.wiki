@@ -136,7 +136,7 @@ _Deleted from repository_
   * Nested Properties support
   * Bug-Fix on stripes:layout-component
 
-===Version 1.0.RC1.577 (yet unreleased)===
+===Version 1.0.RC1.757 (yet unreleased)===
   * Full support for indexed properties in Stripes tag attributes
   * Full support for nested properties in Stripes tag attributes
   * Functional test project
