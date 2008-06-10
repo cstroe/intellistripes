@@ -112,7 +112,7 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
                         || propertyType instanceof PsiArrayType
                         || StripesUtil.isSubclass(Map.class.getName(), propertyClass);
 
-                method = (hasBraces && !isIndexedType) || (!hasBraces && isIndexedType) ? null : method;
+                method = (hasBraces && !isIndexedType) ? null : method;
             }
             return method;
         }
