@@ -26,9 +26,23 @@
     </vendor>
     <change-notes>
         <![CDATA[
-            Recent Changes : <a href="http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes">
-                http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes
-                </a>
+            <strong>ATTENTION</strong>
+<p>
+    The next IntelliStripes version (1.0.final.577) will be the last with Stripes 1.4.3 support.
+    Only bugfixes will be released for this branch
+</p>
+<p>
+    We are focusing now on Stripes 1.5 support for the next mayor version
+</p>
+<p>
+    We recomended that change your actual Stripes 1.4.3 codebase and applications,
+    to the upcoming Stripes 1.5
+</p>
+<br/>
+<br/>
+Recent Changes : <a href="http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes">
+    http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes
+</a>
         ]]>
     </change-notes>                                                         
     <idea-version since-build="7757" until-build="7999"/>
