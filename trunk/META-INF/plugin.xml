@@ -16,13 +16,13 @@
   -->
 
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
-<idea-plugin url="http://code.google.com/p/intellistripes/">
+<idea-plugin url="http://code.google.com/p/intellistripes">
     <name>IntelliStripes</name>
     <description>Stripes even more easy!!!</description>
-    <version>1.0.RC1.757</version>
-    <vendor email="mario.arias.c@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
+    <version>1.0.RC1.860</version>
+    <vendor email="mario.arias.c@gmail.com, eshepelyuk@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">
-        Mario Arias and Evgeny Shepelyuk
+        Mario Arias, Evgeny Shepelyuk
     </vendor>
     <change-notes>
         <![CDATA[
@@ -40,14 +40,11 @@
 </p>
 <br/>
 <br/>
-Recent Changes : <a href="http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes">
-    http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes
-</a> or
-<br/>
-<a href="http://code.google.com/p/intellistripes/wiki/VersionHistory">http://code.google.com/p/intellistripes/wiki/VersionHistory</a>
+Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory">http://code.google.com/p/intellistripes/wiki/VersionHistory</a><br>or
+<br/><a href="http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes">http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes</a>
         ]]>
-    </change-notes>                                                         
-    <idea-version since-build="7757" until-build="7999"/>
+    </change-notes>
+    <idea-version since-build="7860" until-build="7999"/>
     <depends>com.intellij.javaee</depends>
     <depends>com.intellij.spring</depends>
     <depends>JavaScript</depends>
