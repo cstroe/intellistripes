@@ -135,3 +135,23 @@ _Deleted from repository_
   * Auto completion on {{{new ForwardResolution(FooActionBean.class,"event")}}} (and {{{RedirectResolution}}} too) on the event parameter
   * Nested Properties support
   * Bug-Fix on stripes:layout-component
+
+===Version 1.0.RC1.577 (yet unreleased)===
+  * Full support for indexed properties in Stripes tag attributes
+  * Full support for nested properties in Stripes tag attributes
+  * Functional test project
+  * Apache License for source files
+  * Path support for src attribute in stripes:image tag
+  * Inspections for correct stripes annotatin oplacement in Java classes with few basic intention action
+  * Inspections for {{{Resolution}}} methods in Java classes with few basic intention actions
+  * Support for enum attribute in stripes:options-enumeration 
+  * Regexp language in mask attribute of {{{@Validate}}} annotation
+  * Support for resolution method names in {{{on}}} attribute of {{{@ValidationMethod}}} and {{{@Validate}}} annotations
+  * Full property names support for {{{field}}} attribute in {{{@Validate}}} annotation within {{{@ValidateNestedProperties}}}
+  * Basic providing of JSP pathes for one-argement {{{Resolution}}} constructors
+  * Registration of {{{actionBean}}} valiable as pre-defined EL variable in JSPs
+  * {{{FileBean}}} properties support in stripes:file tag
+  * Gutter icon in !ActionBean classes allowing navigation to class usages in JSPs
+  * Registration of pathes annotated with {{{@UrlBinding}}} to be used for common HTML tags
+  * Bugfixes and improvements for more reliable processing of JSP files
+  * Added dependcies from JavaScript and IntelliLang plugins
