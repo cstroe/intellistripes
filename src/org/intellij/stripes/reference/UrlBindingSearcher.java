@@ -58,7 +58,11 @@ public class UrlBindingSearcher extends AnnotatedMembersSearcher {
 
     public Map<String, PsiClass> execute() {
         UrlBindingProcessor proc = new UrlBindingProcessor();
-        super.execute(params, proc);
-        return proc.getBindings();
+		try {
+			super.execute(params, proc);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return proc.getBindings();
     }
 }
