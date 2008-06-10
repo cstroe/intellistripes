@@ -78,8 +78,13 @@ public final class StripesReferenceUtil {
         Map<String, PsiMethod> psiMethods = new HashMap<String, PsiMethod>(8);
 
 //Add Resultion methods for super classes
-        PsiClass superClass = psiClass.getSuperClass();
-        assert superClass != null;
+		PsiClass superClass = null;
+		try {
+			superClass = psiClass.getSuperClass();
+		} catch (Exception e) {
+			return psiMethods;
+		}
+		assert superClass != null;
 
         if (!(Object.class.getName().equals(superClass.getQualifiedName()))) {
             psiMethods.putAll(getResolutionMethods(superClass));
