@@ -41,7 +41,7 @@ Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHi
 <br/><a href="http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes">http://www.jetbrains.net/confluence/display/CONTEST/IntelliStripes</a>
         ]]>
     </change-notes>
-    <idea-version since-build="7860" until-build="7999"/>
+    <idea-version since-build="7757" until-build="7999"/>
     <depends>com.intellij.javaee</depends>
     <depends>com.intellij.spring</depends>
     <depends>JavaScript</depends>
