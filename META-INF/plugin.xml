@@ -20,7 +20,7 @@
     <name>IntelliStripes</name>
     <description>Stripes even more easy!!!</description>
     <version>1.0.RC1.860</version>
-    <vendor email="mario.arias.c@gmail.com, eshepelyuk@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png" url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk</vendor>
+    <vendor email="intellistripes@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png" url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk</vendor>
     <change-notes>
         <![CDATA[
             <strong>ATTENTION</strong>
