@@ -290,11 +290,13 @@ public final class StripesReferenceUtil {
     }
 
     private static UrlBindingSearcher URL_BINDING_SEARCHER;
+    private static Map<String, PsiClass> EMPTY_URL_BINDING_MAP = new Hashtable<String, PsiClass>(0);
 
     public static Map<String, PsiClass> getUrlBindings(Project project) {
         if (URL_BINDING_SEARCHER == null) {
-            URL_BINDING_SEARCHER = new UrlBindingSearcher(StripesUtil.findPsiClassByName(StripesConstants.URL_BINDING_ANNOTATION, project));
+            PsiClass urlBindingCls = StripesUtil.findPsiClassByName(StripesConstants.URL_BINDING_ANNOTATION, project);
+            if (null != urlBindingCls) URL_BINDING_SEARCHER = new UrlBindingSearcher(urlBindingCls);
         }
-        return URL_BINDING_SEARCHER.execute();
+        return URL_BINDING_SEARCHER  == null ? EMPTY_URL_BINDING_MAP : URL_BINDING_SEARCHER.execute();
     }
 }
