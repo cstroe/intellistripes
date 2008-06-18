@@ -28,8 +28,22 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * Path Reference extention point for providing additional pathes in corresponding HTML tags attributes.
+ * <p/>
+ * Provider adds the reference to the list of references for HTML tags attribute (for example href attribute of &lt;a&gt;&lt;/a&gt; tag).
+ * The reference provides auto-complete and resolving using values from ActionBean classes annotated with @UrlBinding.
+ */
 public class UrlBindingPathReferenceProvider implements PathReferenceProvider {
 
+    /**
+     * Adds reference only if element is instance of XmlAttributeValue.
+     *
+     * @param psiElement
+     * @param references
+     * @param soft
+     * @return always true for other extention points to be processed.
+     */
     public boolean createReferences(@NotNull PsiElement psiElement, @NotNull List<PsiReference> references, boolean soft) {
         if (psiElement instanceof XmlAttributeValue) {
             references.add(new UrlBindingReference((XmlAttributeValue) psiElement));

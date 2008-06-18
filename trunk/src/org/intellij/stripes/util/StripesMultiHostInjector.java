@@ -33,7 +33,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class providing JS or CSS injection into attributes of stripes tags.
+ */
 public class StripesMultiHostInjector implements com.intellij.lang.injection.MultiHostInjector {
+
     private static StripesMultiHostInjector CSS_INSTANCE = new StripesMultiHostInjector("inline.style {", "}", CssSupportLoader.CSS_FILE_TYPE.getLanguage(), "style");
     //You must need to add <IDEA_HOME>/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar to your IDEA JDK
     private static StripesMultiHostInjector JS_INSTANCE = new StripesMultiHostInjector(null, null, JavaScriptSupportLoader.JAVASCRIPT.getLanguage(), "on");
@@ -58,6 +62,11 @@ public class StripesMultiHostInjector implements com.intellij.lang.injection.Mul
         this.attribute = attribute;
     }
 
+    /**
+     * Injects certain language into attribute starting with specified prefix of tag matchhing Stripes Tag Filter.
+     * @param registrar
+     * @param context
+     */
     public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
         if (StripesReferencesComponent.STRIPES_NAMESPACE_FILTER.isAcceptable(context.getParent().getParent(), null)) {
             final String name = ((XmlAttribute) context.getParent()).getName();
@@ -70,6 +79,10 @@ public class StripesMultiHostInjector implements com.intellij.lang.injection.Mul
         }
     }
 
+    /**
+     * Only attributes of tags are allowed for language injection by this injector.
+     * @return {@link java.util.List} containing PsiElement corresponding to HTML tag attributes
+     */
     @NotNull
     public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
         return Arrays.asList(XmlAttributeValue.class);
