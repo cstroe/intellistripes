@@ -56,8 +56,7 @@ Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHi
     </extensions>
     <application-components>
         <component>
-            <implementation-class>org.intellij.stripes.components.application.StripesApplicationComponent
-            </implementation-class>
+            <implementation-class>org.intellij.stripes.components.application.StripesApplicationComponent</implementation-class>
         </component>
     </application-components>
     <project-components>

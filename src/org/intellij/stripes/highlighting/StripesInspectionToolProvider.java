@@ -19,6 +19,9 @@ package org.intellij.stripes.highlighting;
 
 import com.intellij.codeInspection.InspectionToolProvider;
 
+/**
+ * Extention point to return Stripes specific inspection classes. 
+ */
 public class StripesInspectionToolProvider implements InspectionToolProvider {
     public Class[] getInspectionClasses() {
         return new Class[]{AnnotationLocationInspection.class, ResolutionMethodsInspection.class};

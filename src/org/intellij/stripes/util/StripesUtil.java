@@ -126,11 +126,13 @@ public final class StripesUtil {
         }
         return false;
     }
-
+/*
+* Cache for resolving PsiClasses by FQN.
+*/
     private static Map<String, PsiClass> PSI_CLASS_MAP = new Hashtable<String, PsiClass>();
 
     /**
-     * Finds instance of {@link PsiClass} corresponding to string, passed as parameter.
+     * Finds instance of {@link PsiClass} corresponding to FQN, passed as parameter.
      *
      * Method uses internal caching for speeding search up.
      *
@@ -153,8 +155,8 @@ public final class StripesUtil {
      * Checks if class presented by {@link PsiClass} instance of another class.
      *
      * @param baseClassName fully qualified name of parent class
-     * @param cls {@links PsiClass} that will be checked for parent
-     * @return true of subclass, false otherwise
+     * @param cls {@link PsiClass} that will be checked for inheritance
+     * @return true if subclass, false otherwise
      */
     public static Boolean isSubclass(String baseClassName, PsiClass cls) {
         if (cls == null) return false;
@@ -163,6 +165,14 @@ public final class StripesUtil {
         return null != baseClass && (cls.isInheritor(baseClass, true) || cls.equals(baseClass));
     }
 
+    /**
+     * Walks up XML tree to find and return parent element of XML tag matching criteria.
+     *
+     * @param childTag start element of XML tree
+     * @param stopFilter filter triggering stop of walking up
+     * @param returnFilter filter allowing return pf found XML tag
+     * @return parent {@link com.intellij.psi.xml.XmlTag} or null
+     */
     public static XmlTag findParent(XmlTag childTag, PsiElementFilter stopFilter, PsiElementFilter returnFilter) {
         for (XmlTag tag = childTag.getParentTag(); tag != null; tag = tag.getParentTag()) {
             if (stopFilter.isAccepted(tag)) {
@@ -172,6 +182,13 @@ public final class StripesUtil {
         return null;
     }
 
+    /**
+     * Processes XML tree and return child tag matching criteria.
+     *
+     * @param rootTag start element of XML treed
+     * @param filter  filter triggering return of current tag
+     * @return {@link com.intellij.psi.xml.XmlTag} or null
+     */
     public static XmlTag findTag(XmlTag rootTag, PsiElementFilter filter) {
         if (filter.isAccepted(rootTag)) {
             return rootTag;
@@ -185,12 +202,12 @@ public final class StripesUtil {
     }
 
     /**
-     * Processes XML tree and collects element matched defined criteria.
+     * Processes XML tree and collects tags matching criteria.
      *
      * @param rootTag      root of XML tree
      * @param stopFilter   filter triggering stop current tag children processing
      * @param incudeFilter filter triggering collecting of current tag
-     * @param container    container to collect tags that matches criteria
+     * @param container    container to collect tags that match criteria
      * @return container
      */
     public static <T> XmlTagContainer<T> collectTags(@NotNull XmlTag rootTag, @NotNull PsiElementFilter stopFilter,
@@ -207,16 +224,29 @@ public final class StripesUtil {
         return container;
     }
 
-    public static Boolean isSetter(PsiMethod method) {
+/**
+ * @deprecated {@link com.intellij.psi.util.PropertyUtil#isSimplePropertySetter(com.intellij.psi.PsiMethod)} should be used
+  */
+    @Deprecated public static Boolean isSetter(PsiMethod method) {
         return null != method && method.getName().startsWith("set")
                 && method.getParameterList().getParametersCount() == 1 && PsiType.VOID.equals(method.getReturnType());
     }
 
-    public static Boolean isGetter(PsiMethod method) {
+/**
+ * @deprecated {@link com.intellij.psi.util.PropertyUtil#isSimplePropertyGetter(com.intellij.psi.PsiMethod)} should be used
+  */
+    @Deprecated public static Boolean isGetter(PsiMethod method) {
         return null != method && method.getName().startsWith("get")
                 && method.getParameterList().getParametersCount() == 0 && !PsiType.VOID.equals(method.getReturnType());
     }
 
+    /**
+     * Checks method to be valid Stripes Action Bean property setter.
+     *
+     * @param method {@link com.intellij.psi.PsiMethod} to be validated
+     * @param full flag indicating full (stripes-specific and JavaBean) or partial (only stripes-specific) validation
+     * @return true if method is valid, false otherwise
+     */
     public static Boolean isActionBeanPropertySetter(PsiMethod method, Boolean full) {
         if (method == null
                 || (full && PropertyUtil.isSimplePropertySetter(method))) return false;
@@ -227,8 +257,8 @@ public final class StripesUtil {
                 && !StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass);
     }
 
-//  Methods for workign with i18n and formatting.
-    
+//  Methods for working with i18n and formatting.
+
     private static ResourceBundle stripesBundle = ResourceBundle.getBundle("resources.Stripes");
 
     public static String message(String template) {
