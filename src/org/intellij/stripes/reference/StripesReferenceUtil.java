@@ -289,7 +289,7 @@ public final class StripesReferenceUtil {
         return retval;
     }
 
-    private static UrlBindingSearcher URL_BINDING_SEARCHER;
+    public static UrlBindingSearcher URL_BINDING_SEARCHER;
     private static Map<String, PsiClass> EMPTY_URL_BINDING_MAP = new Hashtable<String, PsiClass>(0);
 
     public static Map<String, PsiClass> getUrlBindings(Project project) {
