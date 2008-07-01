@@ -249,6 +249,8 @@ public class StripesReferencesComponent implements ProjectComponent {
     }
 
     public void disposeComponent() {
+        StripesReferenceUtil.URL_BINDING_SEARCHER = null;
+        StripesUtil.PSI_CLASS_MAP.clear();
     }
 
 // --------------------- Interface ProjectComponent ---------------------

@@ -129,7 +129,7 @@ public final class StripesUtil {
 /*
 * Cache for resolving PsiClasses by FQN.
 */
-    private static Map<String, PsiClass> PSI_CLASS_MAP = new Hashtable<String, PsiClass>();
+    public static Map<String, PsiClass> PSI_CLASS_MAP = new Hashtable<String, PsiClass>();
 
     /**
      * Finds instance of {@link PsiClass} corresponding to FQN, passed as parameter.
