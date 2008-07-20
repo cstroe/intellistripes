@@ -68,7 +68,7 @@ public class StripesReferencesComponent implements ProjectComponent {
     // ------------------------------ FIELDS ------------------------------
     private ReferenceProvidersRegistry registry;
     final public static NamespaceFilter STRIPES_NAMESPACE_FILTER = new NamespaceFilter(StripesConstants.STRIPES_TLDS);
-
+    final private static ElementFilter VALIDATE_ANNOTATION_FILTER = new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_ANNOTATION));
     // --------------------------- CONSTRUCTORS ---------------------------
 
     public StripesReferencesComponent(Project project) {
@@ -78,8 +78,7 @@ public class StripesReferencesComponent implements ProjectComponent {
         InjectedLanguageManager.getInstance(project).registerMultiHostInjector(StripesMultiHostInjector.getJSInstance());
         InjectedLanguageManager.getInstance(project).registerMultiHostInjector(new MultiHostInjector() {
             public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
-                PsiElement ann = context.getParent().getParent().getParent();
-                if (ann instanceof PsiAnnotation && StripesConstants.VALIDATE_ANNOTATION.equals(((PsiAnnotation) ann).getQualifiedName())) {
+                if (VALIDATE_ANNOTATION_FILTER.isAcceptable(context, context)) {
                     if (StripesConstants.EXPRESSION_ATTR.equals(((PsiNameValuePair) context.getParent()).getName())) {
                         final TextRange range = new TextRange(1, context.getTextLength() - 1);
                         registrar.startInjecting(ELLanguage.INSTANCE)
