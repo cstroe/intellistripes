@@ -17,10 +17,9 @@
 
 package org.intellij.stripes.reference;
 
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import org.intellij.stripes.util.StripesConstants;
