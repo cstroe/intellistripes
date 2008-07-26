@@ -26,6 +26,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiUtil;
+import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.xml.XmlTag;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesTagFilter;
@@ -165,7 +166,7 @@ public final class StripesReferenceUtil {
     }
 
     /**
-     * Returns properties of FileBean o caertain PsiClass that can be set by Stripes.
+     * Returns properties of FileBean of certain PsiClass that can be set by Stripes.
      *
      * @param psiClass
      * @return {@link java.util.List list} of property names
@@ -173,12 +174,22 @@ public final class StripesReferenceUtil {
     public static List<String> getFileBeanProperties(PsiClass psiClass) {
         if (null == psiClass) return EMPTY_STRING_LIST;
 
-        List<String> methodNames = new ArrayList<String>(16);
+        List<String> methodNames = new ArrayList<String>(4);
         for (PsiMethod psiMethod : psiClass.getAllMethods()) {
-            if (StripesUtil.isSetter(psiMethod)) {
-                PsiClass propertyClass = PsiUtil.resolveClassInType(psiMethod.getParameterList().getParameters()[0].getType());
+            if (PropertyUtil.isSimplePropertySetter(psiMethod)) {
+                PsiType propertyType = psiMethod.getParameterList().getParameters()[0].getType();
+                PsiClass propertyClass = StripesReferenceUtil.resolveClassInType(propertyType, psiClass.getProject());
+
                 if (StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass)) {
-                    methodNames.add(StringUtil.decapitalize(psiMethod.getName().replaceFirst("set", "")));
+                    String methodName = PropertyUtil.getPropertyNameBySetter(psiMethod);
+                    
+                    propertyClass = PsiUtil.resolveClassInType(propertyType);
+                    if (StripesUtil.isSubclass(List.class.getName(), propertyClass)
+                        || propertyType instanceof PsiArrayType
+                        || StripesUtil.isSubclass(Map.class.getName(), propertyClass)) {
+                        methodName += "[]";
+                    }
+                    methodNames.add(methodName);
                 }
             }
         }

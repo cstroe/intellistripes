@@ -30,13 +30,13 @@ public interface StripesConstants {
 // ------------------------------ FIELDS ------------------------------
 
     //Icons
-    Icon ACTION_BEAN_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/ActionBean.png");
+    Icon ACTION_BEAN_ICON = IconLoader.findIcon("/resources/icons/ActionBean.png");
     Icon ACTION_BEAN_GUTTER_ICON = IconLoader.findIcon("/resources/icons/ActionBeanGutter.png");
-    Icon STRIPES_JSP_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/JspStripes.png");
-    Icon STRIPES_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/StripesIcon.png");
-    Icon FIELD_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/Field.png");
-    Icon RESOLUTION_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/Resolution.png");
-    Icon LAYOUT_COMPONENT_ICON = IconLoader.findIcon("/org/intellij/stripes/icons/LayoutComponent.png");
+    Icon STRIPES_JSP_ICON = IconLoader.findIcon("/resources/icons/JspStripes.png");
+    Icon STRIPES_ICON = IconLoader.findIcon("/resources/icons/StripesIcon.png");
+    Icon FIELD_ICON = IconLoader.findIcon("/resources/icons/Field.png");
+    Icon RESOLUTION_ICON = IconLoader.findIcon("/resources/icons/Resolution.png");
+    Icon LAYOUT_COMPONENT_ICON = IconLoader.findIcon("/resources/icons/LayoutComponent.png");
 
     //stripes class names
     String STRIPES_SERVLET_CLASS = "net.sourceforge.stripes.controller.DispatcherServlet";

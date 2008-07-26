@@ -220,9 +220,6 @@ public class StripesReferencesComponent implements ProjectComponent {
             }
         });
 
-
-//        registry.unregisterReferenceProvider(PsiLiteralExpression.class, new PropertiesReferenceProvider(true));
-//        registry.unregisterReferenceProvider(PsiLiteralExpression.class, new FilePathReferenceProvider());
         registry.registerReferenceProvider(
                 new AndFilter(
                         new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION)),

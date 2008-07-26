@@ -22,7 +22,7 @@ import com.intellij.ide.IconProvider;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.jsp.JspFile;
 import org.intellij.stripes.facet.StripesFacet;
 import org.intellij.stripes.facet.StripesFacetType;
@@ -73,10 +73,8 @@ public class StripesApplicationComponent implements ApplicationComponent, IconPr
                 PsiClass clazz = (PsiClass) element;
                 boolean isActionBean = false;
                 try {
-                    PsiModifierList list = clazz.getModifierList();
-                    boolean isAbstract = list.hasExplicitModifier("abstract");
                     //is abstract?
-                    if (!isAbstract) {
+                    if (!clazz.getModifierList().hasExplicitModifier(PsiModifier.ABSTRACT)) {
                         //Is an implementation of ActionBean?
                         isActionBean = StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, clazz);
                     }

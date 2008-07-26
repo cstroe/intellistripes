@@ -22,7 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
-import org.intellij.stripes.reference.JspTagAttrFileBeanSetterMethodsReference;
+import org.intellij.stripes.reference.FileBeanSetterMethodsReference;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +33,6 @@ public class FileBeanSetterMethodsReferenceProvider extends AbstractReferencePro
         final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) psiElement.getParent().getParent(), StripesConstants.FORM_TAG);
         return actionBeanPsiClass == null
                 ? PsiReference.EMPTY_ARRAY
-                : new PsiReference[]{new JspTagAttrFileBeanSetterMethodsReference((XmlAttributeValue) psiElement, actionBeanPsiClass)};
+                : new PsiReference[]{new FileBeanSetterMethodsReference((XmlAttributeValue) psiElement, actionBeanPsiClass)};
     }
 }
