@@ -20,6 +20,7 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import org.intellij.stripes.reference.JspTagAttrResolutionMethodsReference;
@@ -39,6 +40,8 @@ public class EventAttrResolutionMethodsReferenceProvider extends AbstractReferen
 
     @NotNull
     public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+        if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
+        
         XmlTag tag = (XmlTag) psiElement.getParent().getParent();
         final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), psiElement.getProject());
         return actionBeanPsiClass == null
