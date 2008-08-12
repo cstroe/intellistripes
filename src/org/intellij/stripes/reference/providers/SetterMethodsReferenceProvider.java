@@ -20,6 +20,7 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.xml.XmlTag;
 import org.intellij.stripes.reference.SetterMethodsReferenceSet;
 import org.intellij.stripes.reference.StripesReferenceUtil;
@@ -44,6 +45,8 @@ public class SetterMethodsReferenceProvider extends AbstractReferenceProvider {
 
     @NotNull
     public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+
+        if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
 
         PsiClass psiClass = null;
         for (String parentTag : parentTags) {

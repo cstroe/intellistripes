@@ -30,6 +30,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
+import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.css.impl.util.CssInHtmlClassOrIdReferenceProvider;
 import com.intellij.psi.filters.*;
 import com.intellij.psi.filters.position.NamespaceFilter;
@@ -110,8 +111,7 @@ public class StripesReferencesComponent implements ProjectComponent {
     }
 
     public void initComponent() {
-        String[] tags = StripesConstants.ACTION_BEAN_TAGS;
-        for (String tag : tags) {
+        for (String tag : StripesConstants.ACTION_BEAN_TAGS) {
 //            all stripes tags with beanclass parameter add Reference provider for implementations od Stripes ActionBean
             registerSubclass(tag, StripesConstants.BEANCLASS_ATTR, StripesConstants.ACTION_BEAN);
         }
@@ -143,6 +143,7 @@ public class StripesReferencesComponent implements ProjectComponent {
         registerTags(new CssInHtmlClassOrIdReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.CLASS_ATTR, StripesConstants.CLASS_TAGS);
 //src on stripes:image
         registerTags(new WebPathReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.SRC_ATTR, StripesConstants.IMAGE_TAG);
+
         JavaClassReferenceProvider provider = new JavaClassReferenceProvider();
         provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{"java.lang.Enum"});
         registerTags(provider, STRIPES_NAMESPACE_FILTER, StripesConstants.ENUM_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG);
@@ -268,7 +269,13 @@ public class StripesReferencesComponent implements ProjectComponent {
     }
 
     private void registerSubclass(String tagName, String attributName, String... classes) {
-        JavaClassReferenceProvider provider = new JavaClassReferenceProvider();
+        JavaClassReferenceProvider provider = new JavaClassReferenceProvider() {
+            @NotNull
+            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+                if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
+                return super.getReferencesByElement(psiElement);
+            }
+        };
         provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, classes);
         provider.setOption(JavaClassReferenceProvider.INSTANTIATABLE, true);
         registerTags(provider, STRIPES_NAMESPACE_FILTER, attributName, tagName);
