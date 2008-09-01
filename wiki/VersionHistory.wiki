@@ -111,24 +111,24 @@ _Deleted from repository_
 ===Version 0.7.7.626 (2008-01-08)===
   * Auto Completion in Stripes JSP tags 
     * class attribute on (CSS) 
-    * button
-    * checkbox
-    * file
-    * form
-    * image
-    * label
-    * link
-    * hidden
-    * option
-    * options-collection
-    * options-enumeration
-    * password
-    * radio
-    * reset
-    * select
-    * submit
-    * text
-    * textarea
+     * button
+     * checkbox
+     * file
+     * form
+     * image
+     * label
+     * link
+     * hidden
+     * option
+     * options-collection
+     * options-enumeration
+     * password
+     * radio
+     * reset
+     * select
+     * submit
+     * text
+     * textarea
 
 ===Version 1.0.beta.757 (2008-01-08)===
   * CSS and !JavaScript support for all tags
@@ -156,3 +156,9 @@ _Deleted from repository_
   * Registration of pathes annotated with {{{@UrlBinding}}} to be used for common HTML tags
   * Bugfixes and improvements for more reliable processing of JSP files
   * Introduced dependencies from !JavaScript and !IntelliLang plugins
+
+===Version 1.0.Final.941 (2208-09-01)===
+  * Auto Complete for {{{new StreamingResultion()}}} on the {{{contentType}}} parameter
+  * Support for EL on tags atributes
+  * Bugfixes
+  * Last Version with Stripes 1.4.3 support
