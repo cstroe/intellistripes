@@ -36,10 +36,10 @@ import org.intellij.stripes.util.StripesConstants;
  * }
  * )
  */
-public class ResolutionConstructorFilter implements ElementFilter {
+public class OnwardResolutionConstructorFilter implements ElementFilter {
     private Integer count = -1;
 
-    public ResolutionConstructorFilter(Integer count) {
+    public OnwardResolutionConstructorFilter(Integer count) {
         this.count = count;
     }
 

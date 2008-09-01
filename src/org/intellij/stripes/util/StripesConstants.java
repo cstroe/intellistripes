@@ -49,6 +49,7 @@ public interface StripesConstants {
     String FILE_BEAN = "net.sourceforge.stripes.action.FileBean";
     String ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
     String FORWARD_RESOLUTION = "net.sourceforge.stripes.action.ForwardResolution";
+    String STREAMING_RESOLUTION = "net.sourceforge.stripes.action.StreamingResolution";
     String REDIRECT_RESOLUTION = "net.sourceforge.stripes.action.RedirectResolution";
     String VALIDATION_ERRORS = "net.sourceforge.stripes.validation.ValidationErrors";
 
@@ -156,5 +157,6 @@ public interface StripesConstants {
     LibraryInfo[] STRIPES_LIBRARY_INFO = {MavenLibraryUtil.createMavenJarInfo("stripes", "1.4.3", "net.sourceforge.stripes.action.ActionBean"),
             MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.0", "org.apache.commons.logging.Log"),
             MavenLibraryUtil.createMavenJarInfo("cos", "1.3.1", "com.oreilly.servlet.multipart.FilePart")};
+
 
 }

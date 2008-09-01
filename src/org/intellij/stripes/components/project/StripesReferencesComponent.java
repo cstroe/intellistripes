@@ -30,7 +30,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.css.impl.util.CssInHtmlClassOrIdReferenceProvider;
 import com.intellij.psi.filters.*;
 import com.intellij.psi.filters.position.NamespaceFilter;
@@ -44,11 +43,14 @@ import com.intellij.psi.impl.source.resolve.reference.ReferenceType;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.JspxIncludePathReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.WebPathReferenceProvider;
+import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
+import org.intellij.lang.regexp.RegExpLanguage;
 import org.intellij.stripes.reference.JavaStringResolutionMethodsReference;
+import org.intellij.stripes.reference.MimeTypeReference;
 import org.intellij.stripes.reference.SetterMethodsReferenceSet;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.intellij.stripes.reference.filters.*;
@@ -56,7 +58,6 @@ import org.intellij.stripes.reference.providers.*;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesMultiHostInjector;
 import org.intellij.stripes.util.StripesUtil;
-import org.intellij.lang.regexp.RegExpLanguage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -83,13 +84,13 @@ public class StripesReferencesComponent implements ProjectComponent {
                     if (StripesConstants.EXPRESSION_ATTR.equals(((PsiNameValuePair) context.getParent()).getName())) {
                         final TextRange range = new TextRange(1, context.getTextLength() - 1);
                         registrar.startInjecting(ELLanguage.INSTANCE)
-                            .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
-                            .doneInjecting();
+                                .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
+                                .doneInjecting();
                     } else if (StripesConstants.MASK_ATTR.equals(((PsiNameValuePair) context.getParent()).getName())) {
                         final TextRange range = new TextRange(1, context.getTextLength() - 1);
                         registrar.startInjecting(RegExpLanguage.INSTANCE)
-                            .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
-                            .doneInjecting();
+                                .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
+                                .doneInjecting();
                     }
                 }
             }
@@ -150,6 +151,7 @@ public class StripesReferencesComponent implements ProjectComponent {
 
         registerSpringBeanReference();
         registerOnwardResolutionReference();
+        registerStreamingResolutionReference();
 
         registry.registerReferenceProvider(
                 new AndFilter(
@@ -171,8 +173,8 @@ public class StripesReferencesComponent implements ProjectComponent {
             }
         });
 
-        registry.registerReferenceProvider(new ResolutionConstructorFilter(1), PsiLiteralExpression.class, new JspxIncludePathReferenceProvider() {
-            private ServletPathReferenceProvider servletPathProvider = new ServletPathReferenceProvider();
+        registry.registerReferenceProvider(new OnwardResolutionConstructorFilter(1), PsiLiteralExpression.class, new JspxIncludePathReferenceProvider() {
+            private ServletPathReferenceProvider servletPathProvider = new ServletPathReferenceProvider();//TODO we can delete this?
 
             @NotNull
             public PsiReference[] getReferencesByElement(final PsiElement psiElement) {
@@ -245,6 +247,15 @@ public class StripesReferencesComponent implements ProjectComponent {
         registry.registerReferenceProvider(new ParentElementFilter(new NewRedirectResolutionFilter()), PsiLiteralExpression.class, referenceProvider);
     }
 
+    private void registerStreamingResolutionReference() {
+        registry.registerReferenceProvider(new ParentElementFilter(new NewStreamingResolutionFilter()), PsiLiteralExpression.class, new AbstractReferenceProvider() {
+            @NotNull
+            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+                return new PsiReference[]{new MimeTypeReference((PsiLiteralExpression) psiElement)};
+            }
+        });
+    }
+
     public void disposeComponent() {
         StripesReferenceUtil.URL_BINDING_SEARCHER = null;
         StripesUtil.PSI_CLASS_MAP.clear();
@@ -272,7 +283,8 @@ public class StripesReferencesComponent implements ProjectComponent {
         JavaClassReferenceProvider provider = new JavaClassReferenceProvider() {
             @NotNull
             public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-                if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
+                if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder)
+                    return PsiReference.EMPTY_ARRAY;
                 return super.getReferencesByElement(psiElement);
             }
         };

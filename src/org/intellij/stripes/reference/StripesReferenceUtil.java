@@ -24,9 +24,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
+import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiUtil;
-import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.xml.XmlTag;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesTagFilter;
@@ -45,7 +45,7 @@ import java.util.*;
  */
 public final class StripesReferenceUtil {
 
-    private static List<String> EMPTY_STRING_LIST = new ArrayList<String>();
+    private static List<String> EMPTY_STRING_LIST = new ArrayList<String>(8);
 
     public static PsiElementFilter NAME_ATTR_FILTER = new StripesTagFilter() {
         protected boolean isDetailsAccepted(XmlTag tag) {
@@ -79,13 +79,13 @@ public final class StripesReferenceUtil {
         Map<String, PsiMethod> psiMethods = new HashMap<String, PsiMethod>(8);
 
 //Add Resultion methods for super classes
-		PsiClass superClass = null;
-		try {
-			superClass = psiClass.getSuperClass();
-		} catch (Exception e) {
-			return psiMethods;
-		}
-		assert superClass != null;
+        PsiClass superClass;
+        try {
+            superClass = psiClass.getSuperClass();
+        } catch (Exception e) {
+            return psiMethods;
+        }
+        assert superClass != null;
 
         if (!(Object.class.getName().equals(superClass.getQualifiedName()))) {
             psiMethods.putAll(getResolutionMethods(superClass));
@@ -136,7 +136,7 @@ public final class StripesReferenceUtil {
      * Returns list of properties for certain class and its superclasses that have setter method
      *
      * @param psiClass class to examine
-     * @param braces append square braces to the property name or not
+     * @param braces   append square braces to the property name or not
      * @return {@link java.util.List java.util.List} of property names
      */
     public static List<String> getWritableProperties(PsiClass psiClass, Boolean braces) {
@@ -182,11 +182,11 @@ public final class StripesReferenceUtil {
 
                 if (StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass)) {
                     String methodName = PropertyUtil.getPropertyNameBySetter(psiMethod);
-                    
+
                     propertyClass = PsiUtil.resolveClassInType(propertyType);
                     if (StripesUtil.isSubclass(List.class.getName(), propertyClass)
-                        || propertyType instanceof PsiArrayType
-                        || StripesUtil.isSubclass(Map.class.getName(), propertyClass)) {
+                            || propertyType instanceof PsiArrayType
+                            || StripesUtil.isSubclass(Map.class.getName(), propertyClass)) {
                         methodName += "[]";
                     }
                     methodNames.add(methodName);
@@ -198,7 +198,7 @@ public final class StripesReferenceUtil {
     }
 
     public static List<String> splitNestedVar(String var) {
-        List<String> retval = new ArrayList<String>();
+        List<String> retval = new ArrayList<String>(8);
         for (int i = 0, wStart = 0, lBrace = 0; i < var.length(); i++) {
             if (var.charAt(i) == '.' && lBrace == 0) {
                 retval.add(var.substring(wStart, i));
@@ -217,7 +217,7 @@ public final class StripesReferenceUtil {
     }
 
     public static PsiClass resolveActionBeanSetterReturnType(PsiClass host, String field) {
-        PsiClass cls = null;
+        PsiClass cls;
 
         try {
             PsiMethod setter = host.findMethodsByName("set" + StringUtil.capitalize(field.replaceAll("\\[.*?\\]", "")), true)[0];
@@ -231,7 +231,7 @@ public final class StripesReferenceUtil {
     }
 
     public static PsiClass resolveClassInType(PsiType propertyType, Project project) {
-        PsiClass cls = null;
+        PsiClass cls;
         try {
             PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
             if (StripesUtil.isSubclass(List.class.getName(), propertyClass)) {
@@ -257,7 +257,7 @@ public final class StripesReferenceUtil {
     }
 
     /**
-     * Gets s PsiClass from a ExressionList of type com.foo.MyClass.class
+     * Gets s PsiClass from a ExpressionList of type com.foo.MyClass.class
      *
      * @param list
      * @return
@@ -301,13 +301,13 @@ public final class StripesReferenceUtil {
     }
 
     public static UrlBindingSearcher URL_BINDING_SEARCHER;
-    private static Map<String, PsiClass> EMPTY_URL_BINDING_MAP = new Hashtable<String, PsiClass>(0);
+    private static Map<String, PsiClass> EMPTY_URL_BINDING_MAP = new HashMap<String, PsiClass>(0);
 
     public static Map<String, PsiClass> getUrlBindings(Project project) {
         if (URL_BINDING_SEARCHER == null) {
             PsiClass urlBindingCls = StripesUtil.findPsiClassByName(StripesConstants.URL_BINDING_ANNOTATION, project);
             if (null != urlBindingCls) URL_BINDING_SEARCHER = new UrlBindingSearcher(urlBindingCls);
         }
-        return URL_BINDING_SEARCHER  == null ? EMPTY_URL_BINDING_MAP : URL_BINDING_SEARCHER.execute();
+        return URL_BINDING_SEARCHER == null ? EMPTY_URL_BINDING_MAP : URL_BINDING_SEARCHER.execute();
     }
 }
