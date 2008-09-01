@@ -1,0 +1,78 @@
+<!--
+  ~ Copyright 2000-2007 JetBrains s.r.o.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ 	http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
+<idea-plugin url="http://code.google.com/p/intellistripes">
+    <name>IntelliStripes</name>
+    <description>Stripes even more easy!!!</description>
+    <version>1.0.Final.941</version>
+    <vendor email="intellistripes@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
+            url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
+    </vendor>
+    <change-notes>
+        <![CDATA[
+            <strong>ATTENTION</strong>
+<p>
+    This is the Last IntelliStripes version with Stripes 1.4.3 support.
+    Only bugfixes will be released for this branch
+</p>
+<p>
+    We are focusing now on Stripes 1.5 support for the next mayor version (1.2)
+</p>
+<p>
+    We recomended that change your actual Stripes 1.4.3 codebase and applications,
+    to Stripes 1.5
+</p>
+<br/>
+<br/>
+Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory">http://code.google.com/p/intellistripes/wiki/VersionHistory</a>
+        ]]>
+    </change-notes>
+    <idea-version since-build="7941" until-build="7999"/>
+    <depends>com.intellij.javaee</depends>
+    <depends>com.intellij.spring</depends>
+    <depends>JavaScript</depends>
+    <depends>IntelliLang</depends>
+
+    <extensions xmlns="com.intellij">
+        <fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
+        <javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>
+        <annotator language="JAVA" annotatorClass="org.intellij.stripes.highlighting.ActionBeanUsageAnnotator"/>
+        <pathReferenceProvider
+                implementation="org.intellij.stripes.reference.providers.UrlBindingPathReferenceProvider"/>
+        <inspectionToolProvider implementation="org.intellij.stripes.highlighting.StripesInspectionToolProvider"/>
+    </extensions>
+    <application-components>
+        <component>
+            <implementation-class>org.intellij.stripes.components.application.StripesApplicationComponent
+            </implementation-class>
+        </component>
+    </application-components>
+    <project-components>
+        <component>
+            <implementation-class>org.intellij.stripes.components.project.StripesReferencesComponent
+            </implementation-class>
+        </component>
+    </project-components>
+    <actions>
+        <group id="Stripes" class="org.intellij.stripes.actions.StripesGroup" text="Stripes">
+            <action class="org.intellij.stripes.actions.StripesNewActionBeanAction" text="Stripes ActionBean"
+                    id="Stripes.NewActionBean"/>
+            <add-to-group anchor="last" group-id="NewGroup"/>
+        </group>
+    </actions>
+</idea-plugin>
