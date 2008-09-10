@@ -69,7 +69,9 @@ public final class StripesReferenceUtil {
         return methodNames;
     }
 
-    /**
+	private static Map<String, PsiMethod> EMPTY_RESOLUTION_METHOD_MAP = new HashMap<String, PsiMethod>(0);
+
+	/**
      * Get the Event methods (Resolution methods) for an ActionBean Class
      *
      * @param psiClass an ActionBean PsiClass
@@ -85,7 +87,8 @@ public final class StripesReferenceUtil {
         } catch (Exception e) {
             return psiMethods;
         }
-        assert superClass != null;
+
+		if (null == superClass) return EMPTY_RESOLUTION_METHOD_MAP;
 
         if (!(Object.class.getName().equals(superClass.getQualifiedName()))) {
             psiMethods.putAll(getResolutionMethods(superClass));
