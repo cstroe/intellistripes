@@ -17,10 +17,10 @@
   -->
 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-           version="2.5">
+         version="2.5">
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/simple-core.xml,/WEB-INF/simple-dao.xml</param-value>
@@ -31,16 +31,16 @@
         <init-param>
             <param-name>Interceptor.Classes</param-name>
             <param-value>
-                net.sourceforge.stripes.integration.spring.SpringInterceptor,com.simpletasks.stripes.interceptors.SecurityInterceptor,net.sourceforge.stripes.controller.BeforeAfterMethodInterceptor
+                net.sourceforge.stripes.integration.spring.SpringInterceptor,com.simpletasks.stripes.interceptors.SecurityInterceptor
             </param-value>
         </init-param>
         <init-param>
-            <param-name>ActionResolver.UrlFilters</param-name>
-            <param-value>WEB-INF/classes</param-value>
+            <param-name>ActionResolver.Packages</param-name>
+            <param-value>com.simpletasks.web</param-value>
         </init-param>
         <init-param>
-            <param-name>ActionBeanContext.Class</param-name>
-            <param-value>com.simpletasks.stripes.context.SimpleTasksActionBeanContext</param-value>
+            <param-name>Extension.Packages</param-name>
+            <param-value>com.simpletasks.stripes</param-value>
         </init-param>
     </filter>
     <filter-mapping>
