@@ -1,0 +1,42 @@
+/*
+ * Copyright 2000-2007 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.intellij.stripes.support;
+
+import com.intellij.ide.fileTemplates.FileTemplateDescriptor;
+import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptor;
+import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptorFactory;
+import org.intellij.stripes.util.StripesConstants;
+
+/**
+ * Created by IntelliJ IDEA. User: Mario Arias Date: 2/08/2007 Time: 10:06:35 PM
+ */
+public class StripesFileTemplateGroupFactory implements FileTemplateGroupDescriptorFactory {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface FileTemplateGroupDescriptorFactory ---------------------
+
+    public FileTemplateGroupDescriptor getFileTemplatesDescriptor() {
+        FileTemplateGroupDescriptor descriptor = new FileTemplateGroupDescriptor(StripesConstants.STRIPES_TEMPLATES, StripesConstants.STRIPES_ICON);
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.LOG4J_PROPERTIES_TEMPLATE));
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.COMMONS_LOGGING_PROPERTIES));
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.STRIPES_RESOURCES_PROPERTIES));
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.LOG4J_XML_TEMPLATE));
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.ACTION_BEAN_TEMPLATE, StripesConstants.ACTION_BEAN_ICON));
+        return descriptor;
+    }
+}
