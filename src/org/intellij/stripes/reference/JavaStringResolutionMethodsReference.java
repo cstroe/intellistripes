@@ -19,10 +19,7 @@ package org.intellij.stripes.reference;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLiteralExpression;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.Nullable;
@@ -85,7 +82,7 @@ public class JavaStringResolutionMethodsReference extends JavaStringReference {
      */
     @Override
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        return StripesReferenceUtil.getManipulator(expression).handleContentChange(expression, newElementName);
+		return ElementManipulators.getManipulator(expression).handleContentChange(expression, newElementName);
     }
 
     @Override

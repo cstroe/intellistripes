@@ -20,8 +20,10 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.ProcessingContext;
 import org.intellij.stripes.reference.SetterMethodsReferenceSet;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  * <p/>
  * Created by IntelliJ IDEA. User: Mario Arias Date: 4/07/2007 Time: 12:45:02 AM
  */
-public class SetterMethodsReferenceProvider extends AbstractReferenceProvider {
+public class SetterMethodsReferenceProvider extends PsiReferenceProvider {
 
     private String[] parentTags;
 
@@ -39,23 +41,19 @@ public class SetterMethodsReferenceProvider extends AbstractReferenceProvider {
         this.parentTags = parentTags;
     }
 
-    // ------------------------ INTERFACE METHODS ------------------------
+	@NotNull
+	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
 
-// --------------------- Interface PsiReferenceProvider ---------------------
-
-    @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-
-        if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
+        if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
 
         PsiClass psiClass = null;
         for (String parentTag : parentTags) {
-            psiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) psiElement.getParent().getParent(), parentTag);
+            psiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) element.getParent().getParent(), parentTag);
             if (psiClass != null) break;
         }
 
         return psiClass == null
                 ? PsiReference.EMPTY_ARRAY
-                : new SetterMethodsReferenceSet(psiElement, psiClass).getPsiReferences();
-    }
+                : new SetterMethodsReferenceSet(element, psiClass).getPsiReferences();
+	}
 }

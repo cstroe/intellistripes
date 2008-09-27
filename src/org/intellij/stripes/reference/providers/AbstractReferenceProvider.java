@@ -19,33 +19,17 @@ package org.intellij.stripes.reference.providers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProvider;
-import com.intellij.psi.impl.source.resolve.reference.ReferenceType;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.PsiReferenceProvider;
+import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 4/07/2007 Time: 12:15:26 AM
  */
-public abstract class AbstractReferenceProvider implements PsiReferenceProvider {
+public abstract class AbstractReferenceProvider extends PsiReferenceProvider {
 
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface PsiReferenceProvider ---------------------
-
-    @Deprecated
-    @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement, ReferenceType referenceType) {
-        return PsiReference.EMPTY_ARRAY;
-    }
-
-    @Deprecated
-    @NotNull
-    public PsiReference[] getReferencesByString(String s, PsiElement psiElement, ReferenceType referenceType, int i) {
-        return PsiReference.EMPTY_ARRAY;
-    }
-
-    public void handleEmptyContext(PsiScopeProcessor psiScopeProcessor, PsiElement psiElement) {
-
-    }
+	@NotNull
+	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+		return PsiReference.EMPTY_ARRAY;
+	}
 }

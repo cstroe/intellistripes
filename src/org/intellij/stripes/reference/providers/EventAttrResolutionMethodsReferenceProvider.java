@@ -20,9 +20,11 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.ProcessingContext;
 import org.intellij.stripes.reference.JspTagAttrResolutionMethodsReference;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
@@ -33,19 +35,17 @@ import org.jetbrains.annotations.NotNull;
  * <p/>
  * Created by IntelliJ IDEA. User: Mario Arias Date: 18/09/2007 Time: 01:01:55 AM
  */
-public class EventAttrResolutionMethodsReferenceProvider extends AbstractReferenceProvider {
-// ------------------------ INTERFACE METHODS ------------------------
+public class EventAttrResolutionMethodsReferenceProvider extends PsiReferenceProvider {
 
-// --------------------- Interface PsiReferenceProvider ---------------------
+	@NotNull
+	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+		if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
 
-    @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-        if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
-        
-        XmlTag tag = (XmlTag) psiElement.getParent().getParent();
-        final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), psiElement.getProject());
-        return actionBeanPsiClass == null
-                ? PsiReference.EMPTY_ARRAY
-                : new PsiReference[]{new JspTagAttrResolutionMethodsReference((XmlAttributeValue) psiElement, actionBeanPsiClass)};
-    }
+		XmlTag tag = (XmlTag) element.getParent().getParent();
+		final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), element.getProject());
+		return actionBeanPsiClass == null
+				? PsiReference.EMPTY_ARRAY
+				: new PsiReference[]{new JspTagAttrResolutionMethodsReference((XmlAttributeValue) element, actionBeanPsiClass)};
+
+	}
 }

@@ -25,7 +25,7 @@ import org.intellij.stripes.util.StripesConstants;
  */
 public class StripesGroup extends DefaultActionGroup {
 // --------------------------- CONSTRUCTORS ---------------------------
-//TEST TEST TEST
+
     public StripesGroup() {
         super(StripesConstants.STRIPES, true);
         getTemplatePresentation().setDescription(StripesConstants.STRIPES);

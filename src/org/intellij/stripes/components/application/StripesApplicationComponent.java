@@ -36,7 +36,7 @@ import javax.swing.*;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 01:57:05 AM
  */
-public class StripesApplicationComponent implements ApplicationComponent, IconProvider {
+public class StripesApplicationComponent extends IconProvider implements ApplicationComponent {
 // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface BaseComponent ---------------------
