@@ -22,6 +22,7 @@ import com.intellij.facet.FacetType;
 import com.intellij.javaee.web.facet.WebFacet;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
+import com.intellij.openapi.module.JavaModuleType;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +52,7 @@ public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfig
 
     @Override
     public boolean isSuitableModuleType(ModuleType moduleType) {
-        return moduleType == ModuleType.JAVA;
+    	return moduleType instanceof JavaModuleType;
     }
 
     @Override
@@ -66,4 +67,8 @@ public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfig
     public StripesFacetConfiguration createDefaultConfiguration() {
         return new StripesFacetConfiguration();
     }
+
+//TODO create auto detect capability
+
+//TODO implement framework support	
 }

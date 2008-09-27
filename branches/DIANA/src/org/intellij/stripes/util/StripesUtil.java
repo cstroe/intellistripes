@@ -144,8 +144,8 @@ public final class StripesUtil {
         if (className == null) return null;
 
         PsiClass retval = PSI_CLASS_MAP.get(className);
-        if (null == retval) {
-            retval = PsiManager.getInstance(project).findClass(className, GlobalSearchScope.allScope(project));
+        if (null == retval) {			
+            retval = JavaPsiFacade.getInstance(project).findClass(className, GlobalSearchScope.allScope(project));
             if (null != retval) PSI_CLASS_MAP.put(className, retval);
         }
         return retval;

@@ -19,7 +19,9 @@ package org.intellij.stripes.actions;
 
 import com.intellij.CommonBundle;
 import com.intellij.ide.IdeView;
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.CreateElementActionBase;
+import com.intellij.ide.actions.CreateClassAction;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
@@ -34,6 +36,8 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.JavaDirectoryService;
+import com.intellij.psi.PsiClass;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
@@ -41,81 +45,31 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Properties;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 10/11/2007 Time: 12:04:05 AM
- */
-public class StripesNewActionBeanAction extends CreateElementActionBase {
-// -------------------------- STATIC METHODS --------------------------
-
-    public static boolean isUnderSourceRoots(final AnActionEvent e) {
-        final DataContext context = e.getDataContext();
-        Module module = (Module) context.getData(DataConstants.MODULE);
-        if (module == null) {
-            return false;
-        }
-        final IdeView view = (IdeView) context.getData(DataConstants.IDE_VIEW);
-        final Project project = (Project) context.getData(DataConstants.PROJECT);
-        if (view != null && project != null) {
-            ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-            PsiDirectory[] dirs = view.getDirectories();
-            for (PsiDirectory dir : dirs) {
-                if (projectFileIndex.isInSourceContent(dir.getVirtualFile()) && dir.getPackage() != null) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
-    public StripesNewActionBeanAction() {
-        super("Stripes ActionBean", "Create a New Stripes Action Bean", StripesConstants.ACTION_BEAN_ICON);
-    }
-
-// -------------------------- OTHER METHODS --------------------------
-
-    @NotNull
-    @Override
-    protected PsiElement[] invokeDialog(Project project, PsiDirectory directory) {
-        MyInputValidator validator = new MyInputValidator(project, directory);
-        Messages.showInputDialog(project, "Enter Name for New Stripes ActionBean", "New Stripes Action Bean", Messages.getQuestionIcon(), "", validator);
-        return validator.getCreatedElements();
-    }
-
-    @NotNull
-    protected PsiElement[] create(String s, PsiDirectory directory) throws Exception {
-        FileTemplate fileTemplate = FileTemplateManager.getInstance().getJ2eeTemplate(StripesConstants.ACTION_BEAN_TEMPLATE);
-        Properties properties = new Properties(FileTemplateManager.getInstance().getDefaultProperties());
-        properties.setProperty("NAME", s);
-        properties.setProperty("PACKAGE_NAME", directory.getText());
-        PsiElement template = FileTemplateUtil.createFromTemplate(fileTemplate, s + ".java", properties, directory);
-        return new PsiElement[]{template};
-    }
-
-    protected String getErrorTitle() {
-        return CommonBundle.getErrorTitle();
+public class StripesNewActionBeanAction extends CreateClassAction {
+    protected String getActionName(PsiDirectory directory, String s) {
+        return "Creating Stripes ActionBean";
     }
 
     protected String getCommandName() {
         return "Create Stripes ActionBean";
     }
 
-    protected String getActionName(PsiDirectory directory, String s) {
-        return "Creating Stripes ActionBean";
-    }
+	@Override
+	protected PsiClass doCreate(PsiDirectory dir, String className) throws IncorrectOperationException {
+		try {
+			return JavaDirectoryService.getInstance().createClass(dir, className, StripesConstants.ACTION_BEAN_TEMPLATE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-    protected void checkBeforeCreate(String newName, PsiDirectory directory) throws IncorrectOperationException {
-        directory.checkCreateClass(newName);
-    }
-
-    @Override
-    public void update(AnActionEvent anActionEvent) {
-        Presentation presentation = anActionEvent.getPresentation();
-
-        if (!StripesUtil.isStripesFacetConfigured((Module) anActionEvent.getDataContext().getData(DataConstants.MODULE))) {
-            presentation.setEnabled(false);
-            presentation.setVisible(false);
-        }
-    }
+	@NotNull
+	@Override
+	protected PsiElement[] invokeDialog(Project project, PsiDirectory directory) {
+		MyInputValidator validator = new MyInputValidator(project, directory);
+		Messages.showInputDialog(project, "Enter ActionBean class name",
+								 "New ActionBean", Messages.getQuestionIcon(), "ActionBean", validator);
+		return validator.getCreatedElements();
+	}
 }

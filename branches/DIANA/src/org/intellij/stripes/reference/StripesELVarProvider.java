@@ -19,6 +19,7 @@ package org.intellij.stripes.reference;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.impl.source.jsp.JspImplicitVariableImpl;
 import com.intellij.psi.impl.source.jsp.el.impl.ELElementProcessor;
 import com.intellij.psi.impl.source.jsp.el.impl.JspElVariablesProvider;
@@ -87,7 +88,7 @@ public class StripesELVarProvider extends JspElVariablesProvider {
             if (actionBeanClass == null) continue;
             elElementProcessor.processVariable(
                     new JspImplicitVariableImpl(actionBeanClass,
-                            actionBeanName, actionBeanClass.getManager().getElementFactory().createType(actionBeanClass),
+                            actionBeanName, JavaPsiFacade.getInstance(psiElement.getProject()).getElementFactory().createType(actionBeanClass),
                             actionBeanClass, JspImplicitVariableImpl.NESTED_RANGE) {
 
                         public PsiElement getDeclaration() {

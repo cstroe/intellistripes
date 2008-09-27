@@ -41,29 +41,30 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
         this.actionBeanClass = beanClass;
     }
 
-    @NotNull
-    protected List<SetterReference> parse(String var, int offset) {
-        Boolean braces = getElement() instanceof XmlAttributeValue;
-        if (!braces) return super.parse(var, offset);
+	@Override
+	protected void parse(String str, int offset) {
+        List<SetterReference> retval = getReferences();
 
-        List<SetterReference> retval = new ArrayList<SetterReference>();
-        for (int i = 0, wStart = 0, lBrace = 0, index = 0, wEnd = 0; i < var.length(); i++) {
-            if (var.charAt(i) == '.' && lBrace == 0) {
+        Boolean braces = getElement() instanceof XmlAttributeValue;
+        if (!braces) return;
+
+		retval.clear();
+        for (int i = 0, wStart = 0, lBrace = 0, index = 0, wEnd = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '.' && lBrace == 0) {
                 retval.add(createReference(new TextRange(offset + wStart, offset + wEnd + 1), index++, wEnd != (i - 1)));
                 wStart = i + 1;
-            } else if (var.charAt(i) == '[') {
+            } else if (str.charAt(i) == '[') {
                 lBrace++;
-            } else if (var.charAt(i) == ']') {
+            } else if (str.charAt(i) == ']') {
                 lBrace--;
             } else if (lBrace == 0) {
                 wEnd = i;
             }
 
-            if (i == (var.length() - 1)) {
+            if (i == (str.length() - 1)) {
                 retval.add(createReference(new TextRange(offset + wStart, offset + (wStart < wEnd ? wEnd + 1 : i + 1)), index++, wEnd != i));
             }
         }
-        return retval;
     }
 
     @NotNull

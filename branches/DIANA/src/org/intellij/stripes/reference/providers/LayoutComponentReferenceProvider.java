@@ -19,10 +19,12 @@ package org.intellij.stripes.reference.providers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.ProcessingContext;
 import org.intellij.stripes.reference.JspTagAttrLayoutComponentReference;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.intellij.stripes.util.StripesConstants;
@@ -32,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 8/11/2007 Time: 11:19:41 PM
  */
-public class LayoutComponentReferenceProvider extends AbstractReferenceProvider {
+public class LayoutComponentReferenceProvider extends PsiReferenceProvider {
     private static PsiElementFilter LAYOUT_RENDER_FILTER = new PsiElementFilter() {
         public boolean isAccepted(PsiElement element) {
             return element instanceof XmlTag
@@ -64,15 +66,11 @@ public class LayoutComponentReferenceProvider extends AbstractReferenceProvider 
         return null;
     }
 
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface PsiReferenceProvider ---------------------
-
-    @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-        final JspFile jspFile = getLayoutDefinitionJspFile((XmlTag) psiElement.getParent().getParent());
-        return jspFile == null
-                ? PsiReference.EMPTY_ARRAY
-                : new PsiReference[]{new JspTagAttrLayoutComponentReference((XmlAttributeValue) psiElement, jspFile)};
-    }
+	@NotNull
+	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+		final JspFile jspFile = getLayoutDefinitionJspFile((XmlTag) element.getParent().getParent());
+		return jspFile == null
+				? PsiReference.EMPTY_ARRAY
+				: new PsiReference[]{new JspTagAttrLayoutComponentReference((XmlAttributeValue) element, jspFile)};
+	}
 }

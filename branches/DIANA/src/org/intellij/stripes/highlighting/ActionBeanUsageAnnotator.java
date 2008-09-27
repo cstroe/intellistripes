@@ -77,12 +77,12 @@ public class ActionBeanUsageAnnotator implements Annotator {
                 .setPopupTitle(StripesUtil.message("annotator.actionBeanUsages"))
                 .setAlignment(GutterIconRenderer.Alignment.LEFT)
                 .setCellRenderer(new PsiElementListCellRenderer<XmlTag>() {
-                    public String getElementText(XmlTag psiElement) {
-                        return psiElement.getName();
-                    }
+					protected String getContainerText(XmlTag xmlTag, String s) {
+						return "in " + xmlTag.getContainingFile().getName();
+					}
 
-                    protected String getContainerText(PsiElement psiElement, String s) {
-                        return "in " + psiElement.getContainingFile().getName();
+					public String getElementText(XmlTag psiElement) {
+                        return psiElement.getName();
                     }
 
                     protected int getIconFlags() {

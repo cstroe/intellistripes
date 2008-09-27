@@ -127,7 +127,7 @@ public class StripesFacetConfiguration implements FacetConfiguration {
 
 // --------------------- Interface JDOMExternalizable ---------------------
 
-
+//TODO rewrite settings persistance for Diana
     public void readExternal(Element element) throws InvalidDataException {
         springIntegration = JDOMExternalizer.readBoolean(element, StripesConstants.SPRING_INTEGRATION);
         logging = JDOMExternalizer.readBoolean(element, StripesConstants.LOGGING);

@@ -131,11 +131,7 @@ public final class StripesReferenceUtil {
         return retval;
     }
 
-    static ElementManipulator<PsiLiteralExpression> getManipulator(PsiLiteralExpression expression) {
-        return PsiManager.getInstance(expression.getProject()).getElementManipulatorsRegistry().getManipulator(expression);
-    }
-
-    /**
+	/**
      * Returns list of properties for certain class and its superclasses that have setter method
      *
      * @param psiClass class to examine
