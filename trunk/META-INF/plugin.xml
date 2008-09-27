@@ -42,7 +42,7 @@
 Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory">http://code.google.com/p/intellistripes/wiki/VersionHistory</a>
         ]]>
     </change-notes>
-    <idea-version since-build="7941" until-build="7999"/>
+    <idea-version since-build="7860" until-build="7999"/>
     <depends>com.intellij.javaee</depends>
     <depends>com.intellij.spring</depends>
     <depends>JavaScript</depends>
