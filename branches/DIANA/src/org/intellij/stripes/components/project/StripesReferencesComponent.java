@@ -194,7 +194,7 @@ public class StripesReferencesComponent implements ProjectComponent {
 					}
         });
 
-        registry.registerReferenceProvider(new OnwardResolutionConstructorFilter(1), PsiLiteralExpression.class, new WebPathReferenceProvider(true, false, false) {
+        registry.registerReferenceProvider(new OnwardResolutionConstructorFilter(1), PsiLiteralExpression.class, new PsiReferenceProvider() {
 			@NotNull
 			public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull ProcessingContext context) {
 
