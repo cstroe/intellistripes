@@ -17,7 +17,6 @@
 
 package org.intellij.stripes.components.project;
 
-import com.intellij.javaee.web.ServletPathReferenceProvider;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
@@ -100,6 +99,7 @@ public class StripesReferencesComponent implements ProjectComponent {
                 return Arrays.asList(PsiLiteralExpression.class);
             }
         });
+
     }
 // ------------------------ INTERFACE METHODS ------------------------
 
@@ -174,8 +174,6 @@ public class StripesReferencesComponent implements ProjectComponent {
         });
 
         registry.registerReferenceProvider(new OnwardResolutionConstructorFilter(1), PsiLiteralExpression.class, new JspxIncludePathReferenceProvider() {
-            private ServletPathReferenceProvider servletPathProvider = new ServletPathReferenceProvider();//TODO we can delete this?
-
             @NotNull
             public PsiReference[] getReferencesByElement(final PsiElement psiElement) {
                 String text = StringUtil.stripQuotesAroundValue(psiElement.getText());
