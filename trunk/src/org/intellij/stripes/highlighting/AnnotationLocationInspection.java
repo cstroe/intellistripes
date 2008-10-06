@@ -22,6 +22,7 @@ import com.intellij.codeInspection.*;
 import com.intellij.psi.*;
 import com.intellij.psi.css.impl.util.RemoveElementAction;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PropertyUtil;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.Nls;
@@ -88,8 +89,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
 
 // check if standalone @Validate annotaion is apllied to valid setter/getter or simple field
                     PsiElement p = annotation.getParent().getParent();
-                    if ((p instanceof PsiMethod && (StripesUtil.isGetter((PsiMethod) p) || StripesUtil.isGetter((PsiMethod) p)))
-                            || p instanceof PsiField) {
+                    if ((p instanceof PsiMethod && (PropertyUtil.isSimplePropertyAccessor((PsiMethod)p))) || p instanceof PsiField) {
                         return;
                     }
                     holder.registerProblem(annotation, StripesUtil.message("inspection.wrongMember"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, p instanceof PsiModifierListOwner
@@ -97,8 +97,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                             : LocalQuickFix.EMPTY_ARRAY);
                 } else if (StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION.equals(annotation.getQualifiedName())) {
                     PsiElement p = annotation.getParent().getParent();
-                    if ((p instanceof PsiMethod && (StripesUtil.isGetter((PsiMethod) p) || StripesUtil.isSetter((PsiMethod) p)))
-                            || p instanceof PsiField) {
+                    if ((p instanceof PsiMethod && PropertyUtil.isSimplePropertyAccessor((PsiMethod) p)) || p instanceof PsiField) {
                         return;
                     }
                     holder.registerProblem(annotation, StripesUtil.message("inspection.wrongMember"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, p instanceof PsiModifierListOwner
