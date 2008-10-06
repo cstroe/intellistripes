@@ -19,7 +19,7 @@
 <idea-plugin url="http://code.google.com/p/intellistripes">
     <name>IntelliStripes</name>
     <description>Stripes even more easy!!!</description>
-    <version>1.0.Final.941</version>
+    <version>1.0.Final.860</version>
     <vendor email="intellistripes@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
     </vendor>
