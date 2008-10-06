@@ -23,6 +23,7 @@ import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.spring.model.properties.ReferenceSetBase;
+import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
@@ -114,6 +115,7 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
 
                 method = (hasBraces && !isIndexedType) ? null : method;
             }
+
             return method;
         }
 
@@ -133,6 +135,18 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
                 }
             }
             return null;
+        }
+
+        public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
+            final String name = PropertyUtil.getPropertyName(newElementName);
+            PsiElement retval = super.handleElementRename(name == null ? newElementName : name);
+//            if (getElement() instanceof PsiLiteralExpression) {
+//                BeanProperty bProp = BeanProperty.createBeanProperty((PsiMethod) resolve());
+//                bProp.setName(name);
+//                return bProp.getPsiElement();
+//            }
+
+            return retval;
         }
     }
 }
