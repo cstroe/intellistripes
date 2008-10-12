@@ -45,7 +45,7 @@ import java.util.*;
  */
 public final class StripesReferenceUtil {
 
-    private static List<String> EMPTY_STRING_LIST = new ArrayList<String>(8);
+    private static List<String> EMPTY_STRING_LIST = new ArrayList<String>(0);
 
     public static PsiElementFilter NAME_ATTR_FILTER = new StripesTagFilter() {
         protected boolean isDetailsAccepted(XmlTag tag) {
@@ -69,8 +69,6 @@ public final class StripesReferenceUtil {
         return methodNames;
     }
 
-	private static Map<String, PsiMethod> EMPTY_RESOLUTION_METHOD_MAP = new HashMap<String, PsiMethod>(0);
-
 	/**
      * Get the Event methods (Resolution methods) for an ActionBean Class
      *
@@ -88,7 +86,7 @@ public final class StripesReferenceUtil {
             return psiMethods;
         }
 
-		if (null == superClass) return EMPTY_RESOLUTION_METHOD_MAP;
+		if (null == superClass) return new HashMap<String, PsiMethod>(0);
 
         if (!(Object.class.getName().equals(superClass.getQualifiedName()))) {
             psiMethods.putAll(getResolutionMethods(superClass));
@@ -198,39 +196,6 @@ public final class StripesReferenceUtil {
         }
 
         return methodNames;
-    }
-
-    public static List<String> splitNestedVar(String var) {
-        List<String> retval = new ArrayList<String>(8);
-        for (int i = 0, wStart = 0, lBrace = 0; i < var.length(); i++) {
-            if (var.charAt(i) == '.' && lBrace == 0) {
-                retval.add(var.substring(wStart, i));
-                wStart = i + 1;
-            } else if (var.charAt(i) == '[') {
-                lBrace++;
-            } else if (var.charAt(i) == ']') {
-                lBrace--;
-            }
-
-            if (i == (var.length() - 1)) {
-                retval.add(var.substring(wStart, var.length()));
-            }
-        }
-        return retval;
-    }
-
-    public static PsiClass resolveActionBeanSetterReturnType(PsiClass host, String field) {
-        PsiClass cls;
-
-        try {
-            PsiMethod setter = host.findMethodsByName("set" + StringUtil.capitalize(field.replaceAll("\\[.*?\\]", "")), true)[0];
-            PsiType propertyType = setter.getParameterList().getParameters()[0].getType();
-            cls = resolveClassInType(propertyType, host.getProject());
-        } catch (Exception e) {
-            cls = null;
-        }
-
-        return cls;
     }
 
     public static PsiClass resolveClassInType(PsiType propertyType, Project project) {

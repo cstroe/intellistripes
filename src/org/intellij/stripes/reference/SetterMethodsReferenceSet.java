@@ -36,11 +36,18 @@ import java.util.Map;
 public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsReferenceSet.SetterReference> {
 
     private final PsiClass actionBeanClass;
+    private final Boolean allowAsterisk;
 
     public SetterMethodsReferenceSet(@NotNull PsiElement element, @NotNull PsiClass beanClass) {
+        this(element, beanClass, false);
+    }
+
+    public SetterMethodsReferenceSet(@NotNull PsiElement element, @NotNull PsiClass beanClass, Boolean allowAsterisk) {
         super(element, 0);
         this.actionBeanClass = beanClass;
+        this.allowAsterisk = allowAsterisk;
     }
+
 
     @NotNull
     protected List<SetterReference> parse(String var, int offset) {
@@ -86,16 +93,18 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
     }
 
     public static final class SetterReference extends PsiReferenceBase<PsiElement> {
+
         final private SetterMethodsReferenceSet referenceSet;
         final private Integer index;
         final private Boolean hasBraces;
 
-        public SetterReference(SetterMethodsReferenceSet referenceSet, TextRange range, Integer index, Boolean hasBraces) {
+        public SetterReference(final SetterMethodsReferenceSet referenceSet, final TextRange range, final Integer index, final Boolean hasBraces) {
             super(referenceSet.getElement(), range);
             this.index = index;
             this.referenceSet = referenceSet;
             this.hasBraces = hasBraces;
         }
+
 
         @Nullable
 /**
@@ -103,6 +112,10 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
  * Must return only valid Stripes setter.
  */
         public PsiElement resolve() {
+            if (getValue().startsWith("*")) {
+                return getHostPsiClass();
+            }
+
             PsiMethod method = PropertyUtil.findPropertySetter(getHostPsiClass(), getValue(), false, true);
             if (!StripesUtil.isActionBeanPropertySetter(method, false)) return null;
 
@@ -120,9 +133,12 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
         }
 
         public Object[] getVariants() {
-            return StripesReferenceUtil.getVariants(StripesReferenceUtil.getWritableProperties(
-                    getHostPsiClass(), referenceSet.isSupportsBraces()), StripesConstants.FIELD_ICON
-            );
+            final List<String> writableProperties = StripesReferenceUtil.getWritableProperties(getHostPsiClass(), referenceSet.isSupportsBraces());
+            if (writableProperties.size() > 0 && this.referenceSet.allowAsterisk) {
+                writableProperties.add(0, "**");
+                writableProperties.add(0, "*");
+            }
+            return StripesReferenceUtil.getVariants(writableProperties, StripesConstants.FIELD_ICON);
         }
 
         private PsiClass getHostPsiClass() {
@@ -140,6 +156,9 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
         public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
             final String name = PropertyUtil.getPropertyName(newElementName);
             PsiElement retval = super.handleElementRename(name == null ? newElementName : name);
+
+//TODO research and implement handle of renaming properties from annotaion attributes
+
 //            if (getElement() instanceof PsiLiteralExpression) {
 //                BeanProperty bProp = BeanProperty.createBeanProperty((PsiMethod) resolve());
 //                bProp.setName(name);

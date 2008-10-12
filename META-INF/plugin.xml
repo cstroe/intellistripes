@@ -19,23 +19,14 @@
 <idea-plugin url="http://code.google.com/p/intellistripes">
     <name>IntelliStripes</name>
     <description>Stripes even more easy!!!</description>
-    <version>1.0.Final.860</version>
+    <version>1.0.1.860</version>
     <vendor email="intellistripes@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
     </vendor>
     <change-notes>
         <![CDATA[
-            <strong>ATTENTION</strong>
 <p>
-    This is the Last IntelliStripes version with Stripes 1.4.3 support.
-    Only bugfixes will be released for this branch
-</p>
-<p>
-    We are focusing now on Stripes 1.5 support for the next mayor version (1.2)
-</p>
-<p>
-    We recomended that change your actual Stripes 1.4.3 codebase and applications,
-    to Stripes 1.5
+    The first version for Selena with Stripes 1.5 support.
 </p>
 <br/>
 <br/>
