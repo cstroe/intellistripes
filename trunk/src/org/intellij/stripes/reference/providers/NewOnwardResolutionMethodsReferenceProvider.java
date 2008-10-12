@@ -18,19 +18,13 @@
 package org.intellij.stripes.reference.providers;
 
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
 import org.intellij.stripes.reference.JavaStringResolutionMethodsReference;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Mario Arias
- * Date: 10/04/2008
- * Time: 01:20:15 AM
- */
-public class NewOnwardResolutionMethodsReferenceProvider extends AbstractReferenceProvider {
-    @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
+public class NewOnwardResolutionMethodsReferenceProvider extends PsiReferenceProviderBase {
+    @NotNull public PsiReference[] getReferencesByElement(PsiElement psiElement) {
         final PsiClass psiClass = StripesReferenceUtil.getPsiClassFromExpressionList((PsiExpressionList) psiElement.getParent());
         return psiClass == null
                 ? PsiReference.EMPTY_ARRAY

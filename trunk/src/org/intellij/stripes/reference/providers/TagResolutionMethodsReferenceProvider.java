@@ -20,6 +20,7 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
  * <p/>
  * Created by IntelliJ IDEA. User: Mario Arias Date: 14/07/2007 Time: 10:34:11 PM
  */
-public class TagResolutionMethodsReferenceProvider extends AbstractReferenceProvider {
+public class TagResolutionMethodsReferenceProvider extends PsiReferenceProviderBase {
 // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface PsiReferenceProvider ---------------------

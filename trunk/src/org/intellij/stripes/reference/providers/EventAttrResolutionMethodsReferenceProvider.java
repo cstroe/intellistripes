@@ -20,6 +20,7 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
  * <p/>
  * Created by IntelliJ IDEA. User: Mario Arias Date: 18/09/2007 Time: 01:01:55 AM
  */
-public class EventAttrResolutionMethodsReferenceProvider extends AbstractReferenceProvider {
+public class EventAttrResolutionMethodsReferenceProvider extends PsiReferenceProviderBase {
 // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface PsiReferenceProvider ---------------------
@@ -41,7 +42,7 @@ public class EventAttrResolutionMethodsReferenceProvider extends AbstractReferen
     @NotNull
     public PsiReference[] getReferencesByElement(PsiElement psiElement) {
         if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
-        
+
         XmlTag tag = (XmlTag) psiElement.getParent().getParent();
         final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), psiElement.getProject());
         return actionBeanPsiClass == null

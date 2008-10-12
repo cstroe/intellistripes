@@ -20,6 +20,7 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.xml.XmlTag;
 import org.intellij.stripes.reference.SetterMethodsReferenceSet;
@@ -28,10 +29,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * This class provide References to Setter Methods for an Action Bean Class, in tags atripes:[input]
- * <p/>
- * Created by IntelliJ IDEA. User: Mario Arias Date: 4/07/2007 Time: 12:45:02 AM
  */
-public class SetterMethodsReferenceProvider extends AbstractReferenceProvider {
+public class SetterMethodsReferenceProvider extends PsiReferenceProviderBase {
 
     private String[] parentTags;
 

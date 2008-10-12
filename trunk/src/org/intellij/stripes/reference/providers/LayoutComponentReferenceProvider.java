@@ -19,6 +19,7 @@ package org.intellij.stripes.reference.providers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
 import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.xml.XmlAttributeValue;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 8/11/2007 Time: 11:19:41 PM
  */
-public class LayoutComponentReferenceProvider extends AbstractReferenceProvider {
+public class LayoutComponentReferenceProvider extends PsiReferenceProviderBase {
     private static PsiElementFilter LAYOUT_RENDER_FILTER = new PsiElementFilter() {
         public boolean isAccepted(PsiElement element) {
             return element instanceof XmlTag

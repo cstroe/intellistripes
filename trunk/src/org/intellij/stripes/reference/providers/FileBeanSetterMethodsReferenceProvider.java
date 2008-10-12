@@ -20,6 +20,7 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
@@ -28,12 +29,12 @@ import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.NotNull;
 
-public class FileBeanSetterMethodsReferenceProvider extends AbstractReferenceProvider {
+public class FileBeanSetterMethodsReferenceProvider extends PsiReferenceProviderBase {
     @NotNull
     public PsiReference[] getReferencesByElement(PsiElement psiElement) {
 
         if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
-        
+
         final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) psiElement.getParent().getParent(), StripesConstants.FORM_TAG);
         return actionBeanPsiClass == null
                 ? PsiReference.EMPTY_ARRAY

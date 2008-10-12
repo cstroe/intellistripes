@@ -28,12 +28,14 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.PsiLiteralExpression;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.css.impl.util.CssInHtmlClassOrIdReferenceProvider;
 import com.intellij.psi.filters.*;
 import com.intellij.psi.filters.position.NamespaceFilter;
 import com.intellij.psi.filters.position.ParentElementFilter;
-import com.intellij.psi.filters.position.SuperParentFilter;
 import com.intellij.psi.impl.source.jsp.el.ELLanguage;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
@@ -43,16 +45,16 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassRe
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.JspxIncludePathReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.WebPathReferenceProvider;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
-import com.intellij.psi.util.PropertyUtil;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
 import org.intellij.lang.regexp.RegExpLanguage;
-import org.intellij.stripes.reference.JavaStringResolutionMethodsReference;
 import org.intellij.stripes.reference.MimeTypeReference;
-import org.intellij.stripes.reference.SetterMethodsReferenceSet;
 import org.intellij.stripes.reference.StripesReferenceUtil;
-import org.intellij.stripes.reference.filters.*;
+import org.intellij.stripes.reference.contributors.ResolutionReferenceContributor;
+import org.intellij.stripes.reference.contributors.SetterReferenceContributor;
+import org.intellij.stripes.reference.filters.NewStreamingResolutionFilter;
+import org.intellij.stripes.reference.filters.OnwardResolutionConstructorFilter;
+import org.intellij.stripes.reference.filters.SpringBeanAnnotationFilter;
 import org.intellij.stripes.reference.providers.*;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesMultiHostInjector;
@@ -62,14 +64,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 3/07/2007 Time: 11:14:42 PM
- */
 public class StripesReferencesComponent implements ProjectComponent {
     // ------------------------------ FIELDS ------------------------------
     private ReferenceProvidersRegistry registry;
     final public static NamespaceFilter STRIPES_NAMESPACE_FILTER = new NamespaceFilter(StripesConstants.STRIPES_TLDS);
-    final private static ElementFilter VALIDATE_ANNOTATION_FILTER = new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_ANNOTATION));
+    final private static ElementFilter VALIDATE_ANNOTATION_EXPRESSION_ATTR = new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.VALIDATE_ANNOTATION, StripesConstants.EXPRESSION_ATTR);
+    final private static ElementFilter VALIDATE_ANNOTATION_MASK_ATTR = new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.VALIDATE_ANNOTATION, StripesConstants.MASK_ATTR);
     // --------------------------- CONSTRUCTORS ---------------------------
 
     public StripesReferencesComponent(Project project) {
@@ -79,19 +79,32 @@ public class StripesReferencesComponent implements ProjectComponent {
         InjectedLanguageManager.getInstance(project).registerMultiHostInjector(StripesMultiHostInjector.getJSInstance());
         InjectedLanguageManager.getInstance(project).registerMultiHostInjector(new MultiHostInjector() {
             public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
-                if (VALIDATE_ANNOTATION_FILTER.isAcceptable(context, context)) {
-                    if (StripesConstants.EXPRESSION_ATTR.equals(((PsiNameValuePair) context.getParent()).getName())) {
-                        final TextRange range = new TextRange(1, context.getTextLength() - 1);
-                        registrar.startInjecting(ELLanguage.INSTANCE)
-                                .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
-                                .doneInjecting();
-                    } else if (StripesConstants.MASK_ATTR.equals(((PsiNameValuePair) context.getParent()).getName())) {
-                        final TextRange range = new TextRange(1, context.getTextLength() - 1);
-                        registrar.startInjecting(RegExpLanguage.INSTANCE)
-                                .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
-                                .doneInjecting();
-                    }
+                if (VALIDATE_ANNOTATION_EXPRESSION_ATTR.isAcceptable(context, context)) {
+                    final TextRange range = new TextRange(1, context.getTextLength() - 1);
+                    registrar.startInjecting(ELLanguage.INSTANCE)
+                            .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
+                            .doneInjecting();
+                } else if (VALIDATE_ANNOTATION_MASK_ATTR.isAcceptable(context, context)) {
+                    final TextRange range = new TextRange(1, context.getTextLength() - 1);
+                    registrar.startInjecting(RegExpLanguage.INSTANCE)
+                            .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
+                            .doneInjecting();
+
                 }
+
+//                if (VALIDATE_ANNOTATION_FILTER.isAcceptable(context, context)) {
+//                    if (StripesConstants.EXPRESSION_ATTR.equals(((PsiNameValuePair) context.getParent()).getName())) {
+//                        final TextRange range = new TextRange(1, context.getTextLength() - 1);
+//                        registrar.startInjecting(ELLanguage.INSTANCE)
+//                                .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
+//                                .doneInjecting();
+//                    } else if (StripesConstants.MASK_ATTR.equals(((PsiNameValuePair) context.getParent()).getName())) {
+//                        final TextRange range = new TextRange(1, context.getTextLength() - 1);
+//                        registrar.startInjecting(RegExpLanguage.INSTANCE)
+//                                .addPlace(null, null, (PsiLanguageInjectionHost) context, range)
+//                                .doneInjecting();
+//                    }
+//                }
             }
 
             @NotNull
@@ -112,6 +125,9 @@ public class StripesReferencesComponent implements ProjectComponent {
     }
 
     public void initComponent() {
+        new ResolutionReferenceContributor().registerReferenceProviders(registry);
+        new SetterReferenceContributor().registerReferenceProviders(registry);
+
         for (String tag : StripesConstants.ACTION_BEAN_TAGS) {
 //            all stripes tags with beanclass parameter add Reference provider for implementations od Stripes ActionBean
             registerSubclass(tag, StripesConstants.BEANCLASS_ATTR, StripesConstants.ACTION_BEAN);
@@ -150,28 +166,7 @@ public class StripesReferencesComponent implements ProjectComponent {
         registerTags(provider, STRIPES_NAMESPACE_FILTER, StripesConstants.ENUM_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG);
 
         registerSpringBeanReference();
-        registerOnwardResolutionReference();
         registerStreamingResolutionReference();
-
-        registry.registerReferenceProvider(
-                new AndFilter(
-                        new SuperParentFilter(new OrFilter(
-                                new QualifiedNameElementFilter(StripesConstants.VALIDATION_METHOD_ANNOTATION),
-                                new QualifiedNameElementFilter(StripesConstants.VALIDATE_ANNOTATION)
-                        )), new SuperParentFilter(new ClassFilter(PsiNameValuePair.class) {
-                    public boolean isAcceptable(Object o, PsiElement psiElement) {
-                        return super.isAcceptable(o, psiElement) && "on".equals(((PsiNameValuePair) o).getName());
-                    }
-                }))
-                , PsiLiteralExpression.class, new PsiReferenceProviderBase() {
-            @NotNull
-            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-                PsiClass cls = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
-                return null == cls
-                        ? PsiReference.EMPTY_ARRAY
-                        : new PsiReference[]{new JavaStringResolutionMethodsReference((PsiLiteralExpression) psiElement, cls)};
-            }
-        });
 
         registry.registerReferenceProvider(new OnwardResolutionConstructorFilter(1), PsiLiteralExpression.class, new JspxIncludePathReferenceProvider() {
             @NotNull
@@ -221,32 +216,11 @@ public class StripesReferencesComponent implements ProjectComponent {
             }
         });
 
-        registry.registerReferenceProvider(
-                new AndFilter(
-                        new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION)),
-                        new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.VALIDATE_ANNOTATION, "field")
-                ), PsiLiteralExpression.class, new PsiReferenceProviderBase() {
-            @NotNull
-            public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-                PsiMember parent = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
-                if (parent == null) parent = PsiTreeUtil.getParentOfType(psiElement, PsiField.class);
 
-                PsiClass cls = StripesReferenceUtil.resolveClassInType(PropertyUtil.getPropertyType(parent), psiElement.getProject());
-                return null == cls
-                        ? PsiReference.EMPTY_ARRAY
-                        : new SetterMethodsReferenceSet(psiElement, cls).getPsiReferences();
-            }
-        });
-    }
-
-    private void registerOnwardResolutionReference() {
-        NewOnwardResolutionMethodsReferenceProvider referenceProvider = new NewOnwardResolutionMethodsReferenceProvider();
-        registry.registerReferenceProvider(new ParentElementFilter(new NewForwardResolutionFilter()), PsiLiteralExpression.class, referenceProvider);
-        registry.registerReferenceProvider(new ParentElementFilter(new NewRedirectResolutionFilter()), PsiLiteralExpression.class, referenceProvider);
     }
 
     private void registerStreamingResolutionReference() {
-        registry.registerReferenceProvider(new ParentElementFilter(new NewStreamingResolutionFilter()), PsiLiteralExpression.class, new AbstractReferenceProvider() {
+        registry.registerReferenceProvider(new ParentElementFilter(new NewStreamingResolutionFilter()), PsiLiteralExpression.class, new PsiReferenceProviderBase() {
             @NotNull
             public PsiReference[] getReferencesByElement(PsiElement psiElement) {
                 return new PsiReference[]{new MimeTypeReference((PsiLiteralExpression) psiElement)};

@@ -22,9 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.jsp.JspImplicitVariableImpl;
 import com.intellij.psi.impl.source.jsp.el.impl.ELElementProcessor;
 import com.intellij.psi.impl.source.jsp.el.impl.JspElVariablesProvider;
-import com.intellij.psi.impl.source.jsp.el.impl.MethodSignatureFilter;
 import com.intellij.psi.jsp.JspFile;
-import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiElementFilter;
@@ -34,7 +32,6 @@ import org.intellij.stripes.util.StripesTagFilter;
 import org.intellij.stripes.util.StripesUtil;
 import org.intellij.stripes.util.XmlTagContainer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -42,7 +39,6 @@ import java.util.Map;
 public class StripesELVarProvider extends JspElVariablesProvider {
 
     private static String ACTION_BEAN = "actionBean";
-    private static String USE_ACTION_BEAN = "useActionBean";
 
     private static PsiElementFilter ACTION_BEAN_PROVIDER_FILTER = new StripesTagFilter() {
         protected boolean isDetailsAccepted(XmlTag tag) {
@@ -65,7 +61,7 @@ public class StripesELVarProvider extends JspElVariablesProvider {
                     public void add(XmlTag tag) {
                         if (StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())) {
                             if (tag.getAttributeValue(StripesConstants.ID_ATTR) == null && tag.getAttributeValue(StripesConstants.VAR_ATTR) == null) {
-                                container.put(USE_ACTION_BEAN, tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
+                                container.put(StripesConstants.USE_ACTION_BEAN_TAG, tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
                             } else if (tag.getAttributeValue(StripesConstants.ID_ATTR) != null) {
                                 container.put(tag.getAttributeValue(StripesConstants.ID_ATTR), tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
                             } else if (tag.getAttributeValue(StripesConstants.VAR_ATTR) != null) {
@@ -77,7 +73,7 @@ public class StripesELVarProvider extends JspElVariablesProvider {
                     }
                 }).getContainer();
 
-        String clsName = actionBeans.remove(USE_ACTION_BEAN);
+        String clsName = actionBeans.remove(StripesConstants.USE_ACTION_BEAN_TAG);
         if (null != clsName) {
             actionBeans.put(ACTION_BEAN, clsName);
         }
@@ -102,10 +98,5 @@ public class StripesELVarProvider extends JspElVariablesProvider {
             );
         }
         return true;
-    }
-
-    @Nullable
-    public MethodSignatureFilter getMethodSignatureFilter(@NotNull PsiElement psiElement, ELExpressionHolder elExpressionHolder, PsiElement psiElement1) {
-        return super.getMethodSignatureFilter(psiElement, elExpressionHolder, psiElement1);
     }
 }
