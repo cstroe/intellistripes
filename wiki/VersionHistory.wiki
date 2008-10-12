@@ -157,8 +157,15 @@ _Deleted from repository_
   * Bugfixes and improvements for more reliable processing of JSP files
   * Introduced dependencies from !JavaScript and !IntelliLang plugins
 
-===Version 1.0.Final.941 (2208-09-01)===
+===Version 1.0.Final.941 (2008-09-01)===
   * Auto Complete for {{{new StreamingResultion()}}} on the {{{contentType}}} parameter
   * Support for EL on tags atributes
   * Bugfixes
   * Last Version with Stripes 1.4.3 support
+
+===Version 1.0.1.860 (2008-10-12)===
+  * Major Refactoring dedicated to moving towards Diana (mmmmm who cares if all works :))
+  * bugfixes (Issue #38, Issue #40)
+  * Issue #35
+  * Issue #41
+  * bug fix related to renaming of nested property references from JSP
