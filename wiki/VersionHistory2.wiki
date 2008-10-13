@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Version History for IntelliStripes2 (Diana version)
 #labels Featured,Diana
 
 = Introduction =
