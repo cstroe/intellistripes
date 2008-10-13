@@ -1,14 +1,8 @@
 #summary Version History for IntelliStripes2 (Diana version)
 #labels Featured,Diana
 
-= Introduction =
+=History=
 
-Add your content here.
+===Version 2.0.beta.1.664 (2008-09-27)===
 
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Initial version. Port of version 1.0.Final to Diana
