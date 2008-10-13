@@ -1,6 +1,7 @@
+#summary Version History for IntelliStripes (Selena version)
 #labels Featured
-=History=
 
+=History=
 
 ===Version 0.1.0.097 (2007-07-29)===
 
