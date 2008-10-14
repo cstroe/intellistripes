@@ -23,12 +23,6 @@ import org.intellij.stripes.reference.JavaStringResolutionMethodsReference;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Mario Arias
- * Date: 10/04/2008
- * Time: 01:20:15 AM
- */
 public class NewOnwardResolutionMethodsReferenceProvider extends PsiReferenceProvider {
 
 	@NotNull

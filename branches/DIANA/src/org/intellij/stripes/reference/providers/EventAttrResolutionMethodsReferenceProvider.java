@@ -32,8 +32,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * This class Provide References to Resolution methods in stripes:link, url or useActionBean tags in
- * <p/>
- * Created by IntelliJ IDEA. User: Mario Arias Date: 18/09/2007 Time: 01:01:55 AM
  */
 public class EventAttrResolutionMethodsReferenceProvider extends PsiReferenceProvider {
 

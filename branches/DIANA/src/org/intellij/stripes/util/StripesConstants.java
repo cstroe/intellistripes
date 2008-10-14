@@ -61,10 +61,16 @@ public interface StripesConstants {
     String VALIDATE_NESTED_PROPERTIES_ANNOTATION = "net.sourceforge.stripes.validation.ValidateNestedProperties";
     String VALIDATION_METHOD_ANNOTATION = "net.sourceforge.stripes.validation.ValidationMethod";
     String URL_BINDING_ANNOTATION = "net.sourceforge.stripes.action.UrlBinding";
+	String AFTER_ANNOTATION = "net.sourceforge.stripes.action.After";
+	String BEFORE_ANNOTATION = "net.sourceforge.stripes.action.Before";
+	String STRICT_BINDING_ANNOTATION = "net.sourceforge.stripes.action.StrictBinding";
 
     //stripes annotation attribute names
     String EXPRESSION_ATTR = "expression";
     String MASK_ATTR = "mask";
+	String DENY_ATTR = "deny";
+	String ALLOW_ATTR = "allow";
+	String ON_ATTR = "on";
 
     //stripes configuration
     String STRIPES_SERVLET_NAME = "StripesDispatcher";

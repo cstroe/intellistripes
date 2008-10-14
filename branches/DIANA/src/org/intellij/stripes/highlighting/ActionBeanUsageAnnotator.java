@@ -38,6 +38,7 @@ import org.intellij.stripes.util.StripesUtil;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 public class ActionBeanUsageAnnotator implements Annotator {
     private static PsiElementFilter FILTER_TAG = new StripesTagFilter() {
@@ -54,7 +55,7 @@ public class ActionBeanUsageAnnotator implements Annotator {
     };
 
     private static class XmlTagProcessor implements Processor<PsiReference> {
-        private Collection<XmlTag> tags = new ArrayList<XmlTag>();
+		private Collection<XmlTag> tags = new LinkedList<XmlTag>();
         public boolean process(PsiReference ref) {
             PsiElement el = ref.getElement();
             if (ActionBeanUsageAnnotator.FILTER_ATTR.isAccepted(el) && ActionBeanUsageAnnotator.FILTER_TAG.isAccepted(el.getParent().getParent())) {
