@@ -32,8 +32,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * This class Provide References to Resolution Methods in stripes:submmit, image or button tags
- * <p/>
- * Created by IntelliJ IDEA. User: Mario Arias Date: 14/07/2007 Time: 10:34:11 PM
  */
 public class TagResolutionMethodsReferenceProvider extends PsiReferenceProvider {
 

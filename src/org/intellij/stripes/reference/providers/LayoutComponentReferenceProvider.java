@@ -31,9 +31,6 @@ import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 8/11/2007 Time: 11:19:41 PM
- */
 public class LayoutComponentReferenceProvider extends PsiReferenceProvider {
     private static PsiElementFilter LAYOUT_RENDER_FILTER = new PsiElementFilter() {
         public boolean isAccepted(PsiElement element) {

@@ -104,9 +104,4 @@ public class StripesELVarProvider extends JspElVariablesProvider {
         }
         return true;
     }
-
-    @Nullable
-    public MethodSignatureFilter getMethodSignatureFilter(@NotNull PsiElement psiElement, ELExpressionHolder elExpressionHolder, PsiElement psiElement1) {
-        return super.getMethodSignatureFilter(psiElement, elExpressionHolder, psiElement1);
-    }
 }

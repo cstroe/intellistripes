@@ -17,42 +17,25 @@
 
 package org.intellij.stripes.actions;
 
-import com.intellij.CommonBundle;
-import com.intellij.ide.IdeView;
-import com.intellij.ide.IdeBundle;
-import com.intellij.ide.actions.CreateElementActionBase;
 import com.intellij.ide.actions.CreateClassAction;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.fileTemplates.FileTemplateUtil;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataConstants;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
-import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Properties;
-
 public class StripesNewActionBeanAction extends CreateClassAction {
-    protected String getActionName(PsiDirectory directory, String s) {
-        return "Creating Stripes ActionBean";
-    }
+	protected String getActionName(PsiDirectory directory, String s) {
+		return "Creating Stripes ActionBean";
+	}
 
-    protected String getCommandName() {
-        return "Create Stripes ActionBean";
-    }
+	protected String getCommandName() {
+		return "Create Stripes ActionBean";
+	}
 
 	@Override
 	protected PsiClass doCreate(PsiDirectory dir, String className) throws IncorrectOperationException {
@@ -69,7 +52,8 @@ public class StripesNewActionBeanAction extends CreateClassAction {
 	protected PsiElement[] invokeDialog(Project project, PsiDirectory directory) {
 		MyInputValidator validator = new MyInputValidator(project, directory);
 		Messages.showInputDialog(project, "Enter ActionBean class name",
-								 "New ActionBean", Messages.getQuestionIcon(), "ActionBean", validator);
+			"New ActionBean", Messages.getQuestionIcon(), "ActionBean", validator
+		);
 		return validator.getCreatedElements();
 	}
 }

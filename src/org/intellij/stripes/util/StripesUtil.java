@@ -144,10 +144,17 @@ public final class StripesUtil {
         if (className == null) return null;
 
         PsiClass retval = PSI_CLASS_MAP.get(className);
-        if (null == retval) {			
+        if (null == retval) {
             retval = JavaPsiFacade.getInstance(project).findClass(className, GlobalSearchScope.allScope(project));
             if (null != retval) PSI_CLASS_MAP.put(className, retval);
         }
+
+        try {
+            retval.getContainingFile();
+        } catch (Exception e) {
+            PSI_CLASS_MAP.remove(className);
+        }
+
         return retval;
     }
 
@@ -222,22 +229,6 @@ public final class StripesUtil {
             }
         }
         return container;
-    }
-
-/**
- * @deprecated {@link com.intellij.psi.util.PropertyUtil#isSimplePropertySetter(com.intellij.psi.PsiMethod)} should be used
-  */
-    @Deprecated public static Boolean isSetter(PsiMethod method) {
-        return null != method && method.getName().startsWith("set")
-                && method.getParameterList().getParametersCount() == 1 && PsiType.VOID.equals(method.getReturnType());
-    }
-
-/**
- * @deprecated {@link com.intellij.psi.util.PropertyUtil#isSimplePropertyGetter(com.intellij.psi.PsiMethod)} should be used
-  */
-    @Deprecated public static Boolean isGetter(PsiMethod method) {
-        return null != method && method.getName().startsWith("get")
-                && method.getParameterList().getParametersCount() == 0 && !PsiType.VOID.equals(method.getReturnType());
     }
 
     /**
