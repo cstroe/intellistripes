@@ -2,5 +2,5 @@
 
 = Features =
 
-  * feature 1
-  * feature 2
+  * Facet auto-detection
+  * ActionResolver.Packages support
