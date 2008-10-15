@@ -3,4 +3,5 @@
 = Features =
 
   * Facet auto-detection
-  * {{{ActionResolver.Packages}}} support
+  * {{{ActionResolver.Packages}}} configuration from GUI
+  * create {{{ActionResolver.Packages}}} when adding new Stripes Facet
