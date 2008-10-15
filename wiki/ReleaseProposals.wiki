@@ -1,4 +1,4 @@
-#summary Feature proposals for 1.0.final release.
+#summary Feature proposals for 1.2 release.
 
 = Features =
 
