@@ -1,5 +1,5 @@
 #summary Proposed RoadMap for future big release.
-#labels Phase-Requirements
+#labels Phase-Requirements,Deprecated
 
 = What is planning to do in release before Stripes 1.5 goes final =
 
