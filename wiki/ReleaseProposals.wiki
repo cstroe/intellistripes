@@ -3,4 +3,4 @@
 = Features =
 
   * Facet auto-detection
-  * ActionResolver.Packages support
+  * {{{ActionResolver.Packages}}} support
