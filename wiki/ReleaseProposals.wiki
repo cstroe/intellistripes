@@ -4,6 +4,6 @@
 
   * Stripes facet auto-detection
   * {{{ActionResolver.Packages}}} configuration from GUI
-  * Create {{{ActionResolver.Packages}}} when adding new Stripes Facet
+  * ~~Create {{{ActionResolver.Packages}}} when adding new Stripes Facet~~
   * Auto-complete of {{{init-param}}} names/values within Stripes Filter in {{{web.xml}}}
   * Option of adding {{{context-param}}} to {{{web.xml}}} indicating usage of Stripes resource as default bundle for web application
