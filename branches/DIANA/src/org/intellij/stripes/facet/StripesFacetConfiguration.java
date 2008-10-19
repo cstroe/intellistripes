@@ -21,28 +21,25 @@ import com.intellij.facet.FacetConfiguration;
 import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.facet.ui.FacetValidatorsManager;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizer;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.intellij.stripes.facet.tabs.FacetConfigurationTab;
 import org.intellij.stripes.facet.tabs.StripesConfigurationTab;
-import org.intellij.stripes.util.StripesConstants;
 import org.jdom.Element;
 
 public class StripesFacetConfiguration implements FacetConfiguration, PersistentStateComponent<StripesFacetConfiguration> {
 // ------------------------------ FIELDS ------------------------------
 
-    private boolean springIntegration = false;
-    private boolean logging = false;
-    private boolean stripesResources;
-    private String log4jFile;
-    private boolean actionResolverUrlFilters = false;
-    private String urlFiltersValue = "WEB-INF/classes";
-    private boolean changeIcons = false;
+	private boolean springIntegration = false;
+	private boolean logging = false;
+	private boolean stripesResources;
+	private String log4jFile;
+	private boolean actionResolverUrlFilters = false;
+	private String urlFiltersValue = "WEB-INF/classes";
+	private boolean changeIcons = false;
+    private String actionResolverPackages = "";
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
@@ -102,7 +99,15 @@ public class StripesFacetConfiguration implements FacetConfiguration, Persistent
         this.stripesResources = stripesResources;
     }
 
-// ------------------------ CANONICAL METHODS ------------------------
+    public String getActionResolverPackages() {
+        return actionResolverPackages;
+    }
+
+    public void setActionResolverPackages(String actionResolverPackages) {
+        this.actionResolverPackages = actionResolverPackages;
+    }
+
+    // ------------------------ CANONICAL METHODS ------------------------
 
     @Override
     public String toString() {
@@ -122,18 +127,20 @@ public class StripesFacetConfiguration implements FacetConfiguration, Persistent
 // --------------------- Interface FacetConfiguration ---------------------
 
     public FacetEditorTab[] createEditorTabs(final FacetEditorContext editorContext, final FacetValidatorsManager validatorsManager) {
-        return new FacetEditorTab[]{new StripesConfigurationTab(editorContext, this, validatorsManager),
-                new FacetConfigurationTab(this)};
+        return new FacetEditorTab[]{
+                new StripesConfigurationTab(editorContext, this, validatorsManager),
+                new FacetConfigurationTab(this)
+        };
     }
 
-// --------------------- Interface JDOMExternalizable ---------------------
+	// --------------------- Interface JDOMExternalizable ---------------------
 	@Deprecated
-    public void readExternal(Element element) throws InvalidDataException {
-    }
+	public void readExternal(Element element) throws InvalidDataException {
+	}
 
 	@Deprecated
-    public void writeExternal(Element element) throws WriteExternalException {
-    }
+	public void writeExternal(Element element) throws WriteExternalException {
+	}
 
 	public StripesFacetConfiguration getState() {
 		return this;

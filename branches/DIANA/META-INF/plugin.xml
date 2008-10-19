@@ -19,16 +19,21 @@
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin url="http://code.google.com/p/intellistripes">
     <name>IntelliStripes</name>
-    <description>Stripes even more easy!!!</description>
-    <version>2.0.beta2.664</version>
+    <description>Stripes even more easy !!!</description>
+    <version>2.0.beta3.664</version>
     <vendor email="intellistripes@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
     </vendor>
     <change-notes>
         <![CDATA[
-The first Diana compatible release with 1.5 specific features.
+<p>
+    Moving towards improved Stripes 1.5 support. Dedicated mainly for facet configuration.
+</p>
+<br/>
+<br/>
+Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">http://code.google.com/p/intellistripes/wiki/VersionHistory2</a>
         ]]>
-    </change-notes>
+		</change-notes>
     <idea-version since-build="8664" until-build="8999"/>
     <depends>com.intellij.javaee</depends>
     <depends>com.intellij.spring</depends>
@@ -38,6 +43,7 @@ The first Diana compatible release with 1.5 specific features.
     <extensions xmlns="com.intellij">
 				<psi.referenceContributor implementation="org.intellij.stripes.reference.contributors.SetterReferenceContributor"/>
 				<psi.referenceContributor implementation="org.intellij.stripes.reference.contributors.ResolutionReferenceContributor"/>
+				<psi.referenceContributor implementation="org.intellij.stripes.reference.contributors.StaticReferenceContributor"/>
 
         <fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
         <javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>

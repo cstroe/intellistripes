@@ -35,9 +35,6 @@ import org.intellij.stripes.util.StripesConstants;
 
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 3/07/2007 Time: 12:53:34 AM
- */
 public class StripesSupportUtil {
 // -------------------------- STATIC METHODS --------------------------
 
@@ -50,22 +47,20 @@ public class StripesSupportUtil {
         WebApp app = facet.getWebFacet().getRoot();
 
         try {
-            installStripes(app);
-            StripesFacetConfiguration stripesFacetConfiguration = facet.getConfiguration();
-            if (stripesFacetConfiguration.isSpringIntegration()) {
+            installStripes(app, facet.getConfiguration());
+            if (facet.getConfiguration().isSpringIntegration()) {
                 installSpringIntegration(app);
             }
-            if (stripesFacetConfiguration.isStripesResources()) {
+            if (facet.getConfiguration().isStripesResources()) {
                 installStripesResources(app);
             }
-            if (stripesFacetConfiguration.isLogging()) {
-                installLogging(app, stripesFacetConfiguration);
+            if (facet.getConfiguration().isLogging()) {
+                installLogging(app, facet.getConfiguration());
             }
-            if (stripesFacetConfiguration.isActionResolverUrlFilters()) {
-                addActionResolverUrlFilter(app, stripesFacetConfiguration);
+            if (facet.getConfiguration().isActionResolverUrlFilters()) {
+                addActionResolverUrlFilter(app, facet.getConfiguration());
             }
-        }
-        catch (Throwable throwable) {
+        } catch (Throwable throwable) {
             //
         }
     }
@@ -73,15 +68,24 @@ public class StripesSupportUtil {
     /**
      * Install Stripes Configuration
      *
-     * @param app Web Applicatio
-     * @throws Throwable some to throw
+     * @param app      Web Application
+     * @param facetCfg
      */
-    private static void installStripes(WebApp app) throws Throwable {
+    private static void installStripes(WebApp app, StripesFacetConfiguration facetCfg) {
         if (!isStripesServletInstalled(app)) {
             addDispatcherServlet(app);
         }
-        if (!isStripesFilterInstalled(app)) {
-            addStripesFilter(app);
+
+        Filter filter = findStripesFilter(app);
+        if (filter == null) {
+            filter = addStripesFilter(app);
+        }
+
+        ParamValue paramValue = findInitParam(filter, StripesConstants.ACTION_RESOLVER_PACKAGES);
+        if (null == paramValue) {
+            addInitParam(filter, StripesConstants.ACTION_RESOLVER_PACKAGES, facetCfg.getActionResolverPackages());
+        } else {
+            paramValue.getParamValue().setStringValue(facetCfg.getActionResolverPackages());
         }
     }
 
@@ -94,15 +98,11 @@ public class StripesSupportUtil {
     public static boolean isStripesServletInstalled(WebApp app) {
         List<Servlet> servlets = app.getServlets();
         for (Servlet servlet : servlets) {
-            boolean b = false;
             try {
-                b = servlet.getServletClass().getValue().getQualifiedName().equals(StripesConstants.STRIPES_SERVLET_CLASS);
-            }
-            catch (NullPointerException e) {
-                //
-            }
-            if (b) {
-                return true;
+                if (StripesConstants.STRIPES_SERVLET_CLASS.equals(servlet.getServletClass().getStringValue())) {
+                    return true;
+                }
+            } catch (Exception e) {
             }
         }
         return false;
@@ -124,39 +124,26 @@ public class StripesSupportUtil {
         mapping.addUrlPattern().setValue(StripesConstants.DEFAULT_STRIPES_MAPPING);
     }
 
-    /**
-     * Is Stripes Filter Installed
-     *
-     * @param app Web Application
-     * @return boolean, do'h
-     */
-    public static boolean isStripesFilterInstalled(WebApp app) {
-        List<Filter> filters = app.getFilters();
-        for (Filter filter : filters) {
-            boolean b = false;
-            try {
-                b = filter.getFilterClass().getValue().getQualifiedName().equals(StripesConstants.STRIPES_FILTER_CLASS);
-            }
-            catch (NullPointerException e) {
-                //
-            }
-            if (b) {
-                return true;
-            }
-        }
-        return false;
+    private static void addInitParam(Filter filter, String name, String value) {
+        ParamValue initParam = filter.addInitParam();
+        initParam.getParamName().setStringValue(name);
+        initParam.getParamValue().setStringValue(value);
     }
 
     /**
      * Add Stripes Filter
      *
      * @param app Web Application
+     * @return recently created Stripes Filter
      */
-    private static void addStripesFilter(WebApp app) {
+    private static Filter addStripesFilter(WebApp app) {
         //Add Filter to the Web Application
         Filter filter = app.addFilter();
         filter.getFilterName().setValue(StripesConstants.STRIPES_FILTER_NAME);
         filter.getFilterClass().setStringValue(StripesConstants.STRIPES_FILTER_CLASS);
+
+        addInitParam(filter, StripesConstants.ACTION_RESOLVER_PACKAGES, "");
+
         //Mappings
         FilterMapping mapping = app.addFilterMapping();
         mapping.getFilterName().setValue(filter);
@@ -167,6 +154,8 @@ public class StripesSupportUtil {
         servletFilterMapping.getFilterName().setValue(filter);
         servletFilterMapping.addServletName().setStringValue(StripesConstants.STRIPES_SERVLET_NAME);
         servletFilterMapping.addDispatcher().setStringValue(StripesConstants.REQUEST);
+
+        return filter;
     }
 
     /**
@@ -181,7 +170,7 @@ public class StripesSupportUtil {
         if (!isContextConfigLocation(app)) {
             addContextConfigLocation(app);
         }
-        Filter filter = getStripesFilter(app);
+        Filter filter = findStripesFilter(app);
         addSpringInterceptor(filter);
     }
 
@@ -196,7 +185,7 @@ public class StripesSupportUtil {
         for (Listener listener : listeners) {
             boolean b = false;
             try {
-                b = listener.getListenerClass().getValue().getQualifiedName().equals(StripesConstants.SPRING_LISTENER);
+                b = StripesConstants.SPRING_LISTENER.equals(listener.getListenerClass().getStringValue());
             }
             catch (NullPointerException e) {
                 //
@@ -230,7 +219,7 @@ public class StripesSupportUtil {
         for (ParamValue contextParam : contextParams) {
             boolean b = false;
             try {
-                b = contextParam.getParamName().getValue().equals(StripesConstants.SPRING_CONTEXT_PARAM);
+                b = StripesConstants.SPRING_CONTEXT_PARAM.equals(contextParam.getParamName().getStringValue());
             }
             catch (NullPointerException e) {
                 //
@@ -260,16 +249,13 @@ public class StripesSupportUtil {
      * @param app Web Application
      * @return Filter Object, null if don't exist
      */
-    private static Filter getStripesFilter(WebApp app) {
-        List<Filter> filters = app.getFilters();
-        for (Filter filter : filters) {
+    public static Filter findStripesFilter(WebApp app) {
+        for (Filter filter : app.getFilters()) {
             try {
-                if (filter.getFilterClass().getValue().getQualifiedName().equals(StripesConstants.STRIPES_FILTER_CLASS)) {
+                if (StripesConstants.STRIPES_FILTER_CLASS.equals(filter.getFilterClass().getStringValue())) {
                     return filter;
                 }
-            }
-            catch (NullPointerException e) {
-                //
+            } catch (Exception e) {
             }
         }
 
@@ -282,18 +268,16 @@ public class StripesSupportUtil {
      * @param filter Filter Object
      */
     private static void addSpringInterceptor(Filter filter) {
-        if (isFilterInitParamConfigured(filter, StripesConstants.INTERCEPTOR_CLASSES)) {
-            //get the init-param
-            ParamValue initParam = getFilterInitParam(filter, StripesConstants.INTERCEPTOR_CLASSES);
+        ParamValue initParam = findInitParam(filter, StripesConstants.INTERCEPTOR_CLASSES);
+        if (initParam != null) {
             //get the value
-            String value = initParam.getParamValue().getValue();
-            assert value != null;
+            String value = initParam.getParamValue().getStringValue();
             //get the Interceptors
             String[] interceptors = value.split(",");
             for (String interceptor : interceptors) {
                 interceptor = interceptor.replaceAll("\n", "");
                 //is Spring Interceptor already installed?
-                if (interceptor.equals(StripesConstants.SPRING_INTERCEPTOR_CLASS)) {
+                if (StripesConstants.SPRING_INTERCEPTOR_CLASS.equals(interceptor)) {
                     return;
                 }
             }
@@ -301,7 +285,7 @@ public class StripesSupportUtil {
             for (String interceptor : interceptors) {
                 interceptor = interceptor.replaceAll("\n", "");
                 //is BeforeAfterMethodInterceptor already installed?
-                if (interceptor.equals(StripesConstants.BEFORE_AFTER_METHOD_INTERCEPTOR_CLASS)) {
+                if (StripesConstants.BEFORE_AFTER_METHOD_INTERCEPTOR_CLASS.equals(interceptor)) {
                     beforeAfterInterceptorPresent = true;
                 }
             }
@@ -319,47 +303,16 @@ public class StripesSupportUtil {
     }
 
     /**
-     * Is Param Configured configured
-     *
-     * @param filter    Stripes Filter
-     * @param paramName Parameter name
-     * @return boolean, do'h
-     */
-    public static boolean isFilterInitParamConfigured(Filter filter, String paramName) {
-        List<ParamValue> initParams = filter.getInitParams();
-        for (ParamValue initParam : initParams) {
-            boolean b = false;
-            try {
-                b = initParam.getParamName().getValue().equals(paramName);
-            }
-            catch (NullPointerException e) {
-                //
-            }
-            if (b) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * get A Specific initParam for a given Filter
      *
      * @param filter    Filter Object
      * @param paramName initParam name
      * @return a Param Value Object, null if don't exists
      */
-    private static ParamValue getFilterInitParam(Filter filter, String paramName) {
-        List<ParamValue> initParams = filter.getInitParams();
-
-        for (ParamValue initParam : initParams) {
-            try {
-                if (initParam.getParamName().getValue().equals(paramName)) {
-                    return initParam;
-                }
-            }
-            catch (NullPointerException e) {
-                //
+    private static ParamValue findInitParam(final Filter filter, final String paramName) {
+        for (ParamValue initParam : filter.getInitParams()) {
+            if (paramName.equals(initParam.getParamName().getStringValue())) {
+                return initParam;
             }
         }
         return null;
@@ -490,15 +443,15 @@ public class StripesSupportUtil {
      * @param configuration Facet Configuration
      */
     private static void addActionResolverUrlFilter(WebApp webApp, StripesFacetConfiguration configuration) {
-        Filter filter = getStripesFilter(webApp);
-        if (isFilterInitParamConfigured(filter, StripesConstants.ACTION_RESOLVER_URL_FILTER)) {
-            ParamValue initParam = getFilterInitParam(filter, StripesConstants.ACTION_RESOLVER_URL_FILTER);
-            initParam.getParamValue().setValue(configuration.getUrlFiltersValue());
-        } else {
+        Filter filter = findStripesFilter(webApp);
+        ParamValue initParam = findInitParam(filter, StripesConstants.ACTION_RESOLVER_URL_FILTER);
+
+        if (initParam == null) {
             ParamValue paramValue = filter.addInitParam();
             paramValue.getParamName().setValue(StripesConstants.ACTION_RESOLVER_URL_FILTER);
-            paramValue.getParamValue().setValue(configuration.getUrlFiltersValue());
         }
+
+        initParam.getParamValue().setValue(configuration.getUrlFiltersValue());
     }
 
 // --------------------------- CONSTRUCTORS ---------------------------
