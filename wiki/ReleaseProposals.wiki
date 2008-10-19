@@ -10,3 +10,4 @@
   * Provide option to allow installation of {{{Stripes Reload}}} extension
   * Provide auto-complete of proper class names within {{{param-values}}} sub tags of Stripes filter configuraiton parameters in {{{web.xml}}}
   * If {{{ActionResolver.Packages}}} is configured auto-complete variants of {{{beanclass}}} attributes in stripes custom tags should be limited only by those packages
+  * Autocomplete on {{{<s:param name="">}}} inside {{{<s:form>}}}
