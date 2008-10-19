@@ -6,4 +6,7 @@
   * ~~{{{ActionResolver.Packages}}} configuration from GUI~~
   * ~~Create {{{ActionResolver.Packages}}} when adding new Stripes Facet~~
   * ~~Auto-complete of {{{init-param}}} names/values within Stripes Filter in {{{web.xml}}}~~
-  * Option of adding {{{context-param}}} to {{{web.xml}}} indicating usage of Stripes resource as default bundle for web application
+  * Provide option of adding {{{context-param}}} to {{{web.xml}}} indicating usage of Stripes resource as default bundle for web application
+  * Provide option to allow installation of {{{Stripes Reload}}} extension
+  * Provide auto-complete of proper class names within {{{param-values}}} sub tags of Stripes filter configuraiton parameters in {{{web.xml}}}
+  * If {{{ActionResolver.Packages}}} is configured auto-complete variants of {{{beanclass}}} attributes in stripes custom tags should be limited only by those packages
