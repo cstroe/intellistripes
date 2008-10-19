@@ -23,9 +23,6 @@ import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 02:07:44 AM
- */
 public interface StripesConstants {
 // ------------------------------ FIELDS ------------------------------
 
@@ -61,26 +58,29 @@ public interface StripesConstants {
     String VALIDATE_NESTED_PROPERTIES_ANNOTATION = "net.sourceforge.stripes.validation.ValidateNestedProperties";
     String VALIDATION_METHOD_ANNOTATION = "net.sourceforge.stripes.validation.ValidationMethod";
     String URL_BINDING_ANNOTATION = "net.sourceforge.stripes.action.UrlBinding";
-	String AFTER_ANNOTATION = "net.sourceforge.stripes.action.After";
-	String BEFORE_ANNOTATION = "net.sourceforge.stripes.action.Before";
-	String STRICT_BINDING_ANNOTATION = "net.sourceforge.stripes.action.StrictBinding";
+    String AFTER_ANNOTATION = "net.sourceforge.stripes.action.After";
+    String BEFORE_ANNOTATION = "net.sourceforge.stripes.action.Before";
+    String STRICT_BINDING_ANNOTATION = "net.sourceforge.stripes.action.StrictBinding";
 
     //stripes annotation attribute names
     String EXPRESSION_ATTR = "expression";
     String MASK_ATTR = "mask";
-	String DENY_ATTR = "deny";
-	String ALLOW_ATTR = "allow";
-	String ON_ATTR = "on";
+    String DENY_ATTR = "deny";
+    String ALLOW_ATTR = "allow";
+    String ON_ATTR = "on";
 
-    //stripes configuration
+    //various stripes configuration related
     String STRIPES_SERVLET_NAME = "StripesDispatcher";
     String DEFAULT_STRIPES_MAPPING = "*.action";
     String STRIPES_FILTER_NAME = "StripesFilter";
     String SPRING_CONTEXT_PARAM = "contextConfigLocation";
-    String INTERCEPTOR_CLASSES = "Interceptor.Classes";
-    String ACTION_RESOLVER_URL_FILTER = "ActionResolver.UrlFilters";
     String STRIPES_FILTER_MAPPING = "*.jsp";
     String REQUEST = "REQUEST";
+
+    //stripes filter configuraiton init parameters
+    String INTERCEPTOR_CLASSES = "Interceptor.Classes";
+    String ACTION_RESOLVER_URL_FILTER = "ActionResolver.UrlFilters";
+    String ACTION_RESOLVER_PACKAGES = "ActionResolver.Packages";
 
     //stripes taglibs
     String TAGLIB_PREFIX = "http://stripes.sourceforge.net/stripes";
@@ -160,9 +160,7 @@ public interface StripesConstants {
 
 
     String STRIPES = "Stripes";
-    LibraryInfo[] STRIPES_LIBRARY_INFO = {MavenLibraryUtil.createMavenJarInfo("stripes", "1.4.3", "net.sourceforge.stripes.action.ActionBean"),
-            MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.0", "org.apache.commons.logging.Log"),
+    LibraryInfo[] STRIPES_LIBRARY_INFO = {MavenLibraryUtil.createSubMavenJarInfo("net/sourceforge/stripes", "stripes", "1.5", "net.sourceforge.stripes.action.ActionBean"),
+            MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.1.1", "org.apache.commons.logging.Log"),
             MavenLibraryUtil.createMavenJarInfo("cos", "1.3.1", "com.oreilly.servlet.multipart.FilePart")};
-
-
 }
