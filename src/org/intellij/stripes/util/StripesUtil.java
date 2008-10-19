@@ -37,10 +37,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.text.MessageFormat;
 
 /**
  * Various utility methods collection.
@@ -126,18 +126,19 @@ public final class StripesUtil {
         }
         return false;
     }
-/*
-* Cache for resolving PsiClasses by FQN.
-*/
+
+    /*
+    * Cache for resolving PsiClasses by FQN.
+    */
     public static Map<String, PsiClass> PSI_CLASS_MAP = new Hashtable<String, PsiClass>();
 
     /**
      * Finds instance of {@link PsiClass} corresponding to FQN, passed as parameter.
-     *
+     * <p/>
      * Method uses internal caching for speeding search up.
      *
      * @param className fully qualified class name to search for
-     * @param project current project
+     * @param project   current project
      * @return instance of {@link PsiClass} if search succesfull, null otherwise
      */
     public static PsiClass findPsiClassByName(String className, Project project) {
@@ -162,7 +163,7 @@ public final class StripesUtil {
      * Checks if class presented by {@link PsiClass} instance of another class.
      *
      * @param baseClassName fully qualified name of parent class
-     * @param cls {@link PsiClass} that will be checked for inheritance
+     * @param cls           {@link PsiClass} that will be checked for inheritance
      * @return true if subclass, false otherwise
      */
     public static Boolean isSubclass(String baseClassName, PsiClass cls) {
@@ -175,8 +176,8 @@ public final class StripesUtil {
     /**
      * Walks up XML tree to find and return parent element of XML tag matching criteria.
      *
-     * @param childTag start element of XML tree
-     * @param stopFilter filter triggering stop of walking up
+     * @param childTag     start element of XML tree
+     * @param stopFilter   filter triggering stop of walking up
      * @param returnFilter filter allowing return pf found XML tag
      * @return parent {@link com.intellij.psi.xml.XmlTag} or null
      */
@@ -235,7 +236,7 @@ public final class StripesUtil {
      * Checks method to be valid Stripes Action Bean property setter.
      *
      * @param method {@link com.intellij.psi.PsiMethod} to be validated
-     * @param full flag indicating full (stripes-specific and JavaBean) or partial (only stripes-specific) validation
+     * @param full   flag indicating full (stripes-specific and JavaBean) or partial (only stripes-specific) validation
      * @return true if method is valid, false otherwise
      */
     public static Boolean isActionBeanPropertySetter(PsiMethod method, Boolean full) {

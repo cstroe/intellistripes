@@ -23,36 +23,26 @@ import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.filters.ElementFilter;
 import org.intellij.stripes.util.StripesConstants;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Mario Arias
- * Date: 23/08/2008
- * Time: 11:41:43 PM
- */
 public class NewStreamingResolutionFilter implements ElementFilter {
 // ------------------------ INTERFACE METHODS ------------------------
 
-// --------------------- Interface ElementFilter ---------------------
+// ------------------d--- Interface ElementFilter ---------------------
 
-    public boolean isAcceptable(Object element, PsiElement psiElement) {
-        if (element instanceof PsiExpressionList) {
-            PsiExpressionList expressionList = (PsiExpressionList) element;
-            if (expressionList.getExpressions()[0].equals(psiElement)) {
-                if (expressionList.getParent() instanceof PsiNewExpression) {
-                    PsiNewExpression newExpression = (PsiNewExpression) expressionList.getParent();
-                    return newExpression.getClassReference().getQualifiedName().equals(StripesConstants.STREAMING_RESOLUTION);
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
+	public boolean isAcceptable(Object element, PsiElement psiElement) {
+		PsiExpressionList expressionList = (PsiExpressionList) element;
+		if (expressionList.getExpressions()[0].equals(psiElement)) {
+			if (expressionList.getParent() instanceof PsiNewExpression) {
+				PsiNewExpression newExpression = (PsiNewExpression) expressionList.getParent();
+				return StripesConstants.STREAMING_RESOLUTION.equals(newExpression.getClassReference().getQualifiedName());
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 
-    public boolean isClassAcceptable(Class aClass) {
-        return false;
-    }
+	public boolean isClassAcceptable(Class aClass) {
+		return PsiExpressionList.class.isAssignableFrom(aClass);
+	}
 }

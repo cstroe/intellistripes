@@ -19,23 +19,32 @@ package org.intellij.stripes.facet;
 
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetType;
+import com.intellij.facet.autodetecting.FacetDetector;
+import com.intellij.facet.autodetecting.FacetDetectorRegistry;
+import com.intellij.facet.impl.autodetecting.FacetDetectorRegistryEx;
+import com.intellij.j2ee.web.WebUtilImpl;
+import com.intellij.javaee.model.common.JavaeeCommonConstants;
 import com.intellij.javaee.web.facet.WebFacet;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
+import com.intellij.openapi.util.io.StreamUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.xml.NanoXmlUtil;
+import net.n3.nanoxml.IXMLBuilder;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.Reader;
+import java.util.Collection;
+import java.util.Iterator;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 10:52:09 PM
- */
+//TODO implement framework support
 public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfiguration> {
 // ------------------------------ FIELDS ------------------------------
 
     public final static StripesFacetType INSTANCE = new StripesFacetType();
-
 // --------------------------- CONSTRUCTORS ---------------------------
 
     private StripesFacetType() {
@@ -66,4 +75,50 @@ public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfig
     public StripesFacetConfiguration createDefaultConfiguration() {
         return new StripesFacetConfiguration();
     }
+
+    public void registerDetectors(FacetDetectorRegistry<StripesFacetConfiguration> facetDetectorRegistry) {
+        ((FacetDetectorRegistryEx) facetDetectorRegistry).registerUniversalDetectorByFileNameAndRootTag("web.xml",
+                JavaeeCommonConstants.WEB_XML_ROOT_TAG, new StripesFacetDetector(), WebUtilImpl.BY_PARENT_WEB_ROOT_SELECTOR);
+    }
+
+    private final static class StripesFacetDetectorHelper extends NanoXmlUtil.BaseXmlBuilder {
+        private Boolean isFilterConfigured = null;
+
+        public void startElement(String name, String nsPrefix, String nsURI, String systemID, int lineNr) throws Exception {
+            super.startElement(name, nsPrefix, nsURI, systemID, lineNr);
+        }
+
+        public void addPCData(Reader reader, String systemID, int lineNr) throws Exception {
+            if (getLocation().endsWith("filter-class")
+                    && StripesConstants.STRIPES_FILTER_CLASS.equals(StreamUtil.readTextFrom(reader))) {
+                isFilterConfigured = true;
+                stop();
+            }
+        }
+
+        @Nullable
+        public Object getResult() throws Exception {
+            return isFilterConfigured;
+        }
+    }
+
+
+    private final static class StripesFacetDetector extends FacetDetector<VirtualFile, StripesFacetConfiguration> {
+
+        public StripesFacetConfiguration detectFacet(VirtualFile source, Collection<StripesFacetConfiguration> existentFacetConfigurations) {
+            final Iterator<StripesFacetConfiguration> iterator = existentFacetConfigurations.iterator();
+            if (iterator.hasNext()) return iterator.next();
+
+            IXMLBuilder builder = new StripesFacetDetectorHelper();
+            try {
+                NanoXmlUtil.parse(source.getInputStream(), builder);
+                return builder.getResult() != null ? new StripesFacetConfiguration() : null;
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
+
+            return null;
+        }
+    }
+
 }

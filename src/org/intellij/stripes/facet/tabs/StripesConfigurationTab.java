@@ -24,12 +24,20 @@ import com.intellij.facet.ui.FacetEditorsFactory;
 import com.intellij.facet.ui.FacetValidatorsManager;
 import com.intellij.facet.ui.libraries.FacetLibrariesValidator;
 import com.intellij.facet.ui.libraries.FacetLibrariesValidatorDescription;
+import com.intellij.javaee.model.xml.ParamValue;
+import com.intellij.javaee.model.xml.web.Filter;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.ui.PackageChooser;
 import com.intellij.openapi.ui.VerticalFlowLayout;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.peer.PeerFactory;
+import com.intellij.psi.PsiPackage;
+import com.intellij.ui.ListUtil;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import com.intellij.util.Function;
 import org.intellij.stripes.facet.StripesFacet;
 import org.intellij.stripes.facet.StripesFacetConfiguration;
 import org.intellij.stripes.support.StripesSupportUtil;
@@ -43,10 +51,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 11:22:05 PM
- */
 public class StripesConfigurationTab extends FacetEditorTab {
 // ------------------------------ FIELDS ------------------------------
 
@@ -63,10 +69,14 @@ public class StripesConfigurationTab extends FacetEditorTab {
     private JPanel messagePanel;
     private JCheckBox configureActionResolverUrlFiltersCheckBox;
     private JTextField actionResolverUrlFiltersTextField;
+    private JList actionResolverPackagesList;
+    private JButton addButton;
+    private JButton removeButton;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    public StripesConfigurationTab(FacetEditorContext editorContext, final StripesFacetConfiguration configuration, FacetValidatorsManager validatorsManager) {
+    public StripesConfigurationTab(final FacetEditorContext editorContext, final StripesFacetConfiguration configuration, FacetValidatorsManager validatorsManager) {
+        $$$setupUI$$$();
         validator = FacetEditorsFactory.getInstance().createLibrariesValidator(StripesConstants.STRIPES_LIBRARY_INFO,
                 new FacetLibrariesValidatorDescription(StripesConstants.STRIPES),
                 editorContext,
@@ -74,8 +84,10 @@ public class StripesConfigurationTab extends FacetEditorTab {
         validatorsManager.registerValidator(validator);
         this.editorContext = editorContext;
         this.configuration = configuration;
+
         messagePanel.setLayout(new VerticalFlowLayout());
-        messagePanel.add(StripesUtil.createLink("More about Stripes", "http://mc4j.org/confluence/display/stripes/"), 1);
+        messagePanel.add(StripesUtil.createLink("More about Stripes", "http://www.stripesframework.org"), 1);
+
         addLoggingCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 log4jComboBox.setEnabled(addLoggingCheckBox.isSelected());
@@ -86,7 +98,33 @@ public class StripesConfigurationTab extends FacetEditorTab {
                 actionResolverUrlFiltersTextField.setEnabled(configureActionResolverUrlFiltersCheckBox.isSelected());
             }
         });
+
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PackageChooser chooser = PeerFactory.getInstance().getUIHelper().createPackageChooser("Package(s) containing ActionBeans", editorContext.getProject());
+                chooser.setCrossClosesWindow(false);
+                chooser.show();
+
+                DefaultListModel model = (DefaultListModel) actionResolverPackagesList.getModel();
+                for (PsiPackage psiPackage : chooser.getSelectedPackages()) {
+                    model.addElement(psiPackage.getQualifiedName());
+                }
+            }
+        });
+        removeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ListUtil.removeSelectedItems(actionResolverPackagesList);
+            }
+        });
+
         fillData();
+
+    }
+
+    public void onTabEntering() {
+        if (actionResolverPackagesList.getModel().getSize() == 0) {
+            addButton.doClick();
+        }
     }
 
     private void fillData() {
@@ -101,11 +139,17 @@ public class StripesConfigurationTab extends FacetEditorTab {
         log4jComboBox.setEnabled(addLoggingCheckBox.isSelected());
         configureActionResolverUrlFiltersCheckBox.setSelected(configuration.isActionResolverUrlFilters());
         actionResolverUrlFiltersTextField.setEnabled(configuration.isActionResolverUrlFilters());
-        if (configuration.getUrlFiltersValue() != null) {
-            if (!(configuration.getUrlFiltersValue().length() == 0)) {
-                actionResolverUrlFiltersTextField.setText(configuration.getUrlFiltersValue());
-            } else {
-                actionResolverUrlFiltersTextField.setText("WEB-INF/classes");
+        actionResolverUrlFiltersTextField.setText(configuration.getUrlFiltersValue());
+
+        Filter f = StripesSupportUtil.findStripesFilter(((StripesFacet) editorContext.getFacet()).getWebFacet().getRoot());
+        if (null != f) {
+            for (ParamValue paramValue : f.getInitParams()) {
+                if (StripesConstants.ACTION_RESOLVER_PACKAGES.equals(paramValue.getParamName().getStringValue())) {
+                    for (String pkg : StringUtil.split(paramValue.getParamValue().getStringValue(), ",")) {
+                        ((DefaultListModel) actionResolverPackagesList.getModel()).addElement(pkg);
+                    }
+                    break;
+                }
             }
         }
     }
@@ -137,14 +181,21 @@ public class StripesConfigurationTab extends FacetEditorTab {
     }
 
     public void apply() throws ConfigurationException {
+
         configuration.setSpringIntegration(addSpringIntegrationCheckBox.isSelected());
         configuration.setLogging(addLoggingCheckBox.isSelected());
         configuration.setStripesResources(addStripesResourcesCheckBox.isSelected());
         configuration.setLog4jFile(log4jComboBox.getSelectedItem().toString());
         configuration.setActionResolverUrlFilters(configureActionResolverUrlFiltersCheckBox.isSelected());
         configuration.setUrlFiltersValue(actionResolverUrlFiltersTextField.getText());
+        configuration.setActionResolverPackages(
+                StringUtil.join(Arrays.asList(((DefaultListModel) actionResolverPackagesList.getModel()).toArray()), new Function<Object, String>() {
+                    public String fun(Object o) {
+                        return o.toString();
+                    }
+                }, ","));
+
         final StripesFacet stripesFacet = (StripesFacet) editorContext.getFacet();
-        assert stripesFacet != null;
         new WriteCommandAction.Simple(editorContext.getProject(), stripesFacet.getWebXmlPsiFile()) {
             @Override
             protected void run() throws Throwable {
@@ -168,13 +219,6 @@ public class StripesConfigurationTab extends FacetEditorTab {
         validator.onFacetInitialized(facet);
     }
 
-    {
-// GUI initializer generated by IntelliJ IDEA GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        $$$setupUI$$$();
-    }
-
     /**
      * Method generated by IntelliJ IDEA GUI Designer
      * >>> IMPORTANT!! <<<
@@ -184,9 +228,7 @@ public class StripesConfigurationTab extends FacetEditorTab {
      */
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
-        final Spacer spacer1 = new Spacer();
-        mainPanel.add(spacer1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        mainPanel.setLayout(new GridLayoutManager(7, 3, new Insets(0, 0, 0, 0), -1, -1));
         addSpringIntegrationCheckBox = new JCheckBox();
         addSpringIntegrationCheckBox.setText("Add Spring Integration");
         addSpringIntegrationCheckBox.setToolTipText("Add necesary configuration in web.xml to enable Spring Integration");
@@ -199,8 +241,6 @@ public class StripesConfigurationTab extends FacetEditorTab {
         addStripesResourcesCheckBox.setText("Add Stripes Resources");
         addStripesResourcesCheckBox.setToolTipText("Add StripesResources.properties ");
         mainPanel.add(addStripesResourcesCheckBox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
-        mainPanel.add(spacer2, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         log4jComboBox = new JComboBox();
         log4jComboBox.setEnabled(false);
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
@@ -208,9 +248,9 @@ public class StripesConfigurationTab extends FacetEditorTab {
         defaultComboBoxModel1.addElement("log4j.xml");
         log4jComboBox.setModel(defaultComboBoxModel1);
         log4jComboBox.setToolTipText("Choose between log4j.properties or log4j.xaml");
-        mainPanel.add(log4jComboBox, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer3 = new Spacer();
-        mainPanel.add(spacer3, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        mainPanel.add(log4jComboBox, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(190, 23), null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        mainPanel.add(spacer1, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         messagePanel = new JPanel();
         messagePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         mainPanel.add(messagePanel, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -225,7 +265,25 @@ public class StripesConfigurationTab extends FacetEditorTab {
         actionResolverUrlFiltersTextField = new JTextField();
         actionResolverUrlFiltersTextField.setEnabled(false);
         actionResolverUrlFiltersTextField.setText("WEB-INF/classes");
-        mainPanel.add(actionResolverUrlFiltersTextField, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        mainPanel.add(actionResolverUrlFiltersTextField, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(190, 20), null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        mainPanel.add(spacer2, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(2, 2, new Insets(0, 2, 2, 2), -1, -1));
+        mainPanel.add(panel1, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, new Dimension(346, 66), null, 0, false));
+        panel1.setBorder(BorderFactory.createTitledBorder("ActionResolver.Packages"));
+        final JScrollPane scrollPane1 = new JScrollPane();
+        panel1.add(scrollPane1, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        actionResolverPackagesList = new JList();
+        final DefaultListModel defaultListModel1 = new DefaultListModel();
+        actionResolverPackagesList.setModel(defaultListModel1);
+        scrollPane1.setViewportView(actionResolverPackagesList);
+        addButton = new JButton();
+        addButton.setText("Add");
+        panel1.add(addButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, new Dimension(66, 25), null, 0, false));
+        removeButton = new JButton();
+        removeButton.setText("Remove");
+        panel1.add(removeButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
     }
 
     /**

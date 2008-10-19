@@ -18,15 +18,15 @@
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin url="http://code.google.com/p/intellistripes">
     <name>IntelliStripes</name>
-    <description>Stripes even more easy!!!</description>
-    <version>1.0.1.860</version>
+    <description>Stripes even more easy !!!</description>
+    <version>1.0.3.860</version>
     <vendor email="intellistripes@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
             url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
     </vendor>
     <change-notes>
         <![CDATA[
 <p>
-    The first version for Selena with Stripes 1.5 support.
+    Moving towards improved Stripes 1.5 support. Dedicated mainly for facet configuration.
 </p>
 <br/>
 <br/>

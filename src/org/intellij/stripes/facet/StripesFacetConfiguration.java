@@ -29,9 +29,6 @@ import org.intellij.stripes.facet.tabs.StripesConfigurationTab;
 import org.intellij.stripes.util.StripesConstants;
 import org.jdom.Element;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 10:53:00 PM
- */
 public class StripesFacetConfiguration implements FacetConfiguration {
 // ------------------------------ FIELDS ------------------------------
 
@@ -39,9 +36,10 @@ public class StripesFacetConfiguration implements FacetConfiguration {
     private boolean logging;
     private boolean stripesResources;
     private String log4jFile;
-    private boolean actionResolverUrlFilters;
-    private String urlFiltersValue;
-    private boolean changeIcons = true;
+    private boolean actionResolverUrlFilters = false;
+    private String urlFiltersValue = "WEB-INF/classes";
+    private boolean changeIcons = false;
+    private String actionResolverPackages = "";
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
@@ -101,7 +99,15 @@ public class StripesFacetConfiguration implements FacetConfiguration {
         this.stripesResources = stripesResources;
     }
 
-// ------------------------ CANONICAL METHODS ------------------------
+    public String getActionResolverPackages() {
+        return actionResolverPackages;
+    }
+
+    public void setActionResolverPackages(String actionResolverPackages) {
+        this.actionResolverPackages = actionResolverPackages;
+    }
+
+    // ------------------------ CANONICAL METHODS ------------------------
 
     @Override
     public String toString() {
@@ -121,8 +127,10 @@ public class StripesFacetConfiguration implements FacetConfiguration {
 // --------------------- Interface FacetConfiguration ---------------------
 
     public FacetEditorTab[] createEditorTabs(final FacetEditorContext editorContext, final FacetValidatorsManager validatorsManager) {
-        return new FacetEditorTab[]{new StripesConfigurationTab(editorContext, this, validatorsManager),
-                new FacetConfigurationTab(this)};
+        return new FacetEditorTab[]{
+                new StripesConfigurationTab(editorContext, this, validatorsManager),
+                new FacetConfigurationTab(this)
+        };
     }
 
 // --------------------- Interface JDOMExternalizable ---------------------
