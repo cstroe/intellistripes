@@ -170,3 +170,13 @@ _Deleted from repository_
   * Issue #35
   * Issue #41
   * bug fix related to renaming of nested property references from JSP
+
+===Version 1.0.3.860 (2008-10-19)===
+  * bugfixes in Stripes installation into web.xml
+  * Stripes facet auto-detection
+  * When Stripes facet is created the parameter {{{ActionResolver.Packages}}} {{{init-param}}} is added to Stripes filter in {{{web.xml}}}
+  * GUI for configuration of {{{ActionResolver.Packages}}} filter parameter
+  * Auto-complete of {{{init-param}}} names within Stripes Filter in {{{web.xml}}}
+  * Upgrade of plugin library requirements to: 
+    * Stripes 1.5
+    * commons-logging to 1.1.1
