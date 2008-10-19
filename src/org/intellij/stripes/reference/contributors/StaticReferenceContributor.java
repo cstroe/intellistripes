@@ -4,6 +4,7 @@ import com.intellij.javaee.model.common.JavaeeCommonConstants;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.filters.*;
 import com.intellij.psi.filters.position.NamespaceFilter;
 import com.intellij.psi.filters.position.ParentElementFilter;
@@ -200,7 +201,10 @@ public class StaticReferenceContributor {
             }
         });
 
-        registry.registerReferenceProvider(new ParentElementFilter(new NewStreamingResolutionFilter()), PsiLiteralExpression.class, new PsiReferenceProviderBase() {
+        registry.registerReferenceProvider(
+            new ParentElementFilter(new AndFilter(new ClassFilter(PsiExpressionList.class), new NewStreamingResolutionFilter())),
+            PsiLiteralExpression.class,
+            new PsiReferenceProviderBase() {
             @NotNull public PsiReference[] getReferencesByElement(PsiElement psiElement) {
                 return new PsiReference[]{new StaticReference(psiElement, MIME_TYPES)};
             }
