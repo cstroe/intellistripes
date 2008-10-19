@@ -203,7 +203,9 @@ public class StaticReferenceContributor extends PsiReferenceContributor {
 			}
 		});
 
-		registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(new ParentElementFilter(new NewStreamingResolutionFilter()))),
+		registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(
+		   	new ParentElementFilter(new AndFilter(new ClassFilter(PsiExpressionList.class), new NewStreamingResolutionFilter()))
+		)),
 			new PsiReferenceProviderBase() {
 				@NotNull
 				public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
