@@ -23,9 +23,6 @@ import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 02:07:44 AM
- */
 public interface StripesConstants {
 // ------------------------------ FIELDS ------------------------------
 
@@ -72,15 +69,18 @@ public interface StripesConstants {
     String ALLOW_ATTR = "allow";
     String ON_ATTR = "on";
 
-    //stripes configuration
+    //various stripes configuration related
     String STRIPES_SERVLET_NAME = "StripesDispatcher";
     String DEFAULT_STRIPES_MAPPING = "*.action";
     String STRIPES_FILTER_NAME = "StripesFilter";
     String SPRING_CONTEXT_PARAM = "contextConfigLocation";
-    String INTERCEPTOR_CLASSES = "Interceptor.Classes";
-    String ACTION_RESOLVER_URL_FILTER = "ActionResolver.UrlFilters";
     String STRIPES_FILTER_MAPPING = "*.jsp";
     String REQUEST = "REQUEST";
+
+    //stripes filter configuraiton init parameters
+    String INTERCEPTOR_CLASSES = "Interceptor.Classes";
+    String ACTION_RESOLVER_URL_FILTER = "ActionResolver.UrlFilters";
+    String ACTION_RESOLVER_PACKAGES = "ActionResolver.Packages";
 
     //stripes taglibs
     String TAGLIB_PREFIX = "http://stripes.sourceforge.net/stripes";
@@ -160,9 +160,7 @@ public interface StripesConstants {
 
 
     String STRIPES = "Stripes";
-    LibraryInfo[] STRIPES_LIBRARY_INFO = {MavenLibraryUtil.createMavenJarInfo("stripes", "1.4.3", "net.sourceforge.stripes.action.ActionBean"),
-            MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.0", "org.apache.commons.logging.Log"),
+    LibraryInfo[] STRIPES_LIBRARY_INFO = {MavenLibraryUtil.createSubMavenJarInfo("net/sourceforge/stripes", "stripes", "1.5", "net.sourceforge.stripes.action.ActionBean"),
+            MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.1.1", "org.apache.commons.logging.Log"),
             MavenLibraryUtil.createMavenJarInfo("cos", "1.3.1", "com.oreilly.servlet.multipart.FilePart")};
-
-
 }
