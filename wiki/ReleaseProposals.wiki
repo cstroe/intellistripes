@@ -16,4 +16,4 @@
   * new inspection for {{{@Validate}}}. Should check {{{on}}} attribute and raise warning if there's no {{{required}}} attribute.
   * Intention actions for inserting {{{Resolution}}}, {{{@ValidateMethod}}}, {{{@Before}}}/{{{@After}}} methods, etc within {{{ActionBean}}} class
   * Intentions for creating various Stripes extension classses from source tree. For example creating {{{ActionBeanContext}}}/{{{ActionBeanContextFactory}}} etc
-  * support {{{beanclass}}} attribute in {{{stripes:field-metadata}}} tag
+  * support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag
