@@ -17,3 +17,5 @@
   * Intention actions for inserting {{{Resolution}}}, {{{@ValidateMethod}}}, {{{@Before}}}/{{{@After}}} methods, etc within {{{ActionBean}}} class
   * Intentions for creating various Stripes extension classses from source tree. For example creating {{{ActionBeanContext}}}/{{{ActionBeanContextFactory}}} etc
   * support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag
+  * remove (make optional ?) creating of context-param when adding Spring Support from facet
+  * detect if spring support is configured from web.xml not from facet setting
