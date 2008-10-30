@@ -94,7 +94,6 @@ public interface StripesConstants {
     String URL_TAG = "url";
     String LINK_TAG = "link";
     String ERRORS_TAG = "errors";
-    String LINK_PARAM_TAG = "link-param";
     String PARAM_TAG = "param";
     String USE_ACTION_BEAN_TAG = "useActionBean";
     String LAYOUT_RENDER_TAG = "layout-render";
@@ -120,9 +119,9 @@ public interface StripesConstants {
             OPTIONS_ENUMERATION_TAG, PASSWORD_TAG, RADIO_TAG, RESET_TAG, SELECT_TAG, SUBMIT_TAG, TEXT_TAG, TEXTAREA_TAG};
     String[] ACTION_BEAN_TAGS = {FORM_TAG, ERRORS_TAG, LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
     String[] ACTION_BEAN_TAGS_WITH_EVENT = {LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
-    String[] PARAMS_TAGS = {PARAM_TAG, LINK_PARAM_TAG};
+    String[] PARAMS_TAGS = {PARAM_TAG};
     String[] RESOLUTION_TAGS = {BUTTON_TAG, IMAGE_TAG, SUBMIT_TAG};
-    String[] INPUT_TAGS = {CHECKBOX_TAG, HIDDEN_TAG, PASSWORD_TAG, RADIO_TAG, SELECT_TAG, TEXT_TAG, TEXTAREA_TAG};
+    String[] INPUT_TAGS = {CHECKBOX_TAG, HIDDEN_TAG, PASSWORD_TAG, RADIO_TAG, SELECT_TAG, TEXT_TAG, TEXTAREA_TAG, PARAM_TAG};
 
     //stripes tag attributes
     String ENUM_ATTR = "enum";
