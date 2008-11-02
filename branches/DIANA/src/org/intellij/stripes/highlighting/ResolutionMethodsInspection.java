@@ -41,7 +41,7 @@ import java.util.Map;
 /**
  * Inspection tool checking for correct usage and annotations applied to event methods (ones returnig Resolutions).
  */
-public class ResolutionMethodsInspection extends LocalInspectionTool {
+public class ResolutionMethodsInspection extends BaseJavaLocalInspectionTool {
 
     @Nls
     @NotNull
@@ -63,12 +63,6 @@ public class ResolutionMethodsInspection extends LocalInspectionTool {
 
     public boolean isEnabledByDefault() {
         return true;
-    }
-
-
-    @NotNull
-    public HighlightDisplayLevel getDefaultLevel() {
-        return HighlightDisplayLevel.WARNING;
     }
 
     @Nullable
