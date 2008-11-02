@@ -68,6 +68,7 @@ public interface StripesConstants {
     String DENY_ATTR = "deny";
     String ALLOW_ATTR = "allow";
     String ON_ATTR = "on";
+ 	String REQUIRED_ATTR = "required";
 
     //various stripes configuration related
     String STRIPES_SERVLET_NAME = "StripesDispatcher";
@@ -114,10 +115,11 @@ public interface StripesConstants {
     String OPTION_TAG = "option";
     String OPTIONS_ENUMERATION_TAG = "options-enumeration";
     String OPTIONS_COLLECTION_TAG = "options-collection";
+ 	String FIELD_METADATA_TAG = "field-metadata";
 
     String[] CLASS_TAGS = {BUTTON_TAG, CHECKBOX_TAG, FILE_TAG, FORM_TAG, IMAGE_TAG, LABEL_TAG, LINK_TAG, HIDDEN_TAG, OPTION_TAG, OPTIONS_COLLECTION_TAG,
             OPTIONS_ENUMERATION_TAG, PASSWORD_TAG, RADIO_TAG, RESET_TAG, SELECT_TAG, SUBMIT_TAG, TEXT_TAG, TEXTAREA_TAG};
-    String[] ACTION_BEAN_TAGS = {FORM_TAG, ERRORS_TAG, LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
+    String[] ACTION_BEAN_TAGS = {FORM_TAG, ERRORS_TAG, LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG, FIELD_METADATA_TAG};
     String[] ACTION_BEAN_TAGS_WITH_EVENT = {LINK_TAG, URL_TAG, USE_ACTION_BEAN_TAG};
     String[] PARAMS_TAGS = {PARAM_TAG};
     String[] RESOLUTION_TAGS = {BUTTON_TAG, IMAGE_TAG, SUBMIT_TAG};
@@ -130,6 +132,7 @@ public interface StripesConstants {
     String ID_ATTR = "id";
     String VAR_ATTR = "var";
     String FIELD_ATTR = "field";
+	String FIELDS_ATTR = "fields";
     String NAME_ATTR = "name";
     String URI_ATTR = "uri";
     String EVENT_ATTR = "event";
