@@ -61,7 +61,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
 
 	@NotNull
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-		return new PsiElementVisitor() {
+		return new JavaElementVisitor() {
 			public void visitReferenceExpression(PsiReferenceExpression expression) {
 			}
 
