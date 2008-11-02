@@ -46,9 +46,4 @@ public class SetterReference extends PsiReferenceBase<XmlAttributeValue> {
     public Object[] getVariants() {
         return StripesReferenceUtil.getVariants(StripesReferenceUtil.getWritableProperties(actionBeanPsiClass, false), StripesConstants.FIELD_ICON);
     }
-
-    public TextRange getRangeInElement() {
-        int i = getElement().getText().indexOf("[");
-        return i == -1 ? super.getRangeInElement() : new TextRange(1, i);
-    }
 }
