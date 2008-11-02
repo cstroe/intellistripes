@@ -19,10 +19,11 @@ package org.intellij.stripes.highlighting;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.*;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.css.impl.util.RemoveElementAction;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PropertyUtil;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.Nls;
@@ -70,38 +71,46 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                         holder.registerProblem(annotation, StripesUtil.message("inspection.noAttributes"), ProblemHighlightType.J2EE_PROBLEM);
                     }
 
+                    PsiAnnotationMemberValue onAttr = annotation.findAttributeValue(StripesConstants.ON_ATTR);
+                    PsiAnnotationMemberValue requiredAttr = annotation.findDeclaredAttributeValue(StripesConstants.REQUIRED_ATTR);
+
+                    if (onAttr != null && requiredAttr == null) {
+                        holder.registerProblem(onAttr, StripesUtil.message("inspection.validWithRequired"), new MyLocalQuickFix(annotation));
+                    }
+
                     PsiAnnotation parent = PsiTreeUtil.getParentOfType(annotation, PsiAnnotation.class, true, PsiMethod.class);
-                    PsiAnnotationMemberValue value = annotation.findDeclaredAttributeValue("field");
+                    PsiAnnotationMemberValue fieldAttr = annotation.findDeclaredAttributeValue(StripesConstants.FIELD_ATTR);
 
                     if (null != parent) {
                         if (StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION.equals(parent.getQualifiedName())) {
-                            if (null == value) {
+                            if (null == fieldAttr) {
                                 holder.registerProblem(annotation, StripesUtil.message("inspection.noFieldAttribute"));
                             }
                             return;
                         }
                     }
 // no @ValidateNestedProperties at top level, so field attribute doesn't make sense
-                    if (null != value) {
-                        holder.registerProblem(value.getParent(), StripesUtil.message("inspection.validWithinNested"),
-                                ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveElementAction(value.getParent()));
+                    if (null != fieldAttr) {
+                        holder.registerProblem(fieldAttr.getParent(), StripesUtil.message("inspection.validWithinNested"),
+                                ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveElementAction(fieldAttr.getParent()));
                     }
 
 // check if standalone @Validate annotaion is apllied to valid setter/getter or simple field
                     PsiElement p = annotation.getParent().getParent();
-                    if ((p instanceof PsiMethod && (PropertyUtil.isSimplePropertyAccessor((PsiMethod)p))) || p instanceof PsiField) {
+                    if ((p instanceof PsiMethod && (PropertyUtil.isSimplePropertyAccessor((PsiMethod) p))) || p instanceof PsiField) {
                         return;
                     }
                     holder.registerProblem(annotation, StripesUtil.message("inspection.wrongMember"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, p instanceof PsiModifierListOwner
-                            ? new LocalQuickFix[] {new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) p)}
+                            ? new LocalQuickFix[]{new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) p)}
                             : LocalQuickFix.EMPTY_ARRAY);
-                } else if (StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION.equals(annotation.getQualifiedName())) {
+                } else
+                if (StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION.equals(annotation.getQualifiedName())) {
                     PsiElement p = annotation.getParent().getParent();
                     if ((p instanceof PsiMethod && PropertyUtil.isSimplePropertyAccessor((PsiMethod) p)) || p instanceof PsiField) {
                         return;
                     }
                     holder.registerProblem(annotation, StripesUtil.message("inspection.wrongMember"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, p instanceof PsiModifierListOwner
-                            ? new LocalQuickFix[] {new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) p)}
+                            ? new LocalQuickFix[]{new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) p)}
                             : LocalQuickFix.EMPTY_ARRAY);
                 } else if (StripesConstants.HANDLES_EVENT_ANNOTATION.equals(annotation.getQualifiedName())
                         || StripesConstants.DEFAULT_HANDLER_ANNOTATION.equals(annotation.getQualifiedName())) {
@@ -110,7 +119,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                         return;
                     }
                     holder.registerProblem(annotation, StripesUtil.message("inspection.appliedToNonResolution"), m instanceof PsiModifierListOwner
-                            ? new LocalQuickFix[] {new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) m)}
+                            ? new LocalQuickFix[]{new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) m)}
                             : LocalQuickFix.EMPTY_ARRAY);
                 } else if (StripesConstants.VALIDATION_METHOD_ANNOTATION.equals(annotation.getQualifiedName())) {
                     PsiElement m = annotation.getParent().getParent();
@@ -122,15 +131,42 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                         }
                     }
                     holder.registerProblem(annotation, StripesUtil.message("inspection.wrongMember"), m instanceof PsiModifierListOwner
-                            ? new LocalQuickFix[] {new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) m)}
+                            ? new LocalQuickFix[]{new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) m)}
                             : LocalQuickFix.EMPTY_ARRAY);
                 } else if (StripesConstants.SPRING_BEAN_ANNOTATION.equals(annotation.getQualifiedName())) {
                     PsiElement m = annotation.getParent().getParent();
-                    if (m instanceof PsiMethod && !StripesUtil.isActionBeanPropertySetter((PsiMethod)m, true)) {
-                        holder.registerProblem(annotation, StripesUtil.message("inspection.appliedToPubSetter"), new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner)m));
+                    if (m instanceof PsiMethod && !StripesUtil.isActionBeanPropertySetter((PsiMethod) m, true)) {
+                        holder.registerProblem(annotation, StripesUtil.message("inspection.appliedToPubSetter"), new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) m));
                     }
                 }
             }
         };
+    }
+
+    private static class MyLocalQuickFix implements LocalQuickFix {
+        private PsiAnnotation annotation;
+
+        private MyLocalQuickFix(PsiAnnotation annotation) {
+            this.annotation = annotation;
+        }
+
+        @NotNull
+        public String getName() {
+            return "Add required attribute";
+        }
+
+        @NotNull
+        public String getFamilyName() {
+            return "Family";
+        }
+
+        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+//            MessagesEx.showErrorDialog("msg", "title");
+//            try {
+//                annotation.getParameterList().add(new PsiNameValuePairImpl().);
+//            } catch (IncorrectOperationException e) {
+//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//            }
+        }
     }
 }
