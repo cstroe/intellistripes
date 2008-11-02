@@ -16,7 +16,7 @@
   * ~~new inspection for {{{@Validate}}}. Should check {{{on}}} attribute and raise warning if there's no {{{required}}} attribute~~
   * Actions for generating elements within {{{ActionBean}}} classes
     * ~~{{{Resolution}}}~~
-    * {{{@ValidateMethod}}}
+    * {{{@ValidationMethod}}}
     * {{{@Before}}}/{{{@After}}} methods
   * Intentions for creating various Stripes extension classses from source tree. For example creating {{{ActionBeanContext}}}/{{{ActionBeanContextFactory}}} etc
   * ~~support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag~~
