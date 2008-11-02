@@ -29,16 +29,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class FileBeanSetterMethodsReference extends PsiReferenceBase<XmlAttributeValue> {
+public class FileBeanSetterReference extends PsiReferenceBase<XmlAttributeValue> {
 
     private PsiClass actionBeanPsiClass;
 
-    public FileBeanSetterMethodsReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass) {
+    public FileBeanSetterReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass) {
         super(xmlAttributeValue);
         this.actionBeanPsiClass = actionBeanPsiClass;
     }
 
-    @Nullable
+	@Nullable
     public PsiElement resolve() {
         PsiMethod[] arr = actionBeanPsiClass.findMethodsByName("set" + StringUtil.capitalize(getValue().replaceAll("\\[.*?\\]", "")), true);
         if (arr.length > 0) {
