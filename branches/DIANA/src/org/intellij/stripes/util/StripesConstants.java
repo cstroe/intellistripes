@@ -45,6 +45,7 @@ public interface StripesConstants {
     String ACTION_BEAN = "net.sourceforge.stripes.action.ActionBean";
     String FILE_BEAN = "net.sourceforge.stripes.action.FileBean";
     String ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
+    String RESOLUTION = "net.sourceforge.stripes.action.Resolution";
     String FORWARD_RESOLUTION = "net.sourceforge.stripes.action.ForwardResolution";
     String STREAMING_RESOLUTION = "net.sourceforge.stripes.action.StreamingResolution";
     String REDIRECT_RESOLUTION = "net.sourceforge.stripes.action.RedirectResolution";
@@ -68,7 +69,7 @@ public interface StripesConstants {
     String DENY_ATTR = "deny";
     String ALLOW_ATTR = "allow";
     String ON_ATTR = "on";
- 	String REQUIRED_ATTR = "required";
+    String REQUIRED_ATTR = "required";
 
     //various stripes configuration related
     String STRIPES_SERVLET_NAME = "StripesDispatcher";
@@ -115,7 +116,7 @@ public interface StripesConstants {
     String OPTION_TAG = "option";
     String OPTIONS_ENUMERATION_TAG = "options-enumeration";
     String OPTIONS_COLLECTION_TAG = "options-collection";
- 	String FIELD_METADATA_TAG = "field-metadata";
+    String FIELD_METADATA_TAG = "field-metadata";
 
     String[] CLASS_TAGS = {BUTTON_TAG, CHECKBOX_TAG, FILE_TAG, FORM_TAG, IMAGE_TAG, LABEL_TAG, LINK_TAG, HIDDEN_TAG, OPTION_TAG, OPTIONS_COLLECTION_TAG,
             OPTIONS_ENUMERATION_TAG, PASSWORD_TAG, RADIO_TAG, RESET_TAG, SELECT_TAG, SUBMIT_TAG, TEXT_TAG, TEXTAREA_TAG};
@@ -132,7 +133,7 @@ public interface StripesConstants {
     String ID_ATTR = "id";
     String VAR_ATTR = "var";
     String FIELD_ATTR = "field";
-	String FIELDS_ATTR = "fields";
+    String FIELDS_ATTR = "fields";
     String NAME_ATTR = "name";
     String URI_ATTR = "uri";
     String EVENT_ATTR = "event";
