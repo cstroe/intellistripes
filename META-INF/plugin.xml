@@ -60,9 +60,13 @@ Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHi
         </component>
     </project-components>
     <actions>
+        <action id="Stripes.Generate.Resolution" class="org.intellij.stripes.actions.GenerateResolutionAction"
+                text="Resolution method">
+            <add-to-group group-id="GenerateGroup" anchor="first"/>
+        </action>
         <group id="Stripes" class="org.intellij.stripes.actions.StripesGroup" text="Stripes">
-            <action class="org.intellij.stripes.actions.StripesNewActionBeanAction" text="Stripes ActionBean"
-                    id="Stripes.NewActionBean"/>
+            <action id="Stripes.New.ActionBean" class="org.intellij.stripes.actions.StripesNewActionBeanAction"
+                    text="ActionBean"/>
             <add-to-group anchor="last" group-id="NewGroup"/>
         </group>
     </actions>

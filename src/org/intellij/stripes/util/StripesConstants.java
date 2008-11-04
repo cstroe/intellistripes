@@ -45,6 +45,7 @@ public interface StripesConstants {
     String ACTION_BEAN = "net.sourceforge.stripes.action.ActionBean";
     String FILE_BEAN = "net.sourceforge.stripes.action.FileBean";
     String ACTION_BEAN_CONTEXT = "net.sourceforge.stripes.action.ActionBeanContext";
+    String RESOLUTION = "net.sourceforge.stripes.action.Resolution";
     String FORWARD_RESOLUTION = "net.sourceforge.stripes.action.ForwardResolution";
     String STREAMING_RESOLUTION = "net.sourceforge.stripes.action.StreamingResolution";
     String REDIRECT_RESOLUTION = "net.sourceforge.stripes.action.RedirectResolution";
