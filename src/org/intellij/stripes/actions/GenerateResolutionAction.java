@@ -17,15 +17,20 @@
 
 package org.intellij.stripes.actions;
 
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.codeInsight.generation.actions.BaseGenerateAction;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFile;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 
-public class StripesGroup extends DefaultActionGroup {
-// --------------------------- CONSTRUCTORS ---------------------------
-
-    public StripesGroup() {
-        super(StripesConstants.STRIPES, true);
-        getTemplatePresentation().setDescription(StripesConstants.STRIPES);
+public class GenerateResolutionAction extends BaseGenerateAction {
+    public GenerateResolutionAction() {
+        super(new GenerateResolutionActionHandler());
         getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
+    }
+
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
+        return super.isValidForFile(project, editor, file) && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, getTargetClass(editor, file));
     }
 }

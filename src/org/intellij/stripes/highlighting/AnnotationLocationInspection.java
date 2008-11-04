@@ -75,7 +75,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                     PsiAnnotationMemberValue requiredAttr = annotation.findDeclaredAttributeValue(StripesConstants.REQUIRED_ATTR);
 
                     if (onAttr != null && requiredAttr == null) {
-                        holder.registerProblem(onAttr, StripesUtil.message("inspection.validWithRequired"), new MyLocalQuickFix(annotation));
+                        holder.registerProblem(onAttr.getParent(), StripesUtil.message("inspection.validWithRequired"), new MyLocalQuickFix(annotation));
                     }
 
 					PsiAnnotation parent = PsiTreeUtil.getParentOfType(annotation, PsiAnnotation.class, true, PsiMethod.class);
@@ -169,12 +169,12 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
         }
 
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-//            MessagesEx.showErrorDialog("msg", "title");
-//            try {
-//                annotation.getParameterList().add(new PsiNameValuePairImpl().);
-//            } catch (IncorrectOperationException e) {
-//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//            }
+            try {
+                PsiAnnotation ann = JavaPsiFacade.getInstance(project).getElementFactory().createAnnotationFromText(StripesUtil.message("generate.validateWithRequired"), null);
+                this.annotation.getParameterList().add(ann.getParameterList().getAttributes()[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
