@@ -18,19 +18,15 @@
 package org.intellij.stripes.actions;
 
 import com.intellij.CommonBundle;
-import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.CreateElementActionBase;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataConstants;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -45,29 +41,8 @@ import java.util.Properties;
  * Created by IntelliJ IDEA. User: Mario Arias Date: 10/11/2007 Time: 12:04:05 AM
  */
 public class StripesNewActionBeanAction extends CreateElementActionBase {
-// -------------------------- STATIC METHODS --------------------------
 
-    public static boolean isUnderSourceRoots(final AnActionEvent e) {
-        final DataContext context = e.getDataContext();
-        Module module = (Module) context.getData(DataConstants.MODULE);
-        if (module == null) {
-            return false;
-        }
-        final IdeView view = (IdeView) context.getData(DataConstants.IDE_VIEW);
-        final Project project = (Project) context.getData(DataConstants.PROJECT);
-        if (view != null && project != null) {
-            ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-            PsiDirectory[] dirs = view.getDirectories();
-            for (PsiDirectory dir : dirs) {
-                if (projectFileIndex.isInSourceContent(dir.getVirtualFile()) && dir.getPackage() != null) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-// --------------------------- CONSTRUCTORS ---------------------------
+    // --------------------------- CONSTRUCTORS ---------------------------
 
     public StripesNewActionBeanAction() {
         super("Stripes ActionBean", "Create a New Stripes Action Bean", StripesConstants.ACTION_BEAN_ICON);
