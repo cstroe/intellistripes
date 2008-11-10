@@ -33,4 +33,4 @@ Initial version. Port of version 1.0.Final to Diana
     * {{{Resolution}}}
   * new inspection for {{{@Validate}}}. Should check {{{on}}} attribute and raise warning if there's no {{{required}}} attribute
   * support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag
-  
+  * Issue #44, Issue #43
