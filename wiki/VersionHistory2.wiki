@@ -24,3 +24,13 @@ Initial version. Port of version 1.0.Final to Diana
   * Upgrade of plugin library requirements to: 
     * Stripes 1.5
     * commons-logging to 1.1.1
+
+===Version 2.0.RC1.013 (2008-11-11)===
+  * Diana final version support
+  * {{{UrlFilters}}} configuration is removed from facet
+  * option to prevent web.xml modifications
+  * Actions for generating elements within {{{ActionBean}}} classes
+    * {{{Resolution}}}
+  * new inspection for {{{@Validate}}}. Should check {{{on}}} attribute and raise warning if there's no {{{required}}} attribute
+  * support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag
+  
