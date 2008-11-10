@@ -36,9 +36,8 @@ public class StripesFacetConfiguration implements FacetConfiguration, Persistent
 	private boolean logging = false;
 	private boolean stripesResources;
 	private String log4jFile;
-	private boolean actionResolverUrlFilters = false;
-	private String urlFiltersValue = "WEB-INF/classes";
 	private boolean changeIcons = false;
+    private boolean neverModifyWebXml = false;
     private String actionResolverPackages = "";
 
 // --------------------- GETTER / SETTER METHODS ---------------------
@@ -49,22 +48,6 @@ public class StripesFacetConfiguration implements FacetConfiguration, Persistent
 
     public void setLog4jFile(String log4jFile) {
         this.log4jFile = log4jFile;
-    }
-
-    public String getUrlFiltersValue() {
-        return urlFiltersValue;
-    }
-
-    public void setUrlFiltersValue(String urlFiltersValue) {
-        this.urlFiltersValue = urlFiltersValue;
-    }
-
-    public boolean isActionResolverUrlFilters() {
-        return actionResolverUrlFilters;
-    }
-
-    public void setActionResolverUrlFilters(boolean actionResolverUrlFilters) {
-        this.actionResolverUrlFilters = actionResolverUrlFilters;
     }
 
     public boolean isChangeIcons() {
@@ -107,17 +90,23 @@ public class StripesFacetConfiguration implements FacetConfiguration, Persistent
         this.actionResolverPackages = actionResolverPackages;
     }
 
+    public boolean isNeverModifyWebXml() {
+        return neverModifyWebXml;
+    }
+
+    public void setNeverModifyWebXml(boolean neverModifyWebXml) {
+        this.neverModifyWebXml = neverModifyWebXml;
+    }
+
     // ------------------------ CANONICAL METHODS ------------------------
 
     @Override
     public String toString() {
         return "StripesFacetConfiguration{" +
-                "actionResolverUrlFilters=" + actionResolverUrlFilters +
                 ", springIntegration=" + springIntegration +
                 ", logging=" + logging +
                 ", stripesResources=" + stripesResources +
                 ", log4jFile='" + log4jFile + '\'' +
-                ", urlFiltersValue='" + urlFiltersValue + '\'' +
                 ", changeIcons=" + changeIcons +
                 '}';
     }

@@ -21,8 +21,8 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiUtil;
+import com.intellij.psi.util.ReferenceSetBase;
 import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.spring.model.properties.ReferenceSetBase;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
@@ -37,29 +37,24 @@ public class SetterMethodsReferenceSet extends ReferenceSetBase<SetterMethodsRef
 
 	private final PsiClass actionBeanClass;
 	private final Boolean allowAsterisk;
-
+                                                                        
 	public SetterMethodsReferenceSet(@NotNull PsiElement element, @NotNull PsiClass beanClass) {
 		this(element, beanClass, false);
 	}
 
 	public SetterMethodsReferenceSet(@NotNull PsiElement element, @NotNull PsiClass beanClass, Boolean allowAsterisk) {
-		super(element, 0);
+		super(element, 1);
 		this.actionBeanClass = beanClass;
 		this.allowAsterisk = allowAsterisk;
 	}
 
-	@Override
-	public List<SetterReference> getReferences() {
+    @NotNull
+	protected List<SetterReference> parse(String str, int offset) {
 		if (!isSupportsBraces()) {
-			return super.getReferences();
+			return super.parse(str, offset);
 		}
 
-		final TextRange range = ElementManipulators.getManipulator(getElement()).getRangeInElement(getElement());
-		final String str = range.substring(getElement().getText());
-		final int offset = range.getStartOffset();
-
 		List<SetterReference> retval = new ArrayList<SetterReference>(8);
-
 		for (int i = 0, wStart = 0, lBrace = 0, index = 0, wEnd = 0; i < str.length(); i++) {
 			if (str.charAt(i) == '.' && lBrace == 0) {
 				retval.add(createReference(new TextRange(offset + wStart, offset + wEnd + 1), index++, wEnd != (i - 1)));

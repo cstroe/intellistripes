@@ -87,10 +87,6 @@ public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfig
     private final static class StripesFacetDetectorHelper extends NanoXmlUtil.BaseXmlBuilder {
         private Boolean isFilterConfigured = null;
 
-        public void startElement(String name, String nsPrefix, String nsURI, String systemID, int lineNr) throws Exception {
-            super.startElement(name, nsPrefix, nsURI, systemID, lineNr);
-        }
-
         public void addPCData(Reader reader, String systemID, int lineNr) throws Exception {
             if (getLocation().endsWith("filter-class")
                     && StripesConstants.STRIPES_FILTER_CLASS.equals(StreamUtil.readTextFrom(reader))) {

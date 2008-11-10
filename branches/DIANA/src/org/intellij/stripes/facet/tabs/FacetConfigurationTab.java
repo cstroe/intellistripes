@@ -28,15 +28,13 @@ import org.jetbrains.annotations.Nls;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 11/11/2007 Time: 12:07:39 PM
- */
 public class FacetConfigurationTab extends FacetEditorTab {
 // ------------------------------ FIELDS ------------------------------
 
     private StripesFacetConfiguration configuration;
     private JPanel mainPanel;
     private JCheckBox changeIconsCheckBox;
+    private JCheckBox neverModifyWebXmlCheckBox;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -47,6 +45,7 @@ public class FacetConfigurationTab extends FacetEditorTab {
 
     private void fillData() {
         changeIconsCheckBox.setSelected(configuration.isChangeIcons());
+        neverModifyWebXmlCheckBox.setSelected(configuration.isNeverModifyWebXml());
     }
 
     // ------------------------ INTERFACE METHODS ------------------------
@@ -71,14 +70,15 @@ public class FacetConfigurationTab extends FacetEditorTab {
 
     public void apply() throws ConfigurationException {
         configuration.setChangeIcons(changeIconsCheckBox.isSelected());
+        configuration.setNeverModifyWebXml(neverModifyWebXmlCheckBox.isSelected());
     }
 
     public void reset() {
-
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void disposeUIResources() {
-
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
 // -------------------------- OTHER METHODS --------------------------

@@ -47,18 +47,18 @@ public class StripesSupportUtil {
         WebApp app = facet.getWebFacet().getRoot();
 
         try {
-            installStripes(app, facet.getConfiguration());
-            if (facet.getConfiguration().isSpringIntegration()) {
-                installSpringIntegration(app);
+            if (!facet.getConfiguration().isNeverModifyWebXml()) {
+                installStripes(app, facet.getConfiguration());
+                if (facet.getConfiguration().isSpringIntegration()) {
+                    installSpringIntegration(app);
+                }
             }
+            
             if (facet.getConfiguration().isStripesResources()) {
                 installStripesResources(app);
             }
             if (facet.getConfiguration().isLogging()) {
                 installLogging(app, facet.getConfiguration());
-            }
-            if (facet.getConfiguration().isActionResolverUrlFilters()) {
-                addActionResolverUrlFilter(app, facet.getConfiguration());
             }
         } catch (Throwable throwable) {
             //
@@ -434,24 +434,6 @@ public class StripesSupportUtil {
                 //
             }
         }
-    }
-
-    /**
-     * Add ActionResolver.UrlFilter to Stripes Filter
-     *
-     * @param webApp        Web Application
-     * @param configuration Facet Configuration
-     */
-    private static void addActionResolverUrlFilter(WebApp webApp, StripesFacetConfiguration configuration) {
-        Filter filter = findStripesFilter(webApp);
-        ParamValue initParam = findInitParam(filter, StripesConstants.ACTION_RESOLVER_URL_FILTER);
-
-        if (initParam == null) {
-            ParamValue paramValue = filter.addInitParam();
-            paramValue.getParamName().setValue(StripesConstants.ACTION_RESOLVER_URL_FILTER);
-        }
-
-        initParam.getParamValue().setValue(configuration.getUrlFiltersValue());
     }
 
 // --------------------------- CONSTRUCTORS ---------------------------

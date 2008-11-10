@@ -29,7 +29,7 @@ import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This class provide References to Setter Methods for an Action Bean Class, in tags atripes:[input]
+ * This class provide References to Setter Methods for an Action Bean Class, in tags stripes:[input]
  */
 public class SetterMethodsReferenceProvider extends PsiReferenceProvider {
 

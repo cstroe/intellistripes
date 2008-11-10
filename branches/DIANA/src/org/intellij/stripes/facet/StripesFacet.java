@@ -25,9 +25,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 2/07/2007 Time: 10:52:45 PM
- */
 public class StripesFacet extends Facet<StripesFacetConfiguration> {
 // ------------------------------ FIELDS ------------------------------
 
