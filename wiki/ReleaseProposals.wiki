@@ -25,3 +25,4 @@
   * remove (make optional ?) creating of context-param when adding Spring Support from facet
   * detect if spring support is configured from web.xml not from facet setting
   * Implement {{{mime-types}}} autocomplete in {{{StreamingResolution}}} constructor when its is serves as anonymous class constructor
+  * option to prevent web.xml modifications
