@@ -25,9 +25,9 @@ import com.intellij.psi.filters.position.FilterPattern;
 import com.intellij.psi.filters.position.SuperParentFilter;
 import com.intellij.psi.filters.position.ParentElementFilter;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.SeparatedReferenceSetBase;
 import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.ReferenceSetBase;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
@@ -98,7 +98,7 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
 		);
 	}
 
-	private static class FieldsSetterReferenceSet extends SeparatedReferenceSetBase {
+	private static class FieldsSetterReferenceSet extends ReferenceSetBase {
 		private final PsiElement psiElement;
 		private final PsiClass actionBeanPsiClass;
 

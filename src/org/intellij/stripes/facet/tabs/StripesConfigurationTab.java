@@ -67,8 +67,6 @@ public class StripesConfigurationTab extends FacetEditorTab {
     private JCheckBox addStripesResourcesCheckBox;
     private JComboBox log4jComboBox;
     private JPanel messagePanel;
-    private JCheckBox configureActionResolverUrlFiltersCheckBox;
-    private JTextField actionResolverUrlFiltersTextField;
     private JList actionResolverPackagesList;
     private JButton addButton;
     private JButton removeButton;
@@ -91,11 +89,6 @@ public class StripesConfigurationTab extends FacetEditorTab {
         addLoggingCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 log4jComboBox.setEnabled(addLoggingCheckBox.isSelected());
-            }
-        });
-        configureActionResolverUrlFiltersCheckBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                actionResolverUrlFiltersTextField.setEnabled(configureActionResolverUrlFiltersCheckBox.isSelected());
             }
         });
 
@@ -137,9 +130,6 @@ public class StripesConfigurationTab extends FacetEditorTab {
             log4jComboBox.setSelectedItem(configuration.getLog4jFile());
         }
         log4jComboBox.setEnabled(addLoggingCheckBox.isSelected());
-        configureActionResolverUrlFiltersCheckBox.setSelected(configuration.isActionResolverUrlFilters());
-        actionResolverUrlFiltersTextField.setEnabled(configuration.isActionResolverUrlFilters());
-        actionResolverUrlFiltersTextField.setText(configuration.getUrlFiltersValue());
 
         Filter f = StripesSupportUtil.findStripesFilter(((StripesFacet) editorContext.getFacet()).getWebFacet().getRoot());
         if (null != f) {
@@ -186,8 +176,6 @@ public class StripesConfigurationTab extends FacetEditorTab {
         configuration.setLogging(addLoggingCheckBox.isSelected());
         configuration.setStripesResources(addStripesResourcesCheckBox.isSelected());
         configuration.setLog4jFile(log4jComboBox.getSelectedItem().toString());
-        configuration.setActionResolverUrlFilters(configureActionResolverUrlFiltersCheckBox.isSelected());
-        configuration.setUrlFiltersValue(actionResolverUrlFiltersTextField.getText());
         configuration.setActionResolverPackages(
                 StringUtil.join(Arrays.asList(((DefaultListModel) actionResolverPackagesList.getModel()).toArray()), new Function<Object, String>() {
                     public String fun(Object o) {
@@ -257,15 +245,6 @@ public class StripesConfigurationTab extends FacetEditorTab {
         final JLabel label1 = new JLabel();
         label1.setText("Stripes is a presentation framework for building web applications using the latest Java technologies.");
         messagePanel.add(label1);
-        configureActionResolverUrlFiltersCheckBox = new JCheckBox();
-        configureActionResolverUrlFiltersCheckBox.setEnabled(true);
-        configureActionResolverUrlFiltersCheckBox.setText("Configure ActionResolver UrlFilters");
-        configureActionResolverUrlFiltersCheckBox.setToolTipText("Add ActionResolver.UrlFilter to Stripes Filter");
-        mainPanel.add(configureActionResolverUrlFiltersCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        actionResolverUrlFiltersTextField = new JTextField();
-        actionResolverUrlFiltersTextField.setEnabled(false);
-        actionResolverUrlFiltersTextField.setText("WEB-INF/classes");
-        mainPanel.add(actionResolverUrlFiltersTextField, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(190, 20), null, 0, false));
         final Spacer spacer2 = new Spacer();
         mainPanel.add(spacer2, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();

@@ -152,7 +152,7 @@ public class StripesReferencesComponent implements ProjectComponent {
 //src on stripes:image
         registerTags(new WebPathReferenceProvider(), STRIPES_NAMESPACE_FILTER, StripesConstants.SRC_ATTR, StripesConstants.IMAGE_TAG);
 
-        JavaClassReferenceProvider provider = new JavaClassReferenceProvider();
+        JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project), this.project);
         provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{"java.lang.Enum"});
         registerTags(provider, STRIPES_NAMESPACE_FILTER, StripesConstants.ENUM_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG);
 
@@ -229,7 +229,7 @@ public class StripesReferencesComponent implements ProjectComponent {
 
     private void registerSubclass(String tagName) {
 //TODO if ActionResolver.Packages is configured in web.xml pass it as GlobalSearchScope instead of whole project scope
-		JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project)) {
+		JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project), this.project) {
 			public PsiReference[] getReferencesByElement(@NotNull PsiElement psiElement) {
 				if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) {
 					return PsiReference.EMPTY_ARRAY;

@@ -19,22 +19,23 @@
 <idea-plugin url="http://code.google.com/p/intellistripes">
 	<name>IntelliStripes</name>
 	<description>Stripes even more easy !!!</description>
-	<version>2.0.beta3.664</version>
+	<version>2.0.RC1.013</version>
 	<vendor email="intellistripes@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
 					url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
 	</vendor>
 	<change-notes>
 		<![CDATA[
 <p>
-    Moving towards improved Stripes 1.5 support. Dedicated mainly for facet configuration.
+    Migration to final Diana version.
 </p>
 <br/>
 <br/>
 Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">http://code.google.com/p/intellistripes/wiki/VersionHistory2</a>
         ]]>
 	</change-notes>
-	<idea-version since-build="8664" until-build="8999"/>
-	<depends>com.intellij.javaee</depends>
+	<idea-version since-build="9013" until-build="9013"/>
+	<depends>com.intellij.css</depends>
+    <depends>com.intellij.javaee</depends>
 	<depends>com.intellij.spring</depends>
 	<depends>JavaScript</depends>
 	<depends>RegExpLanguage</depends>
