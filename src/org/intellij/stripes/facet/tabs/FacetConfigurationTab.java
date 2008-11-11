@@ -20,8 +20,8 @@ package org.intellij.stripes.facet.tabs;
 import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import org.intellij.stripes.facet.StripesFacetConfiguration;
 import org.jetbrains.annotations.Nls;
 
