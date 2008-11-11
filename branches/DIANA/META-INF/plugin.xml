@@ -20,7 +20,8 @@
 	<name>IntelliStripes</name>
 	<description>Stripes even more easy !!!</description>
 	<version>2.0.RC1.013</version>
-	<vendor email="intellistripes@gmail.com" logo="/org/intellij/stripes/icons/StripesIcon.png"
+	<vendor email="intellistripes@gmail.com" logo="/org/intellij/stripes/icons/Strinot
+	pesIcon.png"
 					url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
 	</vendor>
 	<change-notes>
@@ -47,7 +48,7 @@ Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHi
 
 		<fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
 		<javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>
-		<annotator language="JAVA" annotatorClass="org.intellij.stripes.highlighting.ActionBeanUsageAnnotator"/>
+		<annotator language="JAVA" implementationClass="org.intellij.stripes.highlighting.ActionBeanUsageAnnotator"/>
 		<pathReferenceProvider
 			implementation="org.intellij.stripes.reference.providers.UrlBindingPathReferenceProvider"/>
 		<inspectionToolProvider implementation="org.intellij.stripes.highlighting.StripesInspectionToolProvider"/>
