@@ -14,15 +14,15 @@
   * If {{{ActionResolver.Packages}}} is configured auto-complete variants of {{{beanclass}}} attributes in stripes custom tags should be limited only by those packages
   * Provide autocomplete support for {{{@UrlBinding}}} Ex: {{{@UrlBinding("/myAction/{myProperty}/{myAnotherProperty=defaultValue}/{$event}")}}}
   * ~~new inspection for {{{@Validate}}}. Should check {{{on}}} attribute and raise warning if there's no {{{required}}} attribute~~
-  * Actions for generating elements within {{{ActionBean}}} classes
+  * ~~Actions for generating elements within {{{ActionBean}}} classes~~
     * ~~{{{Resolution}}}~~
-    * {{{@ValidationMethod}}}
-    * {{{@Before}}}/{{{@After}}} methods
+    * ~~{{{@ValidationMethod}}}~~
+    * ~~{{{@Before}}}/{{{@After}}} methods~~
   * Intentions for creating various Stripes extension classses from source tree
     * {{{ActionBeanContext}}}
     * {{{ActionBeanContextFactory}}}
   * ~~support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag~~
-  * remove (make optional ?) creating of context-param when adding Spring Support from facet
+  * ~~remove (make optional ?) creating of {{{context-param}}} and Spring Context Listener when adding Spring Support from facet~~
   * detect if spring support is configured from web.xml not from facet setting
-  * Implement {{{mime-types}}} autocomplete in {{{StreamingResolution}}} constructor when its is serves as anonymous class constructor
+  * ~~Implement {{{mime-types}}} autocomplete in {{{StreamingResolution}}} constructor when its is serves as anonymous class constructor~~
   * ~~option to prevent web.xml modifications~~
