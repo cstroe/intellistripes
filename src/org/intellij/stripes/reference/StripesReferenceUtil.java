@@ -141,15 +141,14 @@ public final class StripesReferenceUtil {
 
         List<String> methodNames = new ArrayList<String>(16);
         for (PsiMethod psiMethod : psiClass.getAllMethods()) {
-            String name = psiMethod.getName();
-            if (name.startsWith("set") && psiMethod.getParameterList().getParametersCount() == 1) {
+            String name = PropertyUtil.getPropertyNameBySetter(psiMethod);
+            if (PropertyUtil.isSimplePropertySetter(psiMethod) && !methodNames.contains(name)) {
                 PsiType propertyType = psiMethod.getParameterList().getParameters()[0].getType();
                 PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
 
                 if (StripesUtil.isSubclass(StripesConstants.ACTION_BEAN_CONTEXT, propertyClass)
                         || StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass)) continue;
 
-                name = StringUtil.decapitalize(name.replaceFirst("set", ""));
                 if (propertyType instanceof PsiArrayType
                         || StripesUtil.isSubclass(List.class.getName(), propertyClass)
                         || StripesUtil.isSubclass(Map.class.getName(), propertyClass)) {

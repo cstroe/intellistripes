@@ -17,12 +17,13 @@
 
 package org.intellij.stripes.reference;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.impl.source.jsp.JspImplicitVariableImpl;
 import com.intellij.psi.impl.source.jsp.el.impl.ELElementProcessor;
-import com.intellij.psi.impl.source.jsp.el.impl.JspElVariablesProvider;
+import com.intellij.psi.impl.source.jsp.el.impl.ElVariablesProvider;
 import com.intellij.psi.impl.source.jsp.el.impl.MethodSignatureFilter;
 import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
@@ -40,68 +41,88 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class StripesELVarProvider extends JspElVariablesProvider {
+public class StripesELVarProvider extends ElVariablesProvider {
+	private static String ACTION_BEAN = "actionBean";
+	private static String USE_ACTION_BEAN = "useActionBean";
 
-    private static String ACTION_BEAN = "actionBean";
-    private static String USE_ACTION_BEAN = "useActionBean";
+	private static PsiElementFilter ACTION_BEAN_PROVIDER_FILTER = new StripesTagFilter() {
+		protected boolean isDetailsAccepted(XmlTag tag) {
+			return StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())
+				|| StripesConstants.FORM_TAG.equals(tag.getLocalName());
+		}
+	};
+	public static PsiElementFilter BEANCLASS_ATTR_FILTER = new StripesTagFilter() {
+		protected boolean isDetailsAccepted(XmlTag tag) {
+			return tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR) != null;
+		}
+	};
 
-    private static PsiElementFilter ACTION_BEAN_PROVIDER_FILTER = new StripesTagFilter() {
-        protected boolean isDetailsAccepted(XmlTag tag) {
-            return StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())
-                    || StripesConstants.FORM_TAG.equals(tag.getLocalName());
-        }
-    };
-    public static PsiElementFilter BEANCLASS_ATTR_FILTER = new StripesTagFilter() {
-        protected boolean isDetailsAccepted(XmlTag tag) {
-            return tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR) != null;
-        }
-    };
+	public boolean processImplicitVariables(@NotNull final PsiElement psiElement, @NotNull final ELExpressionHolder elExpressionHolder, @NotNull final ELElementProcessor elElementProcessor) {
+		try {
+			if (!(elExpressionHolder.getContainingFile() instanceof JspFile)) {
+				return true;
+			}
 
-    public boolean processImplicitVariables(@NotNull PsiElement psiElement, @NotNull final JspFile jspFile, @NotNull ELElementProcessor elElementProcessor) {
-        if (!StripesUtil.isStripesPage(jspFile)) return true;
+			final JspFile jspFile = (JspFile) elExpressionHolder.getContainingFile();
+			if (!StripesUtil.isStripesPage(jspFile)) return true;
 
-        Map<String, String> actionBeans = StripesUtil.collectTags(jspFile.getDocument().getRootTag(),
-                ACTION_BEAN_PROVIDER_FILTER, BEANCLASS_ATTR_FILTER,
-                new XmlTagContainer<Map<String, String>>(new Hashtable<String, String>()) {
-                    public void add(XmlTag tag) {
-                        if (StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())) {
-                            if (tag.getAttributeValue(StripesConstants.ID_ATTR) == null && tag.getAttributeValue(StripesConstants.VAR_ATTR) == null) {
-                                container.put(USE_ACTION_BEAN, tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
-                            } else if (tag.getAttributeValue(StripesConstants.ID_ATTR) != null) {
-                                container.put(tag.getAttributeValue(StripesConstants.ID_ATTR), tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
-                            } else if (tag.getAttributeValue(StripesConstants.VAR_ATTR) != null) {
-                                container.put(tag.getAttributeValue(StripesConstants.VAR_ATTR), tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
-                            }
-                        } else if (StripesConstants.FORM_TAG.equals(tag.getLocalName())) {
-                            container.put(ACTION_BEAN, tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR));
-                        }
-                    }
-                }).getContainer();
+			Map<String, String> actionBeans = StripesUtil.collectTags(jspFile.getDocument().getRootTag(),
+				ACTION_BEAN_PROVIDER_FILTER, BEANCLASS_ATTR_FILTER,
+				new XmlTagContainer<Map<String, String>>(new Hashtable<String, String>()) {
+					public void add(XmlTag tag) {
+						String actionBeanClassName = tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR);
+						if (StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())) {
+							if (tag.getAttributeValue(StripesConstants.ID_ATTR) == null && tag.getAttributeValue(StripesConstants.VAR_ATTR) == null) {
+								container.put(USE_ACTION_BEAN, actionBeanClassName);
+							} else if (tag.getAttributeValue(StripesConstants.ID_ATTR) != null) {
+								processVariable(psiElement.getProject(), elElementProcessor, jspFile, tag.getAttributeValue(StripesConstants.ID_ATTR), actionBeanClassName);
+							} else if (tag.getAttributeValue(StripesConstants.VAR_ATTR) != null) {
+								processVariable(psiElement.getProject(), elElementProcessor, jspFile, tag.getAttributeValue(StripesConstants.VAR_ATTR), actionBeanClassName);
+							}
+						} else if (StripesConstants.FORM_TAG.equals(tag.getLocalName())) {
+							container.put("__" + actionBeanClassName, actionBeanClassName);
+						}
+					}
+				}).getContainer();
 
-        String clsName = actionBeans.remove(USE_ACTION_BEAN);
-        if (null != clsName) {
-            actionBeans.put(ACTION_BEAN, clsName);
-        }
+			String clsName = actionBeans.remove(USE_ACTION_BEAN);
+			if (null != clsName) {
+				actionBeans.clear();
+				actionBeans.put(ACTION_BEAN, clsName);
+			}
 
-        for (String actionBeanName : actionBeans.keySet()) {
-            PsiClass actionBeanClass = StripesUtil.findPsiClassByName(actionBeans.get(actionBeanName), psiElement.getProject());
-            if (actionBeanClass == null) continue;
-            elElementProcessor.processVariable(
-                    new JspImplicitVariableImpl(actionBeanClass,
-                            actionBeanName, JavaPsiFacade.getInstance(psiElement.getProject()).getElementFactory().createType(actionBeanClass),
-                            actionBeanClass, JspImplicitVariableImpl.NESTED_RANGE) {
+			for (String actionBeanName : actionBeans.keySet()) {
+				processVariable(psiElement.getProject(), elElementProcessor, jspFile, ACTION_BEAN, actionBeans.get(actionBeanName));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		}
 
-                        public PsiElement getDeclaration() {
-                            return null;
-                        }
+		return true;
+	}
 
-                        @NotNull
-                        public SearchScope getUseScope() {
-                            return GlobalSearchScope.fileScope(jspFile);
-                        }
-                    }
-            );
-        }
-        return true;
-    }
+	private void processVariable(final Project project, final ELElementProcessor elElementProcessor, final JspFile jspFile, final String actionBeanName, final String actionBeanClassName) {
+		final PsiClass actionBeanClass = StripesUtil.findPsiClassByName(actionBeanClassName, project);
+		if (actionBeanClass == null) return;
+
+		elElementProcessor.processVariable(
+			new JspImplicitVariableImpl(actionBeanClass,
+				actionBeanName, JavaPsiFacade.getInstance(project).getElementFactory().createType(actionBeanClass),
+				actionBeanClass, JspImplicitVariableImpl.NESTED_RANGE) {
+
+				public PsiElement getDeclaration() {
+					return null;
+				}
+
+				@NotNull
+				public SearchScope getUseScope() {
+					return GlobalSearchScope.fileScope(jspFile);
+				}
+			}
+		);
+	}
+
+	public MethodSignatureFilter getMethodSignatureFilter(@NotNull PsiElement psiElement, @NotNull ELExpressionHolder elExpressionHolder, @Nullable PsiElement psiElement1) {
+		return null;
+	}
 }
