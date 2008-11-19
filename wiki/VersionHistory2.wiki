@@ -34,3 +34,15 @@ Initial version. Port of version 1.0.Final to Diana
   * new inspection for {{{@Validate}}}. Should check {{{on}}} attribute and raise warning if there's no {{{required}}} attribute
   * support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag
   * Issue #44, Issue #43
+
+===Version 2.0.RC2.013 (2008-11-20)===
+  * Actions for generating elements within {{{ActionBean}}} classes
+    * {{{Resolution}}}
+    * {{{@ValidationMethod}}}
+    * {{{@Before}}}/{{{@After}}} methods
+  * removed creating of {{{context-param}}} and Spring Context Listener when adding Spring Support
+  * {{{mime-type}}} autocomplete in {{{StreamingResolution}}} constructor when its is serves as anonymous class constructor
+  * initial support for Clean URL in {{{@UrlBinding}}}. Auto complete works but URL are not correctly resolved from JSP
+  * fixed registration of {{{actionBean}}} as implicit EL variable
+  * More valid {{{actionBean}}} EL implicit variable proessing
+  * fixed duplicate property names in auto-complete for {{{ActionBean}}} setters
