@@ -120,6 +120,15 @@
           </component>
         </children>
       </grid>
+      <component id="6a276" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font size="9" style="2"/>
+          <text value="/Spring web context must be configured/"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

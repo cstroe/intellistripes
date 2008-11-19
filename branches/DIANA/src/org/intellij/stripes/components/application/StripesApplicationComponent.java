@@ -41,52 +41,61 @@ public class StripesApplicationComponent extends IconProvider implements Applica
 
 // --------------------- Interface BaseComponent ---------------------
 
-    @NotNull
-    public String getComponentName() {
-        return "Stripes Application Component";
-    }
+	@NotNull
+	public String getComponentName() {
+		return "Stripes Application Component";
+	}
 
-    public void initComponent() {
-        //Register a new Facet Type
-        FacetTypeRegistry.getInstance().registerFacetType(StripesFacetType.INSTANCE);
-    }
+	public void initComponent() {
+		//Register a new Facet Type
+		FacetTypeRegistry.getInstance().registerFacetType(StripesFacetType.INSTANCE);
 
-    public void disposeComponent() {
+//		final TemplateSettings settings = TemplateSettings.getInstance();
+//		try {
+//			final Document document = JDOMUtil.loadDocument(getClass().getResourceAsStream("/liveTemplates/stripes.xml"));
+//			settings.readHiddenTemplateFile(document);
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+	}
 
-    }
+	public void disposeComponent() {
+
+	}
 
 // --------------------- Interface IconProvider ---------------------
 
 
-    @Nullable
-    public Icon getIcon(@NotNull PsiElement element, int flags) {
-        StripesFacet facet = StripesUtil.getStripesFacet(StripesUtil.getModule(element));
-        if (facet == null) {
-            return null;
-        }
-        //Change Icons?
-        if (facet.getConfiguration().isChangeIcons()) {
-            //is JSP's?
-            if (element instanceof JspFile && StripesUtil.isStripesPage((JspFile) element)) {//get tags like page, taglib...
-                return StripesConstants.STRIPES_JSP_ICON;
-            } else if (element instanceof PsiClass) { //is class?
-                PsiClass clazz = (PsiClass) element;
-                boolean isActionBean = false;
-                try {
-                    //is abstract?
-                    if (!clazz.getModifierList().hasExplicitModifier(PsiModifier.ABSTRACT)) {
-                        //Is an implementation of ActionBean?
-                        isActionBean = StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, clazz);
-                    }
-                } catch (Exception e) {
-                    //
-                }
-                return isActionBean ? StripesConstants.ACTION_BEAN_ICON : null;
-            } else {
-                return null;
-            }
-        }
+	@Nullable
+	public Icon getIcon(@NotNull PsiElement element, int flags) {
+		StripesFacet facet = StripesUtil.getStripesFacet(StripesUtil.getModule(element));
+		if (facet == null) {
+			return null;
+		}
+		//Change Icons?
+		if (facet.getConfiguration().isChangeIcons()) {
+			//is JSP's?
+			if (element instanceof JspFile && StripesUtil.isStripesPage((JspFile) element)) {//get tags like page, taglib...
+				return StripesConstants.STRIPES_JSP_ICON;
+			} else if (element instanceof PsiClass) { //is class?
+				PsiClass clazz = (PsiClass) element;
+				boolean isActionBean = false;
+				try {
+					//is abstract?
+					if (!clazz.getModifierList().hasExplicitModifier(PsiModifier.ABSTRACT)) {
+						//Is an implementation of ActionBean?
+						isActionBean = StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, clazz);
+					}
+				} catch (Exception e) {
+					//
+				}
+				return isActionBean ? StripesConstants.ACTION_BEAN_ICON : null;
+			} else {
+				return null;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 }

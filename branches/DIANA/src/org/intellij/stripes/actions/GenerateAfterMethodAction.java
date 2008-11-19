@@ -17,20 +17,44 @@
 
 package org.intellij.stripes.actions;
 
+import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.generation.actions.BaseGenerateAction;
+import com.intellij.codeInsight.template.Template;
+import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 
-public class GenerateResolutionAction extends BaseGenerateAction {
-    public GenerateResolutionAction() {
+public class GenerateAfterMethodAction extends BaseGenerateAction {
+    public GenerateAfterMethodAction() {
         super(new GenerateResolutionActionHandler());
         getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
     }
 
-    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
+	protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         return super.isValidForFile(project, editor, file) && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, getTargetClass(editor, file));
     }
+
+	private static class GenerateResolutionActionHandler implements CodeInsightActionHandler {
+		public void invoke(Project project, Editor editor, PsiFile file) {
+			Template t = TemplateManager.getInstance(project).createTemplate("", "");
+			t.setToReformat(true);
+			t.setToShortenLongNames(true);
+			t.setToIndent(true);
+			t.addTextSegment("@net.sourceforge.stripes.action.After public void postProcess() {\n\t");
+			t.addEndVariable();
+			t.addSelectionStartVariable();
+			t.addTextSegment("//	put post process actions here");
+			t.addSelectionEndVariable();
+			t.addTextSegment("\n}");
+
+			TemplateManager.getInstance(project).startTemplate(editor, t);
+		}
+
+		public boolean startInWriteAction() {
+			return true;
+		}
+	}
 }

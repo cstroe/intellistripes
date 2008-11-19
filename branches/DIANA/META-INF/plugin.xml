@@ -19,14 +19,14 @@
 <idea-plugin url="http://code.google.com/p/intellistripes">
 	<name>IntelliStripes</name>
 	<description>Stripes even more easy !!!</description>
-	<version>2.0.RC1.013</version>
+	<version>2.0.RC2.013</version>
 	<vendor email="intellistripes@gmail.com" logo="/resources/icons/StripesIcon.png"
 					url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
 	</vendor>
 	<change-notes>
 		<![CDATA[
 <p>
-    Migration to final Diana version.
+    New features, improvements and some bugfixes.
 </p>
 	<br/>
 	<br/>
@@ -68,8 +68,17 @@
 		</component>
 	</project-components>
 	<actions>
-		<action id="Stripes.Generate.Resolution" class="org.intellij.stripes.actions.GenerateResolutionAction" text="Resolution method">
+		<action id="Stripes.Generate.Resolution" class="org.intellij.stripes.actions.GenerateResolutionMethodAction" text="Resolution method">
 			<add-to-group group-id="GenerateGroup" anchor="first"/>
+		</action>
+		<action id="Stripes.Generate.ValidationMethod" class="org.intellij.stripes.actions.GenerateValidationMethodAction" text="@ValidationMethod">
+			<add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.Resolution"/>
+		</action>
+		<action id="Stripes.Generate.BeforeMethod" class="org.intellij.stripes.actions.GenerateBeforeMethodAction" text="@Before">
+			<add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.ValidationMethod"/>
+		</action>
+		<action id="Stripes.Generate.AfterMethod" class="org.intellij.stripes.actions.GenerateAfterMethodAction" text="@After">
+			<add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.BeforeMethod"/>
 		</action>
 		<group id="Stripes" class="org.intellij.stripes.actions.StripesGroup" text="Stripes">
 			<action id="Stripes.New.ActionBean" class="org.intellij.stripes.actions.StripesNewActionBeanAction" text="ActionBean"/>

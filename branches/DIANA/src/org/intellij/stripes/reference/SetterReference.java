@@ -23,27 +23,48 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.util.PropertyUtil;
-import com.intellij.psi.xml.XmlAttributeValue;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.Nullable;
 
-public class SetterReference extends PsiReferenceBase<XmlAttributeValue> {
+public class SetterReference<T extends PsiElement> extends PsiReferenceBase<T> {
 
-    private PsiClass actionBeanPsiClass;
+	public static <T extends PsiElement> SetterReference<T> getNullReference() {
+		return new SetterReference<T>(null, null) {
+			@Override
+			public TextRange getRangeInElement() {
+				return null;
+			}
 
-    public SetterReference(XmlAttributeValue xmlAttributeValue, TextRange textRange, PsiClass actionBeanPsiClass) {
-        super(xmlAttributeValue, textRange);
-        this.actionBeanPsiClass = actionBeanPsiClass;
-    }
+			@Override
+			public T getElement() {
+				return null;
+			}
+		};
+	}
 
-    @Nullable
-    public PsiElement resolve() {
-        PsiMethod method = PropertyUtil.findPropertySetter(actionBeanPsiClass, getValue(), false, true);
-        return StripesUtil.isActionBeanPropertySetter(method, false) ? method : null;
-    }
+	protected PsiClass actionBeanPsiClass;
 
-    public Object[] getVariants() {
-        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getWritableProperties(actionBeanPsiClass, false), StripesConstants.FIELD_ICON);
-    }
+	public void setActionBeanPsiClass(PsiClass actionBeanPsiClass) {
+		this.actionBeanPsiClass = actionBeanPsiClass;
+	}
+
+	public SetterReference(T element, TextRange range) {
+		super(element, range);
+	}
+
+	public SetterReference(T psiElement, TextRange textRange, PsiClass actionBeanPsiClass) {
+		super(psiElement, textRange);
+		this.actionBeanPsiClass = actionBeanPsiClass;
+	}
+
+	@Nullable
+	public PsiElement resolve() {
+		PsiMethod method = PropertyUtil.findPropertySetter(actionBeanPsiClass, getValue(), false, true);
+		return StripesUtil.isActionBeanPropertySetter(method, false) ? method : null;
+	}
+
+	public Object[] getVariants() {
+		return StripesReferenceUtil.getVariants(StripesReferenceUtil.getWritableProperties(actionBeanPsiClass, false), StripesConstants.FIELD_ICON);
+	}
 }

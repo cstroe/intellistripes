@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.filters.ElementFilter;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.intellij.stripes.util.StripesConstants;
 
 public class NewStreamingResolutionFilter implements ElementFilter {
@@ -31,15 +32,12 @@ public class NewStreamingResolutionFilter implements ElementFilter {
 	public boolean isAcceptable(Object element, PsiElement psiElement) {
 		PsiExpressionList expressionList = (PsiExpressionList) element;
 		if (expressionList.getExpressions()[0].equals(psiElement)) {
-			if (expressionList.getParent() instanceof PsiNewExpression) {
-				PsiNewExpression newExpression = (PsiNewExpression) expressionList.getParent();
-				return StripesConstants.STREAMING_RESOLUTION.equals(newExpression.getClassReference().getQualifiedName());
-			} else {
-				return false;
+			PsiNewExpression p = PsiTreeUtil.getParentOfType(expressionList, PsiNewExpression.class);
+			if (p != null) {
+				return StripesConstants.STREAMING_RESOLUTION.equals(p.getClassOrAnonymousClassReference().getQualifiedName());
 			}
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public boolean isClassAcceptable(Class aClass) {

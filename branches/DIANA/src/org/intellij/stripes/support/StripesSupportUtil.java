@@ -164,14 +164,15 @@ public class StripesSupportUtil {
      * @param app Web Application
      */
     private static void installSpringIntegration(WebApp app) {
-        if (!isSpringListenerInstalled(app)) {
-            addSpringListener(app);
-        }
-        if (!isContextConfigLocation(app)) {
-            addContextConfigLocation(app);
-        }
-        Filter filter = findStripesFilter(app);
-        addSpringInterceptor(filter);
+//        if (!isSpringListenerInstalled(app)) {
+//            addSpringListener(app);
+//        }
+
+//        if (!isContextConfigLocation(app)) {
+//            addContextConfigLocation(app);
+//        }
+
+		addSpringInterceptor(findStripesFilter(app));
     }
 
     /**
