@@ -25,7 +25,6 @@ import com.intellij.facet.impl.autodetecting.FacetDetectorRegistryEx;
 import com.intellij.j2ee.web.WebUtilImpl;
 import com.intellij.javaee.model.common.JavaeeCommonConstants;
 import com.intellij.javaee.web.facet.WebFacet;
-import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
@@ -60,10 +59,10 @@ public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfig
         return true;
     }
 
-	@Override
-	public boolean isSuitableModuleType(ModuleType moduleType) {
-		return moduleType == StdModuleTypes.JAVA;
-	}
+    @Override
+    public boolean isSuitableModuleType(ModuleType moduleType) {
+        return moduleType == StdModuleTypes.JAVA;
+    }
 
     @Override
     public Icon getIcon() {
@@ -78,11 +77,11 @@ public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfig
         return new StripesFacetConfiguration();
     }
 
-	public void registerDetectors(FacetDetectorRegistry<StripesFacetConfiguration> facetDetectorRegistry) {
-		((FacetDetectorRegistryEx) facetDetectorRegistry).registerUniversalDetectorByFileNameAndRootTag("web.xml", JavaeeCommonConstants.WEB_XML_ROOT_TAG,
-			new StripesFacetDetector("stripes-detector"), WebUtilImpl.BY_PARENT_WEB_ROOT_SELECTOR
-		);
-	}
+    public void registerDetectors(FacetDetectorRegistry<StripesFacetConfiguration> facetDetectorRegistry) {
+        ((FacetDetectorRegistryEx) facetDetectorRegistry).registerUniversalDetectorByFileNameAndRootTag("web.xml", JavaeeCommonConstants.WEB_XML_ROOT_TAG,
+                new StripesFacetDetector("stripes-detector"), WebUtilImpl.BY_PARENT_WEB_ROOT_SELECTOR
+        );
+    }
 
     private final static class StripesFacetDetectorHelper extends NanoXmlUtil.BaseXmlBuilder {
         private Boolean isFilterConfigured = null;
@@ -104,13 +103,13 @@ public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfig
 
     private final static class StripesFacetDetector extends FacetDetector<VirtualFile, StripesFacetConfiguration> {
 
-		private StripesFacetDetector(@NotNull String id) {
-			super(id);
-		}
+        private StripesFacetDetector(@NotNull String id) {
+            super(id);
+        }
 
-		public StripesFacetConfiguration detectFacet(VirtualFile source, Collection<StripesFacetConfiguration> existentFacetConfigurations) {
-			final Iterator<StripesFacetConfiguration> iterator = existentFacetConfigurations.iterator();
-			if (iterator.hasNext()) return iterator.next();
+        public StripesFacetConfiguration detectFacet(VirtualFile source, Collection<StripesFacetConfiguration> existentFacetConfigurations) {
+            final Iterator<StripesFacetConfiguration> iterator = existentFacetConfigurations.iterator();
+            if (iterator.hasNext()) return iterator.next();
 
             IXMLBuilder builder = new StripesFacetDetectorHelper();
             try {

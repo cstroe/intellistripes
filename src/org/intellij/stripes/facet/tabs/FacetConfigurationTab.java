@@ -20,8 +20,8 @@ package org.intellij.stripes.facet.tabs;
 import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.Spacer;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 import org.intellij.stripes.facet.StripesFacetConfiguration;
 import org.jetbrains.annotations.Nls;
 
@@ -74,11 +74,11 @@ public class FacetConfigurationTab extends FacetEditorTab {
     }
 
     public void reset() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //
     }
 
     public void disposeUIResources() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //
     }
 
 // -------------------------- OTHER METHODS --------------------------
@@ -99,16 +99,20 @@ public class FacetConfigurationTab extends FacetEditorTab {
      */
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         changeIconsCheckBox = new JCheckBox();
-        changeIconsCheckBox.setSelected(true);
+        changeIconsCheckBox.setSelected(false);
         changeIconsCheckBox.setText("Change Icons");
         changeIconsCheckBox.setToolTipText("Change Icons, Could Improve Performance in Very Large Proyects");
         mainPanel.add(changeIconsCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         mainPanel.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        mainPanel.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mainPanel.add(spacer2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        neverModifyWebXmlCheckBox = new JCheckBox();
+        neverModifyWebXmlCheckBox.setSelected(false);
+        neverModifyWebXmlCheckBox.setText("Never modify web.xml");
+        mainPanel.add(neverModifyWebXmlCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

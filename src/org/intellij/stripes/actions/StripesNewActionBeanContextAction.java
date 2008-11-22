@@ -19,13 +19,13 @@ package org.intellij.stripes.actions;
 
 import org.intellij.stripes.util.StripesConstants;
 
-public class StripesNewActionBeanAction extends StripesBaseNewClassAction {
+public class StripesNewActionBeanContextAction extends StripesBaseNewClassAction {
 
     protected String getClassName() {
-        return "ActionBean";
+        return "ActionBeanContext";
     }
 
     protected String getTemplateName() {
-        return StripesConstants.ACTION_BEAN_TEMPLATE;
+        return StripesConstants.ACTION_BEAN_CONTEXT_TEMPLATE;
     }
 }

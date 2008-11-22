@@ -17,14 +17,14 @@
 
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin url="http://code.google.com/p/intellistripes">
-	<name>IntelliStripes</name>
-	<description>Stripes even more easy !!!</description>
-	<version>2.0.RC2.013</version>
-	<vendor email="intellistripes@gmail.com" logo="/resources/icons/StripesIcon.png"
-					url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
-	</vendor>
-	<change-notes>
-		<![CDATA[
+    <name>IntelliStripes</name>
+    <description>Stripes even more easy !!!</description>
+    <version>2.0.RC2.013</version>
+    <vendor email="intellistripes@gmail.com" logo="/resources/icons/StripesIcon.png"
+            url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
+    </vendor>
+    <change-notes>
+        <![CDATA[
 <p>
     New features, improvements and some bugfixes.
 </p>
@@ -32,57 +32,71 @@
 	<br/>
 	Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">http://code.google.com/p/intellistripes/wiki/VersionHistory2</a>
 			]]>
-		</change-notes>
-		<idea-version since-build="9013" until-build="9013"/>
-		<depends>com.intellij.css</depends>
-		<depends>com.intellij.javaee</depends>
-		<depends>com.intellij.spring</depends>
-		<depends>JavaScript</depends>
-		<depends>RegExpLanguage</depends>
+    </change-notes>
+    <idea-version since-build="9013" until-build="9013"/>
+    <depends>com.intellij.css</depends>
+    <depends>com.intellij.javaee</depends>
+    <depends>com.intellij.spring</depends>
+    <depends>JavaScript</depends>
+    <depends>RegExpLanguage</depends>
 
-		<extensions xmlns="com.intellij">
-			<psi.referenceContributor implementation="org.intellij.stripes.reference.contributors.SetterReferenceContributor"/>
-			<psi.referenceContributor implementation="org.intellij.stripes.reference.contributors.ResolutionReferenceContributor"/>
-			<psi.referenceContributor implementation="org.intellij.stripes.reference.contributors.StaticReferenceContributor"/>
+    <extensions xmlns="com.intellij">
+        <psi.referenceContributor
+                implementation="org.intellij.stripes.reference.contributors.SetterReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="org.intellij.stripes.reference.contributors.ResolutionReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="org.intellij.stripes.reference.contributors.StaticReferenceContributor"/>
 
-			<fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
-			<javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>
-			<annotator language="JAVA" implementationClass="org.intellij.stripes.highlighting.ActionBeanUsageAnnotator"/>
-			<pathReferenceProvider
-				implementation="org.intellij.stripes.reference.providers.UrlBindingPathReferenceProvider"/>
-			<inspectionToolProvider implementation="org.intellij.stripes.highlighting.StripesInspectionToolProvider"/>
-			<projectService serviceInterface="org.intellij.stripes.facet.StripesFacetConfiguration"
-											serviceImplementation="org.intellij.stripes.facet.StripesFacetConfiguration"/>
+        <fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
+        <javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>
+        <annotator language="JAVA" implementationClass="org.intellij.stripes.highlighting.ActionBeanUsageAnnotator"/>
+        <pathReferenceProvider
+                implementation="org.intellij.stripes.reference.providers.UrlBindingPathReferenceProvider"/>
+        <inspectionToolProvider implementation="org.intellij.stripes.highlighting.StripesInspectionToolProvider"/>
+        <projectService serviceInterface="org.intellij.stripes.facet.StripesFacetConfiguration"
+                        serviceImplementation="org.intellij.stripes.facet.StripesFacetConfiguration"/>
 
-	</extensions>
-	<application-components>
-		<component>
-			<implementation-class>org.intellij.stripes.components.application.StripesApplicationComponent
-			</implementation-class>
-		</component>
-	</application-components>
-	<project-components>
-		<component>
-			<implementation-class>org.intellij.stripes.components.project.StripesReferencesComponent
-			</implementation-class>
-		</component>
-	</project-components>
-	<actions>
-		<action id="Stripes.Generate.Resolution" class="org.intellij.stripes.actions.GenerateResolutionMethodAction" text="Resolution method">
-			<add-to-group group-id="GenerateGroup" anchor="first"/>
-		</action>
-		<action id="Stripes.Generate.ValidationMethod" class="org.intellij.stripes.actions.GenerateValidationMethodAction" text="@ValidationMethod">
-			<add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.Resolution"/>
-		</action>
-		<action id="Stripes.Generate.BeforeMethod" class="org.intellij.stripes.actions.GenerateBeforeMethodAction" text="@Before">
-			<add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.ValidationMethod"/>
-		</action>
-		<action id="Stripes.Generate.AfterMethod" class="org.intellij.stripes.actions.GenerateAfterMethodAction" text="@After">
-			<add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.BeforeMethod"/>
-		</action>
-		<group id="Stripes" class="org.intellij.stripes.actions.StripesGroup" text="Stripes">
-			<action id="Stripes.New.ActionBean" class="org.intellij.stripes.actions.StripesNewActionBeanAction" text="ActionBean"/>
-			<add-to-group anchor="last" group-id="NewGroup"/>
-		</group>
-	</actions>
+    </extensions>
+    <application-components>
+        <component>
+            <implementation-class>org.intellij.stripes.components.application.StripesApplicationComponent
+            </implementation-class>
+        </component>
+    </application-components>
+    <project-components>
+        <component>
+            <implementation-class>org.intellij.stripes.components.project.StripesReferencesComponent
+            </implementation-class>
+        </component>
+    </project-components>
+    <actions>
+        <action id="Stripes.Generate.Resolution" class="org.intellij.stripes.actions.GenerateResolutionMethodAction"
+                text="Resolution method">
+            <add-to-group group-id="GenerateGroup" anchor="first"/>
+        </action>
+        <action id="Stripes.Generate.ValidationMethod"
+                class="org.intellij.stripes.actions.GenerateValidationMethodAction" text="@ValidationMethod">
+            <add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.Resolution"/>
+        </action>
+        <action id="Stripes.Generate.BeforeMethod" class="org.intellij.stripes.actions.GenerateBeforeMethodAction"
+                text="@Before">
+            <add-to-group group-id="GenerateGroup" anchor="after"
+                          relative-to-action="Stripes.Generate.ValidationMethod"/>
+        </action>
+        <action id="Stripes.Generate.AfterMethod" class="org.intellij.stripes.actions.GenerateAfterMethodAction"
+                text="@After">
+            <add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.BeforeMethod"/>
+        </action>
+        <group id="Stripes" class="org.intellij.stripes.actions.StripesGroup" text="Stripes">
+            <action id="Stripes.New.ActionBean" class="org.intellij.stripes.actions.StripesNewActionBeanAction"
+                    text="ActionBean"/>
+            <action id="Stripes.New.ActionBeanContext"
+                    class="org.intellij.stripes.actions.StripesNewActionBeanContextAction" text="ActionBeanContext"/>
+            <action id="Stripes.New.ActionBeanContextFactory"
+                    class="org.intellij.stripes.actions.StripesNewActionBeanContextFactoryAction"
+                    text="ActionBeanContextFactory"/>
+            <add-to-group anchor="last" group-id="NewGroup"/>
+        </group>
+    </actions>
 </idea-plugin>
