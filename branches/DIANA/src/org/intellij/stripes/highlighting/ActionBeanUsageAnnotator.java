@@ -36,7 +36,6 @@ import org.intellij.stripes.util.StripesTagFilter;
 import org.intellij.stripes.util.StripesUtil;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -55,7 +54,8 @@ public class ActionBeanUsageAnnotator implements Annotator {
     };
 
     private static class XmlTagProcessor implements Processor<PsiReference> {
-		private Collection<XmlTag> tags = new LinkedList<XmlTag>();
+        private Collection<XmlTag> tags = new LinkedList<XmlTag>();
+
         public boolean process(PsiReference ref) {
             PsiElement el = ref.getElement();
             if (ActionBeanUsageAnnotator.FILTER_ATTR.isAccepted(el) && ActionBeanUsageAnnotator.FILTER_TAG.isAccepted(el.getParent().getParent())) {
@@ -63,6 +63,7 @@ public class ActionBeanUsageAnnotator implements Annotator {
             }
             return true;
         }
+
         public Collection<XmlTag> getTags() {
             return tags;
         }
@@ -74,26 +75,26 @@ public class ActionBeanUsageAnnotator implements Annotator {
             ReferencesSearch.search(psiElement).forEach(proc);
 
             NavigationGutterIconBuilder.create(StripesConstants.ACTION_BEAN_GUTTER_ICON)
-                .setTargets(proc.getTags()).setTooltipText(StripesUtil.message("annotator.actionBeanUsages"))
-                .setPopupTitle(StripesUtil.message("annotator.actionBeanUsages"))
-                .setAlignment(GutterIconRenderer.Alignment.LEFT)
-                .setCellRenderer(new PsiElementListCellRenderer<XmlTag>() {
-					protected String getContainerText(XmlTag xmlTag, String s) {
-						return "in " + xmlTag.getContainingFile().getName();
-					}
+                    .setTargets(proc.getTags()).setTooltipText(StripesUtil.message("annotator.actionBeanUsages"))
+                    .setPopupTitle(StripesUtil.message("annotator.actionBeanUsages"))
+                    .setAlignment(GutterIconRenderer.Alignment.LEFT)
+                    .setCellRenderer(new PsiElementListCellRenderer<XmlTag>() {
+                        protected String getContainerText(XmlTag xmlTag, String s) {
+                            return "in " + xmlTag.getContainingFile().getName();
+                        }
 
-					public String getElementText(XmlTag psiElement) {
-                        return psiElement.getName();
-                    }
+                        public String getElementText(XmlTag psiElement) {
+                            return psiElement.getName();
+                        }
 
-                    protected int getIconFlags() {
-                        return 0;
-                    }
+                        protected int getIconFlags() {
+                            return 0;
+                        }
 
-                    protected Icon getIcon(PsiElement psiElement) {
-                        return null;
-                    }
-                }).install(holder, ((PsiClass)psiElement).getNameIdentifier());
+                        protected Icon getIcon(PsiElement psiElement) {
+                            return null;
+                        }
+                    }).install(holder, ((PsiClass) psiElement).getNameIdentifier());
         }
     }
 }

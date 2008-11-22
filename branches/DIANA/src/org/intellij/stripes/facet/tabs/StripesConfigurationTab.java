@@ -34,10 +34,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.peer.PeerFactory;
 import com.intellij.psi.PsiPackage;
 import com.intellij.ui.ListUtil;
-import com.intellij.util.Function;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import com.intellij.util.Function;
 import org.intellij.stripes.facet.StripesFacet;
 import org.intellij.stripes.facet.StripesFacetConfiguration;
 import org.intellij.stripes.support.StripesSupportUtil;
@@ -216,7 +216,7 @@ public class StripesConfigurationTab extends FacetEditorTab {
      */
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(7, 3, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
         addSpringIntegrationCheckBox = new JCheckBox();
         addSpringIntegrationCheckBox.setText("Add Spring Integration");
         addSpringIntegrationCheckBox.setToolTipText("Add necesary configuration in web.xml to enable Spring Integration");
@@ -246,10 +246,10 @@ public class StripesConfigurationTab extends FacetEditorTab {
         label1.setText("Stripes is a presentation framework for building web applications using the latest Java technologies.");
         messagePanel.add(label1);
         final Spacer spacer2 = new Spacer();
-        mainPanel.add(spacer2, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mainPanel.add(spacer2, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(2, 2, new Insets(0, 2, 2, 2), -1, -1));
-        mainPanel.add(panel1, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, new Dimension(346, 66), null, 0, false));
+        mainPanel.add(panel1, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, new Dimension(346, 66), null, 0, false));
         panel1.setBorder(BorderFactory.createTitledBorder("ActionResolver.Packages"));
         final JScrollPane scrollPane1 = new JScrollPane();
         panel1.add(scrollPane1, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -263,6 +263,10 @@ public class StripesConfigurationTab extends FacetEditorTab {
         removeButton = new JButton();
         removeButton.setText("Remove");
         panel1.add(removeButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
+        final JLabel label2 = new JLabel();
+        label2.setFont(new Font(label2.getFont().getName(), Font.ITALIC, 9));
+        label2.setText("/Spring web context must be configured/");
+        mainPanel.add(label2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

@@ -17,44 +17,35 @@
 
 package org.intellij.stripes.components.project;
 
+import com.intellij.javaee.web.WebRoot;
+import com.intellij.javaee.web.WebUtil;
+import com.intellij.javaee.web.facet.WebFacet;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.css.impl.util.CssInHtmlClassOrIdReferenceProvider;
 import com.intellij.psi.filters.*;
 import com.intellij.psi.filters.position.NamespaceFilter;
 import com.intellij.psi.filters.position.ParentElementFilter;
-import com.intellij.psi.impl.source.jsp.el.ELLanguage;
 import com.intellij.psi.impl.source.jsp.WebDirectoryUtil;
+import com.intellij.psi.impl.source.jsp.el.ELLanguage;
 import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReferenceProvider;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.JspxIncludePathReferenceProvider;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.WebPathReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReferenceProvider;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.WebPathReferenceProvider;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
-import com.intellij.xml.util.XmlUtil;
-import com.intellij.javaee.web.facet.WebFacet;
-import com.intellij.javaee.web.WebRoot;
-import com.intellij.javaee.web.WebUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ProcessingContext;
+import com.intellij.xml.util.XmlUtil;
 import org.intellij.lang.regexp.RegExpLanguage;
 import org.intellij.stripes.reference.StripesReferenceUtil;
-import org.intellij.stripes.reference.contributors.ResolutionReferenceContributor;
-import org.intellij.stripes.reference.contributors.SetterReferenceContributor;
-import org.intellij.stripes.reference.contributors.StaticReferenceContributor;
 import org.intellij.stripes.reference.filters.OnwardResolutionConstructorFilter;
 import org.intellij.stripes.reference.filters.SpringBeanAnnotationFilter;
 import org.intellij.stripes.reference.providers.*;
@@ -63,16 +54,16 @@ import org.intellij.stripes.util.StripesMultiHostInjector;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 //TODO move all reference initializations to PsiReferenceContributors
 public class StripesReferencesComponent implements ProjectComponent {
     // ------------------------------ FIELDS ------------------------------
-	private ReferenceProvidersRegistry registry;
-	private Project project;
+    private ReferenceProvidersRegistry registry;
+    private Project project;
 
     final public static NamespaceFilter STRIPES_NAMESPACE_FILTER = new NamespaceFilter(StripesConstants.STRIPES_TLDS);
     final private static ElementFilter VALIDATE_ANNOTATION_EXPRESSION_ATTR = new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.VALIDATE_ANNOTATION, StripesConstants.EXPRESSION_ATTR);
@@ -81,7 +72,7 @@ public class StripesReferencesComponent implements ProjectComponent {
 
     public StripesReferencesComponent(Project project) {
         this.registry = ReferenceProvidersRegistry.getInstance(project);
-	   	this.project = project;
+        this.project = project;
 
         InjectedLanguageManager.getInstance(project).registerMultiHostInjector(StripesMultiHostInjector.getCSSInstance());
         InjectedLanguageManager.getInstance(project).registerMultiHostInjector(StripesMultiHostInjector.getJSInstance());
@@ -101,7 +92,8 @@ public class StripesReferencesComponent implements ProjectComponent {
                 }
             }
 
-            @NotNull public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
+            @NotNull
+            public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
                 return Arrays.asList(PsiLiteralExpression.class);
             }
         });
@@ -117,7 +109,7 @@ public class StripesReferencesComponent implements ProjectComponent {
         return "Stripes References Provider";
     }
 
-	public void initComponent() {
+    public void initComponent() {
 
         for (String tag : StripesConstants.ACTION_BEAN_TAGS) {
 //            all stripes tags with beanclass parameter add Reference provider for implementations od Stripes ActionBean
@@ -163,24 +155,24 @@ public class StripesReferencesComponent implements ProjectComponent {
 				@NotNull
 				public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull ProcessingContext context) {
 
-					FileReferenceSet set = FileReferenceSet.createSet(element, false, false, false);
-					set.addCustomization(FileReferenceSet.DEFAULT_PATH_EVALUATOR_OPTION, new Function<PsiFile, Collection<PsiFileSystemItem>>() {
-						public Collection<PsiFileSystemItem> fun(PsiFile psiFile) {
-							WebFacet webFacet = WebUtil.getWebFacet(element);
-							if (null == webFacet) return new ArrayList<PsiFileSystemItem>(0);
+                        FileReferenceSet set = FileReferenceSet.createSet(element, false, false, false);
+                        set.addCustomization(FileReferenceSet.DEFAULT_PATH_EVALUATOR_OPTION, new Function<PsiFile, Collection<PsiFileSystemItem>>() {
+                            public Collection<PsiFileSystemItem> fun(PsiFile psiFile) {
+                                WebFacet webFacet = WebUtil.getWebFacet(element);
+                                if (null == webFacet) return new ArrayList<PsiFileSystemItem>(0);
 
-							Collection<PsiFileSystemItem> retval = new ArrayList<PsiFileSystemItem>();
-							for (WebRoot webRoot : webFacet.getWebRoots(true)) {
-								retval.add(WebDirectoryUtil.getWebDirectoryUtil(element.getProject()).findWebDirectoryElementByPath(webRoot.getRelativePath(),
-									webFacet
-								));
-							}
-							return retval;
-						}
-					});
+                                Collection<PsiFileSystemItem> retval = new ArrayList<PsiFileSystemItem>();
+                                for (WebRoot webRoot : webFacet.getWebRoots(true)) {
+                                    retval.add(WebDirectoryUtil.getWebDirectoryUtil(element.getProject()).findWebDirectoryElementByPath(webRoot.getRelativePath(),
+                                            webFacet
+                                    ));
+                                }
+                                return retval;
+                            }
+                        });
 
 //TODO add references to servlets declared in web.xml
-					return set.getAllReferences();
+                        return set.getAllReferences();
 
 //				PsiDynaReference retval = new PsiDynaReference(element, false);
 //
@@ -197,9 +189,9 @@ public class StripesReferencesComponent implements ProjectComponent {
 //				PsiReference[] rrr = super.getReferencesByElement(element, context);
 //
 //				return new PsiReference[]{retval};
-				}
-			}
-			);
+                    }
+                }
+                );
 
 
     }
@@ -229,14 +221,14 @@ public class StripesReferencesComponent implements ProjectComponent {
 
     private void registerSubclass(String tagName) {
 //TODO if ActionResolver.Packages is configured in web.xml pass it as GlobalSearchScope instead of whole project scope
-		JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project), this.project) {
-			public PsiReference[] getReferencesByElement(@NotNull PsiElement psiElement) {
-				if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) {
-					return PsiReference.EMPTY_ARRAY;
-				}
-				return super.getReferencesByElement(psiElement);
-			}
-		};
+        JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project), this.project) {
+            public PsiReference[] getReferencesByElement(@NotNull PsiElement psiElement) {
+                if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) {
+                    return PsiReference.EMPTY_ARRAY;
+                }
+                return super.getReferencesByElement(psiElement);
+            }
+        };
 
         provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{StripesConstants.ACTION_BEAN});
         provider.setOption(JavaClassReferenceProvider.INSTANTIATABLE, true);
@@ -244,7 +236,7 @@ public class StripesReferencesComponent implements ProjectComponent {
     }
 
     private void registerTags(PsiReferenceProvider provider, NamespaceFilter namespaceFilter, String attributeName, String... tagNames) {
-		XmlUtil.registerXmlAttributeValueReferenceProvider(registry, StripesUtil.makeArray(attributeName), getTagsFilter(namespaceFilter, tagNames), provider);
+        XmlUtil.registerXmlAttributeValueReferenceProvider(registry, StripesUtil.makeArray(attributeName), getTagsFilter(namespaceFilter, tagNames), provider);
     }
 
     private static ScopeFilter getTagsFilter(ElementFilter elementFilter, String... tagsNames) {
