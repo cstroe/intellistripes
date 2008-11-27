@@ -18,9 +18,9 @@
     * ~~{{{Resolution}}}~~
     * ~~{{{@ValidationMethod}}}~~
     * ~~{{{@Before}}}/{{{@After}}} methods~~
-  * Intentions for creating various Stripes extension classses from source tree
-    * {{{ActionBeanContext}}}
-    * {{{ActionBeanContextFactory}}}
+  * Actions for creating various Stripes extension classses from source tree
+    * ~~{{{ActionBeanContext}}}~~
+    * ~~{{{ActionBeanContextFactory}}}~~
   * ~~support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag~~
   * ~~remove (make optional ?) creating of {{{context-param}}} and Spring Context Listener when adding Spring Support from facet~~
   * detect if spring support is configured from web.xml not from facet setting
