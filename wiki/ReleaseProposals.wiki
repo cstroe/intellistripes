@@ -26,4 +26,4 @@
   * detect if spring support is configured from web.xml not from facet setting
   * ~~Implement {{{mime-types}}} autocomplete in {{{StreamingResolution}}} constructor when its is serves as anonymous class constructor~~
   * ~~option to prevent web.xml modifications~~
-  * auto-complete of {{{label}}} attribute in {{{option-enumeraiton}}} tag
+  * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{option-xxx}}} tags
