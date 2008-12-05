@@ -17,8 +17,9 @@
 
 package com.simpletasks.web.tasks;
 
-import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.UrlBinding;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,10 +27,11 @@ import net.sourceforge.stripes.action.ForwardResolution;
  * Date: 31/05/2008
  * Time: 09:21:24 AM
  */
-public class DetailTaskActionBean extends TaskActionBean{
+@UrlBinding("/task/{task.id}")
+public class DetailTaskActionBean extends TaskActionBean {
 // -------------------------- OTHER METHODS --------------------------
 
-    public Resolution init(){
+    public Resolution init() {
         task = taskService.getTask(task);
         return new ForwardResolution("/WEB-INF/jsp/DetailTask.jsp");
     }
