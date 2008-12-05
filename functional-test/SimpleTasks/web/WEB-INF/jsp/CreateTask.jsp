@@ -53,4 +53,9 @@
             </table>
         </s:form>
     </s:layout-component>
+    <s:layout-component name="links">
+        <s:link beanclass="com.simpletasks.web.tasks.DisplayTasksActionBean">
+            HOME
+        </s:link>
+    </s:layout-component>
 </s:layout-render>
