@@ -62,6 +62,7 @@ public interface StripesConstants {
     String AFTER_ANNOTATION = "net.sourceforge.stripes.action.After";
     String BEFORE_ANNOTATION = "net.sourceforge.stripes.action.Before";
     String STRICT_BINDING_ANNOTATION = "net.sourceforge.stripes.action.StrictBinding";
+    String WIZARD_ANNOTATION = "net.sourceforge.stripes.action.Wizard";
 
     //stripes annotation attribute names
     String EXPRESSION_ATTR = "expression";
@@ -70,6 +71,7 @@ public interface StripesConstants {
     String ALLOW_ATTR = "allow";
     String ON_ATTR = "on";
     String REQUIRED_ATTR = "required";
+    String START_EVENTS_ATTR = "startEvents";
 
     //various stripes configuration related
     String STRIPES_SERVLET_NAME = "StripesDispatcher";

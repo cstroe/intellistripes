@@ -41,7 +41,8 @@ public class ResolutionReferenceContributor extends PsiReferenceContributor {
                         new StringArrayAnnotationParameterFilter(StripesConstants.VALIDATION_METHOD_ANNOTATION, StripesConstants.ON_ATTR),
                         new StringArrayAnnotationParameterFilter(StripesConstants.VALIDATE_ANNOTATION, StripesConstants.ON_ATTR),
                         new StringArrayAnnotationParameterFilter(StripesConstants.AFTER_ANNOTATION, StripesConstants.ON_ATTR),
-                        new StringArrayAnnotationParameterFilter(StripesConstants.BEFORE_ANNOTATION, StripesConstants.ON_ATTR)
+                        new StringArrayAnnotationParameterFilter(StripesConstants.BEFORE_ANNOTATION, StripesConstants.ON_ATTR),
+                        new StringArrayAnnotationParameterFilter(StripesConstants.WIZARD_ANNOTATION, StripesConstants.START_EVENTS_ATTR)
                 ))), new PsiReferenceProviderBase() {
             @NotNull
             public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
