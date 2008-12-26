@@ -83,7 +83,6 @@ public interface StripesConstants {
 
     //stripes filter configuraiton init parameters
     String INTERCEPTOR_CLASSES = "Interceptor.Classes";
-    String ACTION_RESOLVER_URL_FILTER = "ActionResolver.UrlFilters";
     String ACTION_RESOLVER_PACKAGES = "ActionResolver.Packages";
 
     //stripes taglibs

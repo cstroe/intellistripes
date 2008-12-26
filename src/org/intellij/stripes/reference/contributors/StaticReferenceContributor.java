@@ -34,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class StaticReferenceContributor extends PsiReferenceContributor {
     private static final String[] STRIPES_FILTER_INIT_PARAMS = {
-            StripesConstants.ACTION_RESOLVER_URL_FILTER,
             StripesConstants.ACTION_RESOLVER_PACKAGES,
             "ActionResolver.Class",
             "ActionBeanPropertyBinder.Class",
@@ -49,15 +48,22 @@ public class StaticReferenceContributor extends PsiReferenceContributor {
             "TagErrorRendererFactory.Class",
             "TypeConverterFactory.Class",
             "ActionBeanContext.Class",
-            "DelegatingExceptionHandler.UrlFilters",
-            "DelegatingExceptionHandler.PackageFilters",
+            "DelegatingExceptionHandler.Packages",
             "LocalePicker.Locales",
             "LocalizationBundleFactory.ErrorMessageBundle",
             "LocalizationBundleFactory.FieldNameBundle",
             "FileUpload.MaximumPostSize",
             "MultipartWrapper.Class",
             "Validation.InvokeValidateWhenErrorsExist",
-            "Extension.Packages"
+            "Extension.Packages",
+            "Configuration.Class",
+            "FormatterFactory.Class",
+            "TagErrorRenderer.Class",
+            "ValidationMetadataProvider.Class",
+            "Stripes.DebugMode",
+            "Stripes.EncryptionKey",
+            "CoreInterceptor.Classes",
+            "MultipartWrapperFactory.Class",
     };
 
     private static final String[] MIME_TYPES = {
