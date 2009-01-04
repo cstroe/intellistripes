@@ -96,6 +96,9 @@
             <action id="Stripes.New.ActionBeanContextFactory"
                     class="org.intellij.stripes.actions.StripesNewActionBeanContextFactoryAction"
                     text="ActionBeanContextFactory"/>
+            <action id="Stripes.New.Interceptor"
+                    class="org.intellij.stripes.actions.StripesNewInterceptorAction"
+                    text="Interceptor"/>
             <add-to-group anchor="last" group-id="NewGroup"/>
         </group>
     </actions>

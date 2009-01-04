@@ -1,0 +1,12 @@
+package ${PACKAGE_NAME};
+
+import net.sourceforge.stripes.controller.Interceptor;
+import net.sourceforge.stripes.controller.ExecutionContext;
+import net.sourceforge.stripes.action.Resolution;
+
+#parse("File Header.java")
+public class ${NAME} implements Interceptor{
+public Resolution intercept(ExecutionContext executionContext)throws Exception{
+        return null;
+}
+        }
