@@ -159,6 +159,7 @@ public interface StripesConstants {
     String ACTION_BEAN_TEMPLATE = "ActionBean.java";
     String ACTION_BEAN_CONTEXT_TEMPLATE = "ActionBeanContext.java";
     String ACTION_BEAN_CONTEXT_FACTORY_TEMPLATE = "ActionBeanContextFactory.java";
+    String INTERCEPTOR_TEMPLATE = "Interceptor.java";
     String LOG4J_XML_TEMPLATE = "log4j xml configuration.xml";
     String LOG4J_PROPERTIES_TEMPLATE = "log4j properties configuration.properties";
     String LOG4J_XML = "log4j.xml";
