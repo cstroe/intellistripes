@@ -56,7 +56,7 @@
         <inspectionToolProvider implementation="org.intellij.stripes.highlighting.StripesInspectionToolProvider"/>
         <projectService serviceInterface="org.intellij.stripes.facet.StripesFacetConfiguration"
                         serviceImplementation="org.intellij.stripes.facet.StripesFacetConfiguration"/>
-
+        <iconProvider implementation="org.intellij.stripes.reference.providers.StripesIconProvider"/>
     </extensions>
     <application-components>
         <component>
