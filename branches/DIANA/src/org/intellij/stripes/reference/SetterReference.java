@@ -18,53 +18,96 @@
 package org.intellij.stripes.reference;
 
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PropertyUtil;
+import com.intellij.psi.util.PsiUtil;
+import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class SetterReference<T extends PsiElement> extends PsiReferenceBase<T> {
 
-	public static <T extends PsiElement> SetterReference<T> getNullReference() {
-		return new SetterReference<T>(null, null) {
-			@Override
-			public TextRange getRangeInElement() {
-				return null;
-			}
+    private PsiClass actionBeanPsiClass;
+    protected Boolean supportBraces;
+    protected Boolean hasBraces = false;
 
-			@Override
-			public T getElement() {
-				return null;
-			}
-		};
-	}
+	public PsiClass getActionBeanPsiClass() {
+        return actionBeanPsiClass;
+    }
 
-	protected PsiClass actionBeanPsiClass;
+	public SetterReference(T element, TextRange range, Boolean supportBraces) {
+        super(element, range);
+        this.supportBraces = supportBraces;
+    }
 
-	public void setActionBeanPsiClass(PsiClass actionBeanPsiClass) {
-		this.actionBeanPsiClass = actionBeanPsiClass;
-	}
+	public SetterReference(T element, TextRange range, PsiClass actionBeanPsiClass, Boolean supportBraces) {
+        super(element, range);
+        this.actionBeanPsiClass = actionBeanPsiClass;
+        this.supportBraces = supportBraces;
+    }
 
-	public SetterReference(T element, TextRange range) {
-		super(element, range);
-	}
+    /**
+     * Resolves reference to method
+     * Must return only valid Stripes setter.
+     */
+    public PsiElement resolve() {
+        if (getVariantsEx().contains(getValue())) {
+            return resolveEx();
+        }
 
-	public SetterReference(T psiElement, TextRange textRange, PsiClass actionBeanPsiClass) {
-		super(psiElement, textRange);
-		this.actionBeanPsiClass = actionBeanPsiClass;
-	}
+        PsiMethod method = PropertyUtil.findPropertySetter(getActionBeanPsiClass(), getValue(), false, true);
+        if (!StripesUtil.isActionBeanPropertySetter(method, false)) return null;
 
-	@Nullable
-	public PsiElement resolve() {
-		PsiMethod method = PropertyUtil.findPropertySetter(actionBeanPsiClass, getValue(), false, true);
-		return StripesUtil.isActionBeanPropertySetter(method, false) ? method : null;
-	}
+        if (this.supportBraces) {
+            PsiType propertyType = method.getParameterList().getParameters()[0].getType();
+            PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
+            Boolean isIndexedType = StripesUtil.isSubclass(List.class.getName(), propertyClass)
+                    || propertyType instanceof PsiArrayType
+                    || StripesUtil.isSubclass(Map.class.getName(), propertyClass);
+
+            method = (hasBraces() && !isIndexedType) || (isIndexedType && !hasBraces()) ? null : method;
+        }
+
+        return method;
+    }
+
+    private Boolean hasBraces() {
+        return this.hasBraces;
+    }
 
 	public Object[] getVariants() {
-		return StripesReferenceUtil.getVariants(StripesReferenceUtil.getWritableProperties(actionBeanPsiClass, false), StripesConstants.FIELD_ICON);
+		List<String> retval = new LinkedList<String>();
+		retval.addAll(StripesReferenceUtil.getWritableProperties(getActionBeanPsiClass(), supportBraces));
+        retval.addAll(0, getVariantsEx());
+
+        return StripesReferenceUtil.getVariants(retval, StripesConstants.FIELD_ICON);
+    }
+
+	public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
+        final String name = PropertyUtil.getPropertyName(newElementName);
+	    return super.handleElementRename(name == null ? newElementName : name);
+
+//TODO research and implement handle of renaming properties from annotaion attributes
+//            if (getElement() instanceof PsiLiteralExpression) {
+//                BeanProperty bProp = BeanProperty.createBeanProperty((PsiMethod) resolve());
+//                bProp.setName(name);
+//                return bProp.getPsiElement();
+//            }
+//        return retval;
+    }
+
+	protected static List<String> EMPTY_VARIANTS = Arrays.asList();
+
+	protected PsiElement resolveEx() {
+		return null;
 	}
+
+	protected List<String> getVariantsEx() {
+        return EMPTY_VARIANTS;
+    }
 }

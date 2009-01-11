@@ -26,7 +26,7 @@
     <change-notes>
         <![CDATA[
 <p>
-    New features, improvements and some bugfixes.
+    New features, improvements and engine refactoring.
 </p>
 	<br/>
 	<br/>
@@ -47,6 +47,8 @@
                 implementation="org.intellij.stripes.reference.contributors.ResolutionReferenceContributor"/>
         <psi.referenceContributor
                 implementation="org.intellij.stripes.reference.contributors.StaticReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="org.intellij.stripes.reference.contributors.GetterReferenceContributor"/>
 
         <fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
         <javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>
@@ -57,6 +59,9 @@
         <projectService serviceInterface="org.intellij.stripes.facet.StripesFacetConfiguration"
                         serviceImplementation="org.intellij.stripes.facet.StripesFacetConfiguration"/>
         <iconProvider implementation="org.intellij.stripes.reference.providers.StripesIconProvider"/>
+	    <multiHostInjector implementation="org.intellij.stripes.util.StripesJSInjector"/>
+		<multiHostInjector implementation="org.intellij.stripes.util.StripesCSSInjector"/>
+		<multiHostInjector implementation="org.intellij.stripes.util.StripesELInjector"/>
     </extensions>
     <application-components>
         <component>

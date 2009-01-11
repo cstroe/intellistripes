@@ -20,34 +20,150 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.patterns.PsiJavaPatterns;
 import com.intellij.psi.*;
-import com.intellij.psi.filters.*;
+import com.intellij.psi.filters.AndFilter;
+import com.intellij.psi.filters.AnnotationParameterFilter;
+import com.intellij.psi.filters.OrFilter;
 import com.intellij.psi.filters.position.FilterPattern;
-import com.intellij.psi.filters.position.ParentElementFilter;
 import com.intellij.psi.filters.position.SuperParentFilter;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
+import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.ReferenceSetBase;
-import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
-import com.intellij.xml.util.XmlUtil;
+import com.intellij.util.containers.ContainerUtil;
 import org.intellij.stripes.components.project.StripesReferencesComponent;
-import org.intellij.stripes.reference.SetterMethodsReferenceSet;
-import org.intellij.stripes.reference.SetterReference;
-import org.intellij.stripes.reference.StripesReferenceUtil;
-import org.intellij.stripes.reference.UrlBindingSetterReference;
+import org.intellij.stripes.reference.*;
 import org.intellij.stripes.reference.filters.QualifiedNameElementFilter;
 import org.intellij.stripes.reference.filters.StringArrayAnnotationParameterFilter;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SetterReferenceContributor extends PsiReferenceContributor {
 
+	private static class StrictBindingReference extends SetterReferenceEx<PsiElement> {
+		private static List<String> EXTRA_VALUES = Arrays.asList("*", "**");
+
+		public StrictBindingReference(TextRange range, Boolean supportBraces, StripesReferenceSetBase referenceSet, Integer index) {
+			super(range, supportBraces, referenceSet, index);
+		}
+
+		@Override
+		protected List<String> getVariantsEx() {
+			return EXTRA_VALUES;
+		}
+
+		@Override
+		protected PsiElement resolveEx() {
+			if (getIndex() == 0) return getReferenceSet().getActionBeanPsiClass();
+			PsiMethod method = (PsiMethod) getReferenceSet().getReference(getIndex() - 1).resolve();
+			return null == method ? null : method.getContainingClass();
+		}
+	}
+
+	private static class UrlBindingReference extends StaticReference {
+		private static String[] VARIANTS = {"$event"};
+
+		private PsiClass actionBeanClass;
+
+		public UrlBindingReference(PsiElement psiElement, TextRange range, PsiClass actionBeanClass) {
+			super(psiElement, range);
+			this.actionBeanClass = actionBeanClass;
+		}
+
+		@Override
+		public PsiElement resolve() {
+			Map<String, PsiMethod> resMethods = StripesReferenceUtil.getResolutionMethods(actionBeanClass);
+			if (resMethods.size() <= 1) {
+				return ContainerUtil.getFirstItem(resMethods.values(), null);
+			}
+
+			for (PsiMethod psiMethod : resMethods.values()) {
+				if (psiMethod.getModifierList().findAnnotation(StripesConstants.DEFAULT_HANDLER_ANNOTATION) != null) {
+					return psiMethod;
+				}
+			}
+
+			return null;
+		}
+
+		@Override
+		public Object[] getVariants() {
+			return VARIANTS;
+		}
+	}
+	/**
+	 * This class provide References to ActionBean setter methods in stripes tags.
+	 */
+	private static class SetterMethodsReferenceProvider extends PsiReferenceProvider {
+
+		private String parentTag;
+
+		public SetterMethodsReferenceProvider(String parentTag) {
+			this.parentTag = parentTag;
+		}
+
+		@NotNull
+		public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+			if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) {
+				return PsiReference.EMPTY_ARRAY;
+			}
+
+			final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag(
+				(XmlTag) element.getParent().getParent(), parentTag
+			);
+
+			return actionBeanPsiClass == null
+				? PsiReference.EMPTY_ARRAY
+				: new SetterReferenceExSet(element, 1, '.', actionBeanPsiClass, true).getPsiReferences();
+		}
+	}
+
 	public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
+
+//errors tag add Reference Provider for Setters Method on parameter field
+		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.FORM_TAG),
+			StripesConstants.FIELD_ATTR, StripesConstants.ERRORS_TAG);
+//all stripes tags for input form add Reference Provider for Setters Method
+		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.FORM_TAG),
+			StripesConstants.NAME_ATTR, StripesConstants.INPUT_TAGS);
+//param tag add Reference Provider for Setter Methods
+		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.LINK_TAG),
+			StripesConstants.NAME_ATTR, StripesConstants.PARAM_TAG);
+		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.URL_TAG),
+			StripesConstants.NAME_ATTR, StripesConstants.PARAM_TAG);
+
+		StripesReferencesComponent.registerXmlAttributeReferenceProvider(
+			registrar, new PsiReferenceProviderBase() {
+				@NotNull
+				public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+					if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) {
+						return PsiReference.EMPTY_ARRAY;
+					}
+
+					final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag(
+						(XmlTag) element.getParent().getParent(), StripesConstants.FORM_TAG
+					);
+
+					if (null != actionBeanPsiClass) {
+						List<String> arr = StringUtil.split(ElementManipulators.getValueText(element), ",");
+
+						List<PsiReference> retval = new LinkedList<PsiReference>();
+						for (int i = 0, offset = 1; i < arr.size(); i++) {
+							Collections.addAll(retval, new SetterReferenceExSet(arr.get(i), element, offset, '.', actionBeanPsiClass, false).getPsiReferences());
+							offset += (arr.get(i).length() + 1);
+						}
+
+						return retval.toArray(new PsiReference[retval.size()]);
+					}
+
+					return PsiReference.EMPTY_ARRAY;
+				}
+			}, StripesConstants.FIELDS_ATTR, StripesConstants.FIELD_METADATA_TAG
+		);
+
 		registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(
 			new AndFilter(
 				new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION)),
@@ -63,7 +179,7 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
 				PsiClass cls = StripesReferenceUtil.resolveClassInType(PropertyUtil.getPropertyType(parent), element.getProject());
 				return null == cls
 					? PsiReference.EMPTY_ARRAY
-					: new SetterMethodsReferenceSet(element, cls).getPsiReferences();
+					: new SetterReferenceExSet(element, 1, '.', cls, false).getPsiReferences();
 			}
 		});
 
@@ -76,110 +192,58 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
 			@NotNull
 			public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
 				PsiClass cls = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-				return null == cls
-					? PsiReference.EMPTY_ARRAY
-					: new SetterMethodsReferenceSet(element, cls, true).getPsiReferences();
+				return null == cls ? PsiReference.EMPTY_ARRAY : new SetterReferenceExSet(element, 1, '.', cls, false) {
+					@NotNull
+					@Override
+					protected SetterReferenceEx<PsiElement> createReferenceWithBraces(TextRange range, int index, boolean hasBraces) {
+						return new StrictBindingReference(range, this.isSupportBraces(), this, index);
+					}
+				}.getPsiReferences();
 			}
 		});
 
-		XmlUtil.registerXmlAttributeValueReferenceProvider(registrar, new String[]{StripesConstants.FIELDS_ATTR},
-			new ScopeFilter(new ParentElementFilter(new AndFilter(
-				StripesReferencesComponent.STRIPES_NAMESPACE_FILTER,
-				new ClassFilter(XmlTag.class),
-				new TextFilter(StripesConstants.FIELD_METADATA_TAG)
-			), 2)), new PsiReferenceProviderBase() {
-				@NotNull
-				public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-					final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag(
-						(XmlTag) element.getParent().getParent(), StripesConstants.FORM_TAG
-					);
-					return actionBeanPsiClass == null
-						? PsiReference.EMPTY_ARRAY
-						: new FieldMetadataSetterReferenceSet(element, actionBeanPsiClass).getPsiReferences();
-				}
-			}
-		);
-
 		registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(
-			new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.URL_BINDING_ANNOTATION, "value")
+			new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.URL_BINDING_ANNOTATION, StripesConstants.VALUE_ATTR)
 		)), new PsiReferenceProviderBase() {
 			@NotNull
 			public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-				PsiClass cls = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-				return null == cls || !ElementManipulators.getValueText(element).startsWith("/")
-					? PsiReference.EMPTY_ARRAY
-					: new UrlBindingSetterReferenceSet(element, cls).getPsiReferences();
-			}
-		}
-		);
-	}
+				PsiClass actionBeanPsiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
+				String str = ElementManipulators.getValueText(element);
 
-	private static class FieldMetadataSetterReferenceSet extends ReferenceSetBase<SetterReference<XmlAttributeValue>> {
+				if (null != actionBeanPsiClass && str.startsWith("/")) {
+					final List<PsiReference> retval = new LinkedList<PsiReference>();
+					for (int i = 0, eqInd = -1, lBraceInd = -1, braceStack = 0; i < str.length(); i++) {
+						if (str.charAt(i) == '{') {
+							braceStack++;
+							lBraceInd = i;
+							eqInd = -1;
+						} else if (str.charAt(i) == '}') {// we found closing brace and need to retrreive references if possible
+							braceStack--;
+							if (braceStack != 0) continue;// braces are unbalanced - we should not try to parse
 
-		public FieldMetadataSetterReferenceSet(PsiElement psiElement, PsiClass actionBeanPsiClass) {
-			super(StringUtil.stripQuotesAroundValue(psiElement.getText()), psiElement, 1, ',');
-			for (SetterReference<XmlAttributeValue> reference : getReferences()) {
-				reference.setActionBeanPsiClass(actionBeanPsiClass);
-			}
-		}
+							int endInd = eqInd != -1
+								? eqInd // there's '=' sign within curly braces bounded part of string. processign only part of text located within curl braces
+								: i; // no '=' sign found. process whole text from curly braces;
 
-		@NotNull
-		protected SetterReference<XmlAttributeValue> createReference(TextRange textRange, int i) {
-			return new SetterReference<XmlAttributeValue>((XmlAttributeValue) getElement(), textRange);
-		}
-	}
+							String txt = str.substring(1 + lBraceInd, endInd);
+							if ("$event".equals(txt) && eqInd == -1) {
+								retval.add(new UrlBindingReference(element, new TextRange(1 + lBraceInd + 1, 1 + endInd), actionBeanPsiClass));
+							} else {
+								Collections.addAll(retval,
+									new SetterReferenceExSet(txt, element, 1 + lBraceInd + 1, '.', actionBeanPsiClass, true).getPsiReferences()
+								);
+							}
 
-	private static class UrlBindingSetterReferenceSet extends ReferenceSetBase<UrlBindingSetterReference<PsiLiteralExpression>> {
-		private PsiClass actionBeanPsiClass;
-
-		public UrlBindingSetterReferenceSet(PsiElement psiElement, PsiClass actionBeanPsiClass) {
-			super(ElementManipulators.getValueText(psiElement), psiElement, 1, '/');
-
-			this.actionBeanPsiClass = actionBeanPsiClass;
-
-			for (SetterReference<PsiLiteralExpression> reference : getReferences()) {
-				reference.setActionBeanPsiClass(actionBeanPsiClass);
-			}
-//			List<SetterReference<PsiLiteralExpression>> references = getReferences();
-//			for (int i = 0; i < references.size(); i++) {
-//				SetterReference<PsiLiteralExpression> reference = getReferences().get(i);
-//				if (reference.getElement() == null && reference.getRangeInElement() == null) {
-//					references.set(i, null);
-//				} else {
-//					reference.setActionBeanPsiClass(actionBeanPsiClass);
-//				}
-//			}
-		}
-
-		@NotNull
-		@Override
-		protected List<UrlBindingSetterReference<PsiLiteralExpression>> parse(String str, int offset) {
-			final List<UrlBindingSetterReference<PsiLiteralExpression>> references = new ArrayList<UrlBindingSetterReference<PsiLiteralExpression>>();
-			for (int i = 0, eqInd = -1, lBraceInd = -1, braceStack = 0, index = 0; i < str.length(); i++) {
-				if (str.charAt(i) == '{') {
-					braceStack ++;
-					lBraceInd = i;
-					eqInd = -1;
-				} else if (str.charAt(i) == '}') {
-					braceStack--;
-					if (braceStack != 0) continue;
-					if (eqInd != -1) {
-						if (!"$event".equals(str.substring(lBraceInd + 1, eqInd))) {
-							references.add(createReference(new TextRange(offset + lBraceInd + 1, offset + eqInd), index++));
+							retval.add(new UrlBindingReference(element, new TextRange(1 + lBraceInd + 1, 1 + lBraceInd + 1), actionBeanPsiClass));
+						} else if (str.charAt(i) == '=') {
+							eqInd = i;
 						}
-					} else {
-						references.add(createReference(new TextRange(offset + lBraceInd + 1, offset + i), index++));
 					}
-				} else if (str.charAt(i) == '=') {
-					eqInd = i;
+					return retval.toArray(new PsiReference[retval.size()]);
 				}
-			}
-			return references;
-		}
 
-		@NotNull
-		protected UrlBindingSetterReference<PsiLiteralExpression> createReference(TextRange textRange, int i) {
-			return new UrlBindingSetterReference<PsiLiteralExpression>((PsiLiteralExpression) getElement(), textRange, this.actionBeanPsiClass);
-		}
+				return PsiReference.EMPTY_ARRAY;
+			}
+		});
 	}
 }
