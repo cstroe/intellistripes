@@ -47,16 +47,14 @@ public class LayoutComponentReferenceProvider extends PsiReferenceProvider {
      * @return JspFile
      */
     private static JspFile getLayoutDefinitionJspFile(@NotNull XmlTag xmlTag) {
-        if (!StripesUtil.isStripesPage((JspFile) xmlTag.getContainingFile())) return null;
+        if (!StripesUtil.isStripesPage(xmlTag.getContainingFile())) return null;
 
         XmlTag layoutRenderTag = StripesUtil.findParent(xmlTag, LAYOUT_RENDER_FILTER, StripesReferenceUtil.NAME_ATTR_FILTER);
         if (layoutRenderTag != null) {
             PsiReference[] refs = layoutRenderTag.getAttribute("name").getValueElement().getReferences();
             for (PsiReference ref : refs) {
                 PsiElement el = ref.resolve();
-                if (el instanceof JspFile) {
-                    return StripesUtil.isStripesPage((JspFile) el) ? (JspFile) el : null;
-                }
+                return StripesUtil.isStripesPage(el) ? (JspFile) el : null;
             }
         }
 

@@ -117,6 +117,7 @@ public interface StripesConstants {
     String OPTION_TAG = "option";
     String OPTIONS_ENUMERATION_TAG = "options-enumeration";
     String OPTIONS_COLLECTION_TAG = "options-collection";
+    String OPTIONS_MAP_TAG = "options-map";
     String FIELD_METADATA_TAG = "field-metadata";
 
     String[] CLASS_TAGS = {BUTTON_TAG, CHECKBOX_TAG, FILE_TAG, FORM_TAG, IMAGE_TAG, LABEL_TAG, LINK_TAG, HIDDEN_TAG, OPTION_TAG, OPTIONS_COLLECTION_TAG,
@@ -139,6 +140,8 @@ public interface StripesConstants {
     String URI_ATTR = "uri";
     String EVENT_ATTR = "event";
     String SRC_ATTR = "src";
+    String LABEL_ATTR = "label";
+    String VALUE_ATTR = "value";
 
     //facet configuration
     String SPRING_INTEGRATION = "springIntegration";

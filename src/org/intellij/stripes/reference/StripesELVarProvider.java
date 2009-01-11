@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.jsp.JspImplicitVariableImpl;
 import com.intellij.psi.impl.source.jsp.el.impl.ELElementProcessor;
 import com.intellij.psi.impl.source.jsp.el.impl.ElVariablesProvider;
@@ -63,10 +64,10 @@ public class StripesELVarProvider extends ElVariablesProvider {
 				return true;
 			}
 
-			final JspFile jspFile = (JspFile) elExpressionHolder.getContainingFile();
-			if (!StripesUtil.isStripesPage(jspFile)) return true;
+			final PsiFile jspFile = elExpressionHolder.getContainingFile();
+			if (!StripesUtil.isStripesPage(elExpressionHolder.getContainingFile())) return true;
 
-			Map<String, String> actionBeans = StripesUtil.collectTags(jspFile.getDocument().getRootTag(),
+			Map<String, String> actionBeans = StripesUtil.collectTags(((JspFile)jspFile).getDocument().getRootTag(),
 				ACTION_BEAN_PROVIDER_FILTER, BEANCLASS_ATTR_FILTER,
 				new XmlTagContainer<Map<String, String>>(new Hashtable<String, String>()) {
 					public void add(XmlTag tag) {
@@ -75,9 +76,9 @@ public class StripesELVarProvider extends ElVariablesProvider {
 							if (tag.getAttributeValue(StripesConstants.ID_ATTR) == null && tag.getAttributeValue(StripesConstants.VAR_ATTR) == null) {
 								container.put(USE_ACTION_BEAN, actionBeanClassName);
 							} else if (tag.getAttributeValue(StripesConstants.ID_ATTR) != null) {
-								processVariable(psiElement.getProject(), elElementProcessor, jspFile, tag.getAttributeValue(StripesConstants.ID_ATTR), actionBeanClassName);
+								processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile, tag.getAttributeValue(StripesConstants.ID_ATTR), actionBeanClassName);
 							} else if (tag.getAttributeValue(StripesConstants.VAR_ATTR) != null) {
-								processVariable(psiElement.getProject(), elElementProcessor, jspFile, tag.getAttributeValue(StripesConstants.VAR_ATTR), actionBeanClassName);
+								processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile, tag.getAttributeValue(StripesConstants.VAR_ATTR), actionBeanClassName);
 							}
 						} else if (StripesConstants.FORM_TAG.equals(tag.getLocalName())) {
 							container.put("__" + actionBeanClassName, actionBeanClassName);
@@ -92,10 +93,10 @@ public class StripesELVarProvider extends ElVariablesProvider {
 			}
 
 			for (String actionBeanName : actionBeans.keySet()) {
-				processVariable(psiElement.getProject(), elElementProcessor, jspFile, ACTION_BEAN, actionBeans.get(actionBeanName));
+				processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile, ACTION_BEAN, actionBeans.get(actionBeanName));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			e.printStackTrace();
 		}
 
 		return true;

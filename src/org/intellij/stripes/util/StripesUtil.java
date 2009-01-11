@@ -47,10 +47,6 @@ import java.util.ResourceBundle;
  */
 public final class StripesUtil {
 
-    public static <T> T[] makeArray(T... parameters) {
-        return parameters;
-    }
-
     /**
      * Is Stripes Facet Configured
      *
@@ -114,11 +110,14 @@ public final class StripesUtil {
     /**
      * This Jsp have a Stripes Taglib declared
      *
-     * @param jspFile JspFile
+     * @param psiFile JspFile
      * @return true or false
      */
-    public static boolean isStripesPage(JspFile jspFile) {
-        for (XmlTag tag : jspFile.getDirectiveTags(JspDirectiveKind.TAGLIB, true)) {
+
+    public static boolean isStripesPage(PsiElement psiFile) {
+        if (!(psiFile instanceof JspFile)) return false;
+
+        for (XmlTag tag : ((JspFile)psiFile).getDirectiveTags(JspDirectiveKind.TAGLIB, true)) {
             if (tag.getAttributeValue(StripesConstants.URI_ATTR) != null
                     && tag.getAttributeValue(StripesConstants.URI_ATTR).startsWith(StripesConstants.TAGLIB_PREFIX)) {
                 return true;

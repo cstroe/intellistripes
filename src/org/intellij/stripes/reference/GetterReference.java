@@ -17,22 +17,30 @@
 
 package org.intellij.stripes.reference;
 
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
-import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.util.PropertyUtil;
 import org.intellij.stripes.util.StripesConstants;
-//TODO replace with ServletPathProviders (or smth)
-public class UrlBindingReference extends PsiReferenceBase<XmlAttributeValue> {
+import org.jetbrains.annotations.Nullable;
 
-    public UrlBindingReference(XmlAttributeValue element) {
-        super(element);
+import java.util.Arrays;
+
+public class GetterReference extends PsiReferenceBase<PsiElement> {
+
+    protected PsiClass actionBeanPsiClass;
+
+    public GetterReference(PsiElement psiElement, PsiClass actionBeanPsiClass) {
+        super(psiElement);
+        this.actionBeanPsiClass = actionBeanPsiClass;
     }
 
+    @Nullable
     public PsiElement resolve() {
-        return StripesReferenceUtil.getUrlBindings(getElement().getProject()).get(getCanonicalText());
+        return PropertyUtil.findPropertyGetter(actionBeanPsiClass, getValue(), false, true);
     }
 
     public Object[] getVariants() {
-        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getUrlBindings(getElement().getProject()).keySet(), StripesConstants.ACTION_BEAN_ICON);
+        return StripesReferenceUtil.getVariants(Arrays.asList(PropertyUtil.getReadableProperties(actionBeanPsiClass, true)), StripesConstants.FIELD_ICON);
     }
 }
