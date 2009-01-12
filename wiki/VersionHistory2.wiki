@@ -47,7 +47,7 @@ Initial version. Port of version 1.0.Final to Diana
   * More valid {{{actionBean}}} EL implicit variable proessing
   * fixed duplicate property names in auto-complete for {{{ActionBean}}} setters
 
-===Version 2.0.RC3.164===
+===Version 2.0.RC3.164 (2009-01-12)===
   * Actions to Create Stripes Classes:
     * {{{ActionBeanContext}}} 
     * {{{ActionBeanContextFactory}}} 
