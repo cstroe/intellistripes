@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,11 +61,11 @@ public class LayoutComponentReferenceProvider extends PsiReferenceProvider {
         return null;
     }
 
-	@NotNull
-	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-		final JspFile jspFile = getLayoutDefinitionJspFile((XmlTag) element.getParent().getParent());
-		return jspFile == null
-				? PsiReference.EMPTY_ARRAY
-				: new PsiReference[]{new JspTagAttrLayoutComponentReference((XmlAttributeValue) element, jspFile)};
-	}
+    @NotNull
+    public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+        final JspFile jspFile = getLayoutDefinitionJspFile((XmlTag) element.getParent().getParent());
+        return jspFile == null
+                ? PsiReference.EMPTY_ARRAY
+                : new PsiReference[]{new JspTagAttrLayoutComponentReference((XmlAttributeValue) element, jspFile)};
+    }
 }

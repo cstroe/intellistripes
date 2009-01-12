@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ import com.intellij.psi.xml.XmlTag;
 
 /**
  * Base class for filters that can process stripes tags.
- *
+ * <p/>
  * <br>Implements filtering by taglib declaration uri.
  * Checks if taglib uri starts with valid prefix.<br>
- *
+ * <p/>
  * To implement custom filtering one need overriding {@link #isDetailsAccepted(com.intellij.psi.xml.XmlTag)} method.
  */
 public abstract class StripesTagFilter implements PsiElementFilter {

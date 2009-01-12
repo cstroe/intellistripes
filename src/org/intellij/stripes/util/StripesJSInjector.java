@@ -13,19 +13,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StripesJSInjector implements MultiHostInjector {
-	public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host) {
-		if (StripesReferencesComponent.STRIPES_NAMESPACE_FILTER.isAcceptable(host.getParent().getParent(), null)) {
-			final String name = ((XmlAttribute) host.getParent()).getName();
-			if (name.startsWith("on")) {
-				JSLanguageInjector.injectJSIntoAttributeValue(registrar, (XmlAttributeValue) host, false);
-			}
-		}
-	}
+    public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host) {
+        if (StripesReferencesComponent.STRIPES_NAMESPACE_FILTER.isAcceptable(host.getParent().getParent(), null)) {
+            final String name = ((XmlAttribute) host.getParent()).getName();
+            if (name.startsWith("on")) {
+                JSLanguageInjector.injectJSIntoAttributeValue(registrar, (XmlAttributeValue) host, false);
+            }
+        }
+    }
 
-	@NotNull
-	public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-		return ELEMENTS;
-	}
+    @NotNull
+    public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
+        return ELEMENTS;
+    }
 
-	private static List<Class<XmlAttributeValue>> ELEMENTS = Arrays.asList(XmlAttributeValue.class);
+    private static List<Class<XmlAttributeValue>> ELEMENTS = Arrays.asList(XmlAttributeValue.class);
 }

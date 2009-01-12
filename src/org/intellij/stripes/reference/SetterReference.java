@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,16 +36,16 @@ public class SetterReference<T extends PsiElement> extends PsiReferenceBase<T> {
     protected Boolean supportBraces;
     protected Boolean hasBraces = false;
 
-	public PsiClass getActionBeanPsiClass() {
+    public PsiClass getActionBeanPsiClass() {
         return actionBeanPsiClass;
     }
 
-	public SetterReference(T element, TextRange range, Boolean supportBraces) {
+    public SetterReference(T element, TextRange range, Boolean supportBraces) {
         super(element, range);
         this.supportBraces = supportBraces;
     }
 
-	public SetterReference(T element, TextRange range, PsiClass actionBeanPsiClass, Boolean supportBraces) {
+    public SetterReference(T element, TextRange range, PsiClass actionBeanPsiClass, Boolean supportBraces) {
         super(element, range);
         this.actionBeanPsiClass = actionBeanPsiClass;
         this.supportBraces = supportBraces;
@@ -80,17 +80,17 @@ public class SetterReference<T extends PsiElement> extends PsiReferenceBase<T> {
         return this.hasBraces;
     }
 
-	public Object[] getVariants() {
-		List<String> retval = new LinkedList<String>();
-		retval.addAll(StripesReferenceUtil.getWritableProperties(getActionBeanPsiClass(), supportBraces));
+    public Object[] getVariants() {
+        List<String> retval = new LinkedList<String>();
+        retval.addAll(StripesReferenceUtil.getWritableProperties(getActionBeanPsiClass(), supportBraces));
         retval.addAll(0, getVariantsEx());
 
         return StripesReferenceUtil.getVariants(retval, StripesConstants.FIELD_ICON);
     }
 
-	public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
+    public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
         final String name = PropertyUtil.getPropertyName(newElementName);
-	    return super.handleElementRename(name == null ? newElementName : name);
+        return super.handleElementRename(name == null ? newElementName : name);
 
 //TODO research and implement handle of renaming properties from annotaion attributes
 //            if (getElement() instanceof PsiLiteralExpression) {
@@ -101,13 +101,13 @@ public class SetterReference<T extends PsiElement> extends PsiReferenceBase<T> {
 //        return retval;
     }
 
-	protected static List<String> EMPTY_VARIANTS = Arrays.asList();
+    protected static List<String> EMPTY_VARIANTS = Arrays.asList();
 
-	protected PsiElement resolveEx() {
-		return null;
-	}
+    protected PsiElement resolveEx() {
+        return null;
+    }
 
-	protected List<String> getVariantsEx() {
+    protected List<String> getVariantsEx() {
         return EMPTY_VARIANTS;
     }
 }

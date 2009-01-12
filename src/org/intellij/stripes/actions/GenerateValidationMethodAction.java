@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,31 +25,31 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 
 public class GenerateValidationMethodAction extends StripesBaseGenerateAction {
-	
+
     public GenerateValidationMethodAction() {
         super(new GenerateValidationMethodHandler());
     }
 
-	private static class GenerateValidationMethodHandler implements CodeInsightActionHandler {
-		public void invoke(Project project, Editor editor, PsiFile file) {
+    private static class GenerateValidationMethodHandler implements CodeInsightActionHandler {
+        public void invoke(Project project, Editor editor, PsiFile file) {
 
-			Template t = TemplateManager.getInstance(project).createTemplate("", "");
-			t.setToReformat(true);
-			t.setToShortenLongNames(true);
-			t.setToIndent(true);
+            Template t = TemplateManager.getInstance(project).createTemplate("", "");
+            t.setToReformat(true);
+            t.setToShortenLongNames(true);
+            t.setToIndent(true);
 
-			t.addTextSegment("@net.sourceforge.stripes.validation.ValidationMethod public void validate(net.sourceforge.stripes.validation.ValidationErrors errors) {\n\t");
-			t.addEndVariable();
-			t.addSelectionStartVariable();
-			t.addTextSegment("//	put validation actions here");
-			t.addSelectionEndVariable();
-			t.addTextSegment("\n}");
+            t.addTextSegment("@net.sourceforge.stripes.validation.ValidationMethod public void validate(net.sourceforge.stripes.validation.ValidationErrors errors) {\n\t");
+            t.addEndVariable();
+            t.addSelectionStartVariable();
+            t.addTextSegment("//	put validation actions here");
+            t.addSelectionEndVariable();
+            t.addTextSegment("\n}");
 
-			TemplateManager.getInstance(project).startTemplate(editor, t);
-		}
+            TemplateManager.getInstance(project).startTemplate(editor, t);
+        }
 
-		public boolean startInWriteAction() {
-			return true;
-		}
-	}
+        public boolean startInWriteAction() {
+            return true;
+        }
+    }
 }

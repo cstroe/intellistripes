@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ import org.jdom.Element;
 public class StripesFacetConfiguration implements FacetConfiguration, PersistentStateComponent<StripesFacetConfiguration> {
 // ------------------------------ FIELDS ------------------------------
 
-	private boolean springIntegration = false;
-	private boolean logging = false;
-	private boolean stripesResources;
-	private String log4jFile;
-	private boolean changeIcons = false;
+    private boolean springIntegration = false;
+    private boolean logging = false;
+    private boolean stripesResources;
+    private String log4jFile;
+    private boolean changeIcons = false;
     private boolean neverModifyWebXml = false;
     private String actionResolverPackages = "";
 
@@ -122,20 +122,20 @@ public class StripesFacetConfiguration implements FacetConfiguration, Persistent
         };
     }
 
-	// --------------------- Interface JDOMExternalizable ---------------------
-	@Deprecated
-	public void readExternal(Element element) throws InvalidDataException {
-	}
+    // --------------------- Interface JDOMExternalizable ---------------------
+    @Deprecated
+    public void readExternal(Element element) throws InvalidDataException {
+    }
 
-	@Deprecated
-	public void writeExternal(Element element) throws WriteExternalException {
-	}
+    @Deprecated
+    public void writeExternal(Element element) throws WriteExternalException {
+    }
 
-	public StripesFacetConfiguration getState() {
-		return this;
-	}
+    public StripesFacetConfiguration getState() {
+        return this;
+    }
 
-	public void loadState(StripesFacetConfiguration state) {
-		XmlSerializerUtil.copyBean(state, this);
-	}
+    public void loadState(StripesFacetConfiguration state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
 }

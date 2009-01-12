@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class FileBeanSetterReference extends PsiReferenceBase<XmlAttributeValue>
         this.actionBeanPsiClass = actionBeanPsiClass;
     }
 
-	@Nullable
+    @Nullable
     public PsiElement resolve() {
         PsiMethod[] arr = actionBeanPsiClass.findMethodsByName("set" + StringUtil.capitalize(getValue().replaceAll("\\[.*?\\]", "")), true);
         if (arr.length > 0) {
@@ -48,7 +48,7 @@ public class FileBeanSetterReference extends PsiReferenceBase<XmlAttributeValue>
             PsiClass propertyClass = StripesReferenceUtil.resolveClassInType(propertyType, actionBeanPsiClass.getProject());
 
             if (StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass)) {
-                if (getValue().indexOf("[") > 0) {
+                if (getValue().indexOf('[') > 0) {
                     propertyClass = PsiUtil.resolveClassInType(propertyType);
                     return StripesUtil.isSubclass(List.class.getName(), propertyClass)
                             || propertyType instanceof PsiArrayType
@@ -65,7 +65,7 @@ public class FileBeanSetterReference extends PsiReferenceBase<XmlAttributeValue>
     }
 
     public TextRange getRangeInElement() {
-        int i = getElement().getText().indexOf("[");
+        int i = getElement().getText().indexOf('[');
         return i == -1 ? super.getRangeInElement() : new TextRange(1, i);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import java.text.MessageFormat;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -117,7 +117,7 @@ public final class StripesUtil {
     public static boolean isStripesPage(PsiElement psiFile) {
         if (!(psiFile instanceof JspFile)) return false;
 
-        for (XmlTag tag : ((JspFile)psiFile).getDirectiveTags(JspDirectiveKind.TAGLIB, true)) {
+        for (XmlTag tag : ((JspFile) psiFile).getDirectiveTags(JspDirectiveKind.TAGLIB, true)) {
             if (tag.getAttributeValue(StripesConstants.URI_ATTR) != null
                     && tag.getAttributeValue(StripesConstants.URI_ATTR).startsWith(StripesConstants.TAGLIB_PREFIX)) {
                 return true;
@@ -129,7 +129,7 @@ public final class StripesUtil {
     /*
     * Cache for resolving PsiClasses by FQN.
     */
-    public static Map<String, PsiClass> PSI_CLASS_MAP = new Hashtable<String, PsiClass>();
+    public static Map<String, PsiClass> PSI_CLASS_MAP = new HashMap<String, PsiClass>(8);
 
     /**
      * Finds instance of {@link PsiClass} corresponding to FQN, passed as parameter.

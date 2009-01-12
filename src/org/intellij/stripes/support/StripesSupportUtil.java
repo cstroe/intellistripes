@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class StripesSupportUtil {
                     installSpringIntegration(app);
                 }
             }
-            
+
             if (facet.getConfiguration().isStripesResources()) {
                 installStripesResources(app);
             }
@@ -103,6 +103,7 @@ public class StripesSupportUtil {
                     return true;
                 }
             } catch (Exception e) {
+                //
             }
         }
         return false;
@@ -172,7 +173,7 @@ public class StripesSupportUtil {
 //            addContextConfigLocation(app);
 //        }
 
-		addSpringInterceptor(findStripesFilter(app));
+        addSpringInterceptor(findStripesFilter(app));
     }
 
     /**
@@ -257,6 +258,7 @@ public class StripesSupportUtil {
                     return filter;
                 }
             } catch (Exception e) {
+                //
             }
         }
 

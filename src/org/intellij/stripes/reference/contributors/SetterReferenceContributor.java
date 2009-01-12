@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,207 +43,208 @@ import java.util.*;
 
 public class SetterReferenceContributor extends PsiReferenceContributor {
 
-	private static class StrictBindingReference extends SetterReferenceEx<PsiElement> {
-		private static List<String> EXTRA_VALUES = Arrays.asList("*", "**");
+    private static class StrictBindingReference extends SetterReferenceEx<PsiElement> {
+        private static List<String> EXTRA_VALUES = Arrays.asList("*", "**");
 
-		public StrictBindingReference(TextRange range, Boolean supportBraces, StripesReferenceSetBase referenceSet, Integer index) {
-			super(range, supportBraces, referenceSet, index);
-		}
+        public StrictBindingReference(TextRange range, Boolean supportBraces, StripesReferenceSetBase referenceSet, Integer index) {
+            super(range, supportBraces, referenceSet, index);
+        }
 
-		@Override
-		protected List<String> getVariantsEx() {
-			return EXTRA_VALUES;
-		}
+        @Override
+        protected List<String> getVariantsEx() {
+            return EXTRA_VALUES;
+        }
 
-		@Override
-		protected PsiElement resolveEx() {
-			if (getIndex() == 0) return getReferenceSet().getActionBeanPsiClass();
-			PsiMethod method = (PsiMethod) getReferenceSet().getReference(getIndex() - 1).resolve();
-			return null == method ? null : method.getContainingClass();
-		}
-	}
+        @Override
+        protected PsiElement resolveEx() {
+            if (getIndex() == 0) return getReferenceSet().getActionBeanPsiClass();
+            PsiMethod method = (PsiMethod) getReferenceSet().getReference(getIndex() - 1).resolve();
+            return null == method ? null : method.getContainingClass();
+        }
+    }
 
-	private static class UrlBindingReference extends StaticReference {
-		private static String[] VARIANTS = {"$event"};
+    private static class UrlBindingReference extends StaticReference {
+        private static String[] VARIANTS = {"$event"};
 
-		private PsiClass actionBeanClass;
+        private PsiClass actionBeanClass;
 
-		public UrlBindingReference(PsiElement psiElement, TextRange range, PsiClass actionBeanClass) {
-			super(psiElement, range);
-			this.actionBeanClass = actionBeanClass;
-		}
+        public UrlBindingReference(PsiElement psiElement, TextRange range, PsiClass actionBeanClass) {
+            super(psiElement, range);
+            this.actionBeanClass = actionBeanClass;
+        }
 
-		@Override
-		public PsiElement resolve() {
-			Map<String, PsiMethod> resMethods = StripesReferenceUtil.getResolutionMethods(actionBeanClass);
-			if (resMethods.size() <= 1) {
-				return ContainerUtil.getFirstItem(resMethods.values(), null);
-			}
+        @Override
+        public PsiElement resolve() {
+            Map<String, PsiMethod> resMethods = StripesReferenceUtil.getResolutionMethods(actionBeanClass);
+            if (resMethods.size() <= 1) {
+                return ContainerUtil.getFirstItem(resMethods.values(), null);
+            }
 
-			for (PsiMethod psiMethod : resMethods.values()) {
-				if (psiMethod.getModifierList().findAnnotation(StripesConstants.DEFAULT_HANDLER_ANNOTATION) != null) {
-					return psiMethod;
-				}
-			}
+            for (PsiMethod psiMethod : resMethods.values()) {
+                if (psiMethod.getModifierList().findAnnotation(StripesConstants.DEFAULT_HANDLER_ANNOTATION) != null) {
+                    return psiMethod;
+                }
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		@Override
-		public Object[] getVariants() {
-			return VARIANTS;
-		}
-	}
-	/**
-	 * This class provide References to ActionBean setter methods in stripes tags.
-	 */
-	private static class SetterMethodsReferenceProvider extends PsiReferenceProvider {
+        @Override
+        public Object[] getVariants() {
+            return VARIANTS;
+        }
+    }
 
-		private String parentTag;
+    /**
+     * This class provide References to ActionBean setter methods in stripes tags.
+     */
+    private static class SetterMethodsReferenceProvider extends PsiReferenceProvider {
 
-		public SetterMethodsReferenceProvider(String parentTag) {
-			this.parentTag = parentTag;
-		}
+        private String parentTag;
 
-		@NotNull
-		public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-			if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) {
-				return PsiReference.EMPTY_ARRAY;
-			}
+        public SetterMethodsReferenceProvider(String parentTag) {
+            this.parentTag = parentTag;
+        }
 
-			final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag(
-				(XmlTag) element.getParent().getParent(), parentTag
-			);
+        @NotNull
+        public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+            if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) {
+                return PsiReference.EMPTY_ARRAY;
+            }
 
-			return actionBeanPsiClass == null
-				? PsiReference.EMPTY_ARRAY
-				: new SetterReferenceExSet(element, 1, '.', actionBeanPsiClass, true).getPsiReferences();
-		}
-	}
+            final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag(
+                    (XmlTag) element.getParent().getParent(), parentTag
+            );
 
-	public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
+            return actionBeanPsiClass == null
+                    ? PsiReference.EMPTY_ARRAY
+                    : new SetterReferenceExSet(element, 1, '.', actionBeanPsiClass, true).getPsiReferences();
+        }
+    }
+
+    public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
 
 //errors tag add Reference Provider for Setters Method on parameter field
-		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.FORM_TAG),
-			StripesConstants.FIELD_ATTR, StripesConstants.ERRORS_TAG);
+        StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.FORM_TAG),
+                StripesConstants.FIELD_ATTR, StripesConstants.ERRORS_TAG);
 //all stripes tags for input form add Reference Provider for Setters Method
-		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.FORM_TAG),
-			StripesConstants.NAME_ATTR, StripesConstants.INPUT_TAGS);
+        StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.FORM_TAG),
+                StripesConstants.NAME_ATTR, StripesConstants.INPUT_TAGS);
 //param tag add Reference Provider for Setter Methods
-		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.LINK_TAG),
-			StripesConstants.NAME_ATTR, StripesConstants.PARAM_TAG);
-		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.URL_TAG),
-			StripesConstants.NAME_ATTR, StripesConstants.PARAM_TAG);
+        StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.LINK_TAG),
+                StripesConstants.NAME_ATTR, StripesConstants.PARAM_TAG);
+        StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.URL_TAG),
+                StripesConstants.NAME_ATTR, StripesConstants.PARAM_TAG);
 
-		StripesReferencesComponent.registerXmlAttributeReferenceProvider(
-			registrar, new PsiReferenceProviderBase() {
-				@NotNull
-				public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-					if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) {
-						return PsiReference.EMPTY_ARRAY;
-					}
+        StripesReferencesComponent.registerXmlAttributeReferenceProvider(
+                registrar, new PsiReferenceProviderBase() {
+                    @NotNull
+                    public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+                        if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) {
+                            return PsiReference.EMPTY_ARRAY;
+                        }
 
-					final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag(
-						(XmlTag) element.getParent().getParent(), StripesConstants.FORM_TAG
-					);
+                        final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag(
+                                (XmlTag) element.getParent().getParent(), StripesConstants.FORM_TAG
+                        );
 
-					if (null != actionBeanPsiClass) {
-						List<String> arr = StringUtil.split(ElementManipulators.getValueText(element), ",");
+                        if (null != actionBeanPsiClass) {
+                            List<String> arr = StringUtil.split(ElementManipulators.getValueText(element), ",");
 
-						List<PsiReference> retval = new LinkedList<PsiReference>();
-						for (int i = 0, offset = 1; i < arr.size(); i++) {
-							Collections.addAll(retval, new SetterReferenceExSet(arr.get(i), element, offset, '.', actionBeanPsiClass, false).getPsiReferences());
-							offset += (arr.get(i).length() + 1);
-						}
+                            List<PsiReference> retval = new LinkedList<PsiReference>();
+                            for (int i = 0, offset = 1; i < arr.size(); i++) {
+                                Collections.addAll(retval, new SetterReferenceExSet(arr.get(i), element, offset, '.', actionBeanPsiClass, false).getPsiReferences());
+                                offset += (arr.get(i).length() + 1);
+                            }
 
-						return retval.toArray(new PsiReference[retval.size()]);
-					}
+                            return retval.toArray(new PsiReference[retval.size()]);
+                        }
 
-					return PsiReference.EMPTY_ARRAY;
-				}
-			}, StripesConstants.FIELDS_ATTR, StripesConstants.FIELD_METADATA_TAG
-		);
+                        return PsiReference.EMPTY_ARRAY;
+                    }
+                }, StripesConstants.FIELDS_ATTR, StripesConstants.FIELD_METADATA_TAG
+        );
 
-		registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(
-			new AndFilter(
-				new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION)),
-				new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.VALIDATE_ANNOTATION, StripesConstants.FIELD_ATTR)
-			)
-		)), new PsiReferenceProviderBase() {
+        registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(
+                new AndFilter(
+                        new SuperParentFilter(new QualifiedNameElementFilter(StripesConstants.VALIDATE_NESTED_PROPERTIES_ANNOTATION)),
+                        new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.VALIDATE_ANNOTATION, StripesConstants.FIELD_ATTR)
+                )
+        )), new PsiReferenceProviderBase() {
 
-			@NotNull
-			public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-				PsiMember parent = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
-				if (parent == null) parent = PsiTreeUtil.getParentOfType(element, PsiField.class);
+            @NotNull
+            public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+                PsiMember parent = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
+                if (parent == null) parent = PsiTreeUtil.getParentOfType(element, PsiField.class);
 
-				PsiClass cls = StripesReferenceUtil.resolveClassInType(PropertyUtil.getPropertyType(parent), element.getProject());
-				return null == cls
-					? PsiReference.EMPTY_ARRAY
-					: new SetterReferenceExSet(element, 1, '.', cls, false).getPsiReferences();
-			}
-		});
+                PsiClass cls = StripesReferenceUtil.resolveClassInType(PropertyUtil.getPropertyType(parent), element.getProject());
+                return null == cls
+                        ? PsiReference.EMPTY_ARRAY
+                        : new SetterReferenceExSet(element, 1, '.', cls, false).getPsiReferences();
+            }
+        });
 
-		registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(
-			new OrFilter(
-				new StringArrayAnnotationParameterFilter(StripesConstants.STRICT_BINDING_ANNOTATION, StripesConstants.ALLOW_ATTR),
-				new StringArrayAnnotationParameterFilter(StripesConstants.STRICT_BINDING_ANNOTATION, StripesConstants.DENY_ATTR)
-			)
-		)), new PsiReferenceProviderBase() {
-			@NotNull
-			public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-				PsiClass cls = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-				return null == cls ? PsiReference.EMPTY_ARRAY : new SetterReferenceExSet(element, 1, '.', cls, false) {
-					@NotNull
-					@Override
-					protected SetterReferenceEx<PsiElement> createReferenceWithBraces(TextRange range, int index, boolean hasBraces) {
-						return new StrictBindingReference(range, this.isSupportBraces(), this, index);
-					}
-				}.getPsiReferences();
-			}
-		});
+        registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(
+                new OrFilter(
+                        new StringArrayAnnotationParameterFilter(StripesConstants.STRICT_BINDING_ANNOTATION, StripesConstants.ALLOW_ATTR),
+                        new StringArrayAnnotationParameterFilter(StripesConstants.STRICT_BINDING_ANNOTATION, StripesConstants.DENY_ATTR)
+                )
+        )), new PsiReferenceProviderBase() {
+            @NotNull
+            public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+                PsiClass cls = PsiTreeUtil.getParentOfType(element, PsiClass.class);
+                return null == cls ? PsiReference.EMPTY_ARRAY : new SetterReferenceExSet(element, 1, '.', cls, false) {
+                    @NotNull
+                    @Override
+                    protected SetterReferenceEx<PsiElement> createReferenceWithBraces(TextRange range, int index, boolean hasBraces) {
+                        return new StrictBindingReference(range, this.isSupportBraces(), this, index);
+                    }
+                }.getPsiReferences();
+            }
+        });
 
-		registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(
-			new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.URL_BINDING_ANNOTATION, StripesConstants.VALUE_ATTR)
-		)), new PsiReferenceProviderBase() {
-			@NotNull
-			public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-				PsiClass actionBeanPsiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-				String str = ElementManipulators.getValueText(element);
+        registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().and(new FilterPattern(
+                new AnnotationParameterFilter(PsiLiteralExpression.class, StripesConstants.URL_BINDING_ANNOTATION, StripesConstants.VALUE_ATTR)
+        )), new PsiReferenceProviderBase() {
+            @NotNull
+            public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+                PsiClass actionBeanPsiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
+                String str = ElementManipulators.getValueText(element);
 
-				if (null != actionBeanPsiClass && str.startsWith("/")) {
-					final List<PsiReference> retval = new LinkedList<PsiReference>();
-					for (int i = 0, eqInd = -1, lBraceInd = -1, braceStack = 0; i < str.length(); i++) {
-						if (str.charAt(i) == '{') {
-							braceStack++;
-							lBraceInd = i;
-							eqInd = -1;
-						} else if (str.charAt(i) == '}') {// we found closing brace and need to retrreive references if possible
-							braceStack--;
-							if (braceStack != 0) continue;// braces are unbalanced - we should not try to parse
+                if (null != actionBeanPsiClass && str.startsWith("/")) {
+                    final List<PsiReference> retval = new LinkedList<PsiReference>();
+                    for (int i = 0, eqInd = -1, lBraceInd = -1, braceStack = 0; i < str.length(); i++) {
+                        if (str.charAt(i) == '{') {
+                            braceStack++;
+                            lBraceInd = i;
+                            eqInd = -1;
+                        } else if (str.charAt(i) == '}') {// we found closing brace and need to retrreive references if possible
+                            braceStack--;
+                            if (braceStack != 0) continue;// braces are unbalanced - we should not try to parse
 
-							int endInd = eqInd != -1
-								? eqInd // there's '=' sign within curly braces bounded part of string. processign only part of text located within curl braces
-								: i; // no '=' sign found. process whole text from curly braces;
+                            int endInd = eqInd != -1
+                                    ? eqInd // there's '=' sign within curly braces bounded part of string. processign only part of text located within curl braces
+                                    : i; // no '=' sign found. process whole text from curly braces;
 
-							String txt = str.substring(1 + lBraceInd, endInd);
-							if ("$event".equals(txt) && eqInd == -1) {
-								retval.add(new UrlBindingReference(element, new TextRange(1 + lBraceInd + 1, 1 + endInd), actionBeanPsiClass));
-							} else {
-								Collections.addAll(retval,
-									new SetterReferenceExSet(txt, element, 1 + lBraceInd + 1, '.', actionBeanPsiClass, true).getPsiReferences()
-								);
-							}
+                            String txt = str.substring(1 + lBraceInd, endInd);
+                            if ("$event".equals(txt) && eqInd == -1) {
+                                retval.add(new UrlBindingReference(element, new TextRange(1 + lBraceInd + 1, 1 + endInd), actionBeanPsiClass));
+                            } else {
+                                Collections.addAll(retval,
+                                        new SetterReferenceExSet(txt, element, 1 + lBraceInd + 1, '.', actionBeanPsiClass, true).getPsiReferences()
+                                );
+                            }
 
-							retval.add(new UrlBindingReference(element, new TextRange(1 + lBraceInd + 1, 1 + lBraceInd + 1), actionBeanPsiClass));
-						} else if (str.charAt(i) == '=') {
-							eqInd = i;
-						}
-					}
-					return retval.toArray(new PsiReference[retval.size()]);
-				}
+                            retval.add(new UrlBindingReference(element, new TextRange(1 + lBraceInd + 1, 1 + lBraceInd + 1), actionBeanPsiClass));
+                        } else if (str.charAt(i) == '=') {
+                            eqInd = i;
+                        }
+                    }
+                    return retval.toArray(new PsiReference[retval.size()]);
+                }
 
-				return PsiReference.EMPTY_ARRAY;
-			}
-		});
-	}
+                return PsiReference.EMPTY_ARRAY;
+            }
+        });
+    }
 }

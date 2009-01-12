@@ -15,22 +15,22 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StripesCSSInjector implements MultiHostInjector {
-	public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
-		if (StripesReferencesComponent.STRIPES_NAMESPACE_FILTER.isAcceptable(context.getParent().getParent(), null)) {
-			final String name = ((XmlAttribute) context.getParent()).getName();
-			if (name.startsWith("style")) {
-				final TextRange range = new TextRange(1, context.getTextLength() - 1);
-				registrar.startInjecting(CssSupportLoader.CSS_FILE_TYPE.getLanguage())
-					.addPlace("inline.style {", "}", (PsiLanguageInjectionHost) context, range)
-					.doneInjecting();
-			}
-		}
-	}
+    public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
+        if (StripesReferencesComponent.STRIPES_NAMESPACE_FILTER.isAcceptable(context.getParent().getParent(), null)) {
+            final String name = ((XmlAttribute) context.getParent()).getName();
+            if (name.startsWith("style")) {
+                final TextRange range = new TextRange(1, context.getTextLength() - 1);
+                registrar.startInjecting(CssSupportLoader.CSS_FILE_TYPE.getLanguage())
+                        .addPlace("inline.style {", "}", (PsiLanguageInjectionHost) context, range)
+                        .doneInjecting();
+            }
+        }
+    }
 
-	@NotNull
-	public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-		return ELEMENTS;
-	}
+    @NotNull
+    public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
+        return ELEMENTS;
+    }
 
-	private static List<Class<XmlAttributeValue>> ELEMENTS = Arrays.asList(XmlAttributeValue.class);
+    private static List<Class<XmlAttributeValue>> ELEMENTS = Arrays.asList(XmlAttributeValue.class);
 }

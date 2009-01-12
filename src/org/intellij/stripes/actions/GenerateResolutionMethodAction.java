@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,22 +29,22 @@ public class GenerateResolutionMethodAction extends StripesBaseGenerateAction {
         super(new GenerateResolutionMethodHandler());
     }
 
-	private static class GenerateResolutionMethodHandler implements CodeInsightActionHandler {
-		public void invoke(Project project, Editor editor, PsiFile file) {
+    private static class GenerateResolutionMethodHandler implements CodeInsightActionHandler {
+        public void invoke(Project project, Editor editor, PsiFile file) {
 
-			Template t = TemplateManager.getInstance(project).createTemplate("", "", "public net.sourceforge.stripes.action.Resolution $RESOLUTION_NAME$() {\n return new $TYPE$($END$);\n}");
-			t.setToReformat(true);
-			t.setToShortenLongNames(true);
-			t.setToIndent(true);
-			t.addVariable("RESOLUTION_NAME", "", "\"action\"", true);
-			t.addVariable("TYPE", "completeSmart()", "", true);
+            Template t = TemplateManager.getInstance(project).createTemplate("", "", "public net.sourceforge.stripes.action.Resolution $RESOLUTION_NAME$() {\n return new $TYPE$($END$);\n}");
+            t.setToReformat(true);
+            t.setToShortenLongNames(true);
+            t.setToIndent(true);
+            t.addVariable("RESOLUTION_NAME", "", "\"action\"", true);
+            t.addVariable("TYPE", "completeSmart()", "", true);
 //			t.addVariable("TYPE", "descendantClassEnum(\"net.sourceforge.stripes.action.Resolution\")", "", true);
-			TemplateManager.getInstance(project).startTemplate(editor, t);
+            TemplateManager.getInstance(project).startTemplate(editor, t);
 
-		}
-		                                                                               
-		public boolean startInWriteAction() {
-			return true;
-		}
-	}
+        }
+
+        public boolean startInWriteAction() {
+            return true;
+        }
+    }
 }

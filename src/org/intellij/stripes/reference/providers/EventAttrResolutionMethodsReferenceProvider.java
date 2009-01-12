@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,15 +35,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EventAttrResolutionMethodsReferenceProvider extends PsiReferenceProvider {
 
-	@NotNull
-	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-		if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
+    @NotNull
+    public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+        if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder)
+            return PsiReference.EMPTY_ARRAY;
 
-		XmlTag tag = (XmlTag) element.getParent().getParent();
-		final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), element.getProject());
-		return actionBeanPsiClass == null
-				? PsiReference.EMPTY_ARRAY
-				: new PsiReference[]{new JspTagAttrResolutionMethodsReference((XmlAttributeValue) element, actionBeanPsiClass)};
+        XmlTag tag = (XmlTag) element.getParent().getParent();
+        final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), element.getProject());
+        return actionBeanPsiClass == null
+                ? PsiReference.EMPTY_ARRAY
+                : new PsiReference[]{new JspTagAttrResolutionMethodsReference((XmlAttributeValue) element, actionBeanPsiClass)};
 
-	}
+    }
 }

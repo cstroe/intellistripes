@@ -6,7 +6,8 @@ import net.sourceforge.stripes.action.Resolution;
 
 #parse("File Header.java")
 public class ${NAME} implements Interceptor{
-public Resolution intercept(ExecutionContext executionContext)throws Exception{
+
+    public Resolution intercept(ExecutionContext executionContext)throws Exception{
         return null;
+    }
 }
-        }

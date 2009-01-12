@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public final class StripesReferenceUtil {
         return methodNames;
     }
 
-	/**
+    /**
      * Get the Event methods (Resolution methods) for an ActionBean Class
      *
      * @param psiClass an ActionBean PsiClass
@@ -86,7 +86,7 @@ public final class StripesReferenceUtil {
             return psiMethods;
         }
 
-		if (null == superClass) return new HashMap<String, PsiMethod>(0);
+        if (null == superClass) return new HashMap<String, PsiMethod>(0);
 
         if (!(Object.class.getName().equals(superClass.getQualifiedName()))) {
             psiMethods.putAll(getResolutionMethods(superClass));
@@ -129,7 +129,7 @@ public final class StripesReferenceUtil {
         return retval;
     }
 
-	/**
+    /**
      * Returns list of properties for certain class and its superclasses that have setter method
      *
      * @param psiClass class to examine
@@ -193,7 +193,7 @@ public final class StripesReferenceUtil {
         return methodNames;
     }
 
-	public static PsiClass resolveClassInType(PsiType propertyType, Project project) {
+    public static PsiClass resolveClassInType(PsiType propertyType, Project project) {
         PsiClass cls;
         try {
             PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
