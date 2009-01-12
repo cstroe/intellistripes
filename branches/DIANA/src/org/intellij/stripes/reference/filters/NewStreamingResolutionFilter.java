@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,18 +29,18 @@ public class NewStreamingResolutionFilter implements ElementFilter {
 
 // ------------------d--- Interface ElementFilter ---------------------
 
-	public boolean isAcceptable(Object element, PsiElement psiElement) {
-		PsiExpressionList expressionList = (PsiExpressionList) element;
-		if (expressionList.getExpressions()[0].equals(psiElement)) {
-			PsiNewExpression p = PsiTreeUtil.getParentOfType(expressionList, PsiNewExpression.class);
-			if (p != null) {
-				return StripesConstants.STREAMING_RESOLUTION.equals(p.getClassOrAnonymousClassReference().getQualifiedName());
-			}
-		}
-		return false;
-	}
+    public boolean isAcceptable(Object element, PsiElement psiElement) {
+        PsiExpressionList expressionList = (PsiExpressionList) element;
+        if (expressionList.getExpressions()[0].equals(psiElement)) {
+            PsiNewExpression p = PsiTreeUtil.getParentOfType(expressionList, PsiNewExpression.class);
+            if (p != null) {
+                return StripesConstants.STREAMING_RESOLUTION.equals(p.getClassOrAnonymousClassReference().getQualifiedName());
+            }
+        }
+        return false;
+    }
 
-	public boolean isClassAcceptable(Class aClass) {
-		return PsiExpressionList.class.isAssignableFrom(aClass);
-	}
+    public boolean isClassAcceptable(Class aClass) {
+        return PsiExpressionList.class.isAssignableFrom(aClass);
+    }
 }

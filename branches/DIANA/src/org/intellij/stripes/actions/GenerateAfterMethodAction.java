@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,28 +33,28 @@ public class GenerateAfterMethodAction extends BaseGenerateAction {
         getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
     }
 
-	protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         return super.isValidForFile(project, editor, file) && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, getTargetClass(editor, file));
     }
 
-	private static class GenerateResolutionActionHandler implements CodeInsightActionHandler {
-		public void invoke(Project project, Editor editor, PsiFile file) {
-			Template t = TemplateManager.getInstance(project).createTemplate("", "");
-			t.setToReformat(true);
-			t.setToShortenLongNames(true);
-			t.setToIndent(true);
-			t.addTextSegment("@net.sourceforge.stripes.action.After public void postProcess() {\n\t");
-			t.addEndVariable();
-			t.addSelectionStartVariable();
-			t.addTextSegment("//	put post process actions here");
-			t.addSelectionEndVariable();
-			t.addTextSegment("\n}");
+    private static class GenerateResolutionActionHandler implements CodeInsightActionHandler {
+        public void invoke(Project project, Editor editor, PsiFile file) {
+            Template t = TemplateManager.getInstance(project).createTemplate("", "");
+            t.setToReformat(true);
+            t.setToShortenLongNames(true);
+            t.setToIndent(true);
+            t.addTextSegment("@net.sourceforge.stripes.action.After public void postProcess() {\n\t");
+            t.addEndVariable();
+            t.addSelectionStartVariable();
+            t.addTextSegment("//	put post process actions here");
+            t.addSelectionEndVariable();
+            t.addTextSegment("\n}");
 
-			TemplateManager.getInstance(project).startTemplate(editor, t);
-		}
+            TemplateManager.getInstance(project).startTemplate(editor, t);
+        }
 
-		public boolean startInWriteAction() {
-			return true;
-		}
-	}
+        public boolean startInWriteAction() {
+            return true;
+        }
+    }
 }

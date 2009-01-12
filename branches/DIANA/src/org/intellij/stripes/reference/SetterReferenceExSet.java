@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class SetterReferenceExSet extends StripesReferenceSetBase<SetterReferenc
             }
 
             if (i == (getStr().length() - 1)) {
-                retval.add(createReferenceWithBraces(new TextRange(getOffset() + wStart, getOffset() + (wStart < wEnd ? wEnd + 1 : i + 1)), index++, wEnd != i  && lBrace == 0));
+                retval.add(createReferenceWithBraces(new TextRange(getOffset() + wStart, getOffset() + (wStart < wEnd ? wEnd + 1 : i + 1)), index++, wEnd != i && lBrace == 0));
             }
         }
 
@@ -66,6 +66,7 @@ public class SetterReferenceExSet extends StripesReferenceSetBase<SetterReferenc
 
     /**
      * This method should never be directly used.
+     *
      * @param range
      * @param index
      * @return

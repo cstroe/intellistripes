@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class StripesIconProvider extends IconProvider {
         //Change Icons?
         if (facet.getConfiguration().isChangeIcons()) {
             //is JSP's?
-            if (element instanceof JspFile && StripesUtil.isStripesPage((JspFile) element)) {//get tags like page, taglib...
+            if (element instanceof JspFile && StripesUtil.isStripesPage(element)) {//get tags like page, taglib...
                 return StripesConstants.STRIPES_JSP_ICON;
             } else if (element instanceof PsiClass) { //is class?
                 PsiClass clazz = (PsiClass) element;

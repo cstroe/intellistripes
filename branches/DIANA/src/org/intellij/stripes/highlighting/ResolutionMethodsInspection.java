@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 
 package org.intellij.stripes.highlighting;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.intention.AddAnnotationFix;
 import com.intellij.codeInspection.*;
 import com.intellij.psi.PsiAnnotation;
@@ -67,9 +66,9 @@ public class ResolutionMethodsInspection extends BaseJavaLocalInspectionTool {
 
     @Nullable
     public ProblemDescriptor[] checkClass(@NotNull PsiClass aClass, @NotNull InspectionManager manager, boolean isOnTheFly) {
-        List<ProblemDescriptor> retval = new ArrayList<ProblemDescriptor>();
+        List<ProblemDescriptor> retval = new ArrayList<ProblemDescriptor>(4);
 
-        Map<String, List<PsiAnnotation>> handlesEvents = new HashMap<String, List<PsiAnnotation>>();
+        Map<String, List<PsiAnnotation>> handlesEvents = new HashMap<String, List<PsiAnnotation>>(4);
         Map<String, PsiMethod> resolutionMethods = StripesReferenceUtil.getResolutionMethods(aClass);
         List<PsiAnnotation> defaultHandlers = new ArrayList<PsiAnnotation>(4);
 
@@ -86,11 +85,11 @@ public class ResolutionMethodsInspection extends BaseJavaLocalInspectionTool {
 
                 if (method.getName().equals(eventName)) {
                     retval.add(manager.createProblemDescriptor(ann, StripesUtil.message("inspection.duplicatesMethodName"),
-                        new RemoveAnnotationQuickFix(ann, method), ProblemHighlightType.GENERIC_ERROR_OR_WARNING));
+                            new RemoveAnnotationQuickFix(ann, method), ProblemHighlightType.GENERIC_ERROR_OR_WARNING));
                 }
 
                 List<PsiAnnotation> methods = handlesEvents.get(eventName);
-                if (null == methods) methods = new ArrayList<PsiAnnotation>();
+                if (null == methods) methods = new ArrayList<PsiAnnotation>(8);
                 methods.add(ann);
                 handlesEvents.put(eventName, methods);
             }
@@ -134,7 +133,7 @@ public class ResolutionMethodsInspection extends BaseJavaLocalInspectionTool {
             }
         }
 
-        if (fixes.size() > 0) {
+        if (!fixes.isEmpty()) {
             retval.add(manager.createProblemDescriptor(aClass.getNameIdentifier(), StripesUtil.message("inspection.duplicatedHandlesEvent"),
                     fixes.toArray(new LocalQuickFix[fixes.size()]), ProblemHighlightType.GENERIC_ERROR_OR_WARNING));
         }

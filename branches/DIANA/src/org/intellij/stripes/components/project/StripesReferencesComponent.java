@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,91 +59,91 @@ import java.util.Collection;
 
 //TODO move all reference initializations to PsiReferenceContributors
 public class StripesReferencesComponent implements ProjectComponent {
-	// ------------------------------ FIELDS ------------------------------
-	private ReferenceProvidersRegistry registry;
-	private Project project;
+    // ------------------------------ FIELDS ------------------------------
+    private ReferenceProvidersRegistry registry;
+    private Project project;
 
-	final public static NamespaceFilter STRIPES_NAMESPACE_FILTER = new NamespaceFilter(StripesConstants.STRIPES_TLDS);
-	// --------------------------- CONSTRUCTORS ---------------------------
+    final public static NamespaceFilter STRIPES_NAMESPACE_FILTER = new NamespaceFilter(StripesConstants.STRIPES_TLDS);
+    // --------------------------- CONSTRUCTORS ---------------------------
 
-	public StripesReferencesComponent(Project project) {
-		this.registry = ReferenceProvidersRegistry.getInstance(project);
-		this.project = project;
-	}
+    public StripesReferencesComponent(Project project) {
+        this.registry = ReferenceProvidersRegistry.getInstance(project);
+        this.project = project;
+    }
 // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface BaseComponent ---------------------
 
 
-	@NotNull
-	public String getComponentName() {
-		return "Stripes References Provider";
-	}
+    @NotNull
+    public String getComponentName() {
+        return "Stripes References Provider";
+    }
 
-	public void initComponent() {
+    public void initComponent() {
 
-		for (String tag : StripesConstants.ACTION_BEAN_TAGS) {
+        for (String tag : StripesConstants.ACTION_BEAN_TAGS) {
 //            all stripes tags with beanclass parameter add Reference provider for implementations od Stripes ActionBean
-			registerSubclass(tag);
-		}
+            registerSubclass(tag);
+        }
 
 //file upload input
-		registerXmlAttributeReferenceProvider(registry, new FileBeanSetterMethodsReferenceProvider(),
-			StripesConstants.NAME_ATTR, StripesConstants.FILE_TAG);
+        registerXmlAttributeReferenceProvider(registry, new FileBeanSetterMethodsReferenceProvider(),
+                StripesConstants.NAME_ATTR, StripesConstants.FILE_TAG);
 
 //all stripes tags for submit form add Reference Provider for Event(Resolution Method)
-		registerXmlAttributeReferenceProvider(registry, new TagResolutionMethodsReferenceProvider(),
-			StripesConstants.NAME_ATTR, StripesConstants.RESOLUTION_TAGS);
+        registerXmlAttributeReferenceProvider(registry, new TagResolutionMethodsReferenceProvider(),
+                StripesConstants.NAME_ATTR, StripesConstants.RESOLUTION_TAGS);
 //all stripes special tags with event parameter add Reference Provider for Event(Resolution Method)
-		registerXmlAttributeReferenceProvider(registry, new EventAttrResolutionMethodsReferenceProvider(),
-			StripesConstants.EVENT_ATTR, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
+        registerXmlAttributeReferenceProvider(registry, new EventAttrResolutionMethodsReferenceProvider(),
+                StripesConstants.EVENT_ATTR, StripesConstants.ACTION_BEAN_TAGS_WITH_EVENT);
 
 //layout-render
-		registerXmlAttributeReferenceProvider(registry, new WebPathReferenceProvider(), StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_RENDER_TAG);
+        registerXmlAttributeReferenceProvider(registry, new WebPathReferenceProvider(), StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_RENDER_TAG);
 //layout-component
-		registerXmlAttributeReferenceProvider(registry, new LayoutComponentReferenceProvider(), StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_COMPONENT_TAG);
+        registerXmlAttributeReferenceProvider(registry, new LayoutComponentReferenceProvider(), StripesConstants.NAME_ATTR, StripesConstants.LAYOUT_COMPONENT_TAG);
 //css
-		registerXmlAttributeReferenceProvider(registry, new CssInHtmlClassOrIdReferenceProvider(), StripesConstants.CLASS_ATTR, StripesConstants.CLASS_TAGS);
+        registerXmlAttributeReferenceProvider(registry, new CssInHtmlClassOrIdReferenceProvider(), StripesConstants.CLASS_ATTR, StripesConstants.CLASS_TAGS);
 //src on stripes:image
-		registerXmlAttributeReferenceProvider(registry, new WebPathReferenceProvider(), StripesConstants.SRC_ATTR, StripesConstants.IMAGE_TAG);
+        registerXmlAttributeReferenceProvider(registry, new WebPathReferenceProvider(), StripesConstants.SRC_ATTR, StripesConstants.IMAGE_TAG);
 
-		JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project), this.project) {
-			@NotNull
-			@Override
-			public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-				return super.getReferencesByElement(element, context);    //To change body of overridden methods use File | Settings | File Templates.
-			}
-		};
-		provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{Enum.class.getName()});
-		provider.setOption(JavaClassReferenceProvider.CLASS_KIND, ClassKind.ENUM);
-		provider.setOption(JavaClassReferenceProvider.NOT_ENUM, Boolean.FALSE);
-		registerXmlAttributeReferenceProvider(registry, provider, StripesConstants.ENUM_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG);
+        JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project), this.project) {
+            @NotNull
+            @Override
+            public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+                return super.getReferencesByElement(element, context);    //To change body of overridden methods use File | Settings | File Templates.
+            }
+        };
+        provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{Enum.class.getName()});
+        provider.setOption(JavaClassReferenceProvider.CLASS_KIND, ClassKind.ENUM);
+        provider.setOption(JavaClassReferenceProvider.NOT_ENUM, Boolean.FALSE);
+        registerXmlAttributeReferenceProvider(registry, provider, StripesConstants.ENUM_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG);
 
-		registerSpringBeanReference();
+        registerSpringBeanReference();
 
-		registry
-			.registerReferenceProvider(new OnwardResolutionConstructorFilter(1), PsiLiteralExpression.class, new WebPathReferenceProvider(true, false, false) {
-				@NotNull
-				public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull ProcessingContext context) {
+        registry
+                .registerReferenceProvider(new OnwardResolutionConstructorFilter(1), PsiLiteralExpression.class, new WebPathReferenceProvider(true, false, false) {
+                    @NotNull
+                    public PsiReference[] getReferencesByElement(@NotNull final PsiElement element, @NotNull ProcessingContext context) {
 
-					FileReferenceSet set = FileReferenceSet.createSet(element, false, false, false);
-					set.addCustomization(FileReferenceSet.DEFAULT_PATH_EVALUATOR_OPTION, new Function<PsiFile, Collection<PsiFileSystemItem>>() {
-						public Collection<PsiFileSystemItem> fun(PsiFile psiFile) {
-							WebFacet webFacet = WebUtil.getWebFacet(element);
-							if (null == webFacet) return new ArrayList<PsiFileSystemItem>(0);
+                        FileReferenceSet set = FileReferenceSet.createSet(element, false, false, false);
+                        set.addCustomization(FileReferenceSet.DEFAULT_PATH_EVALUATOR_OPTION, new Function<PsiFile, Collection<PsiFileSystemItem>>() {
+                            public Collection<PsiFileSystemItem> fun(PsiFile psiFile) {
+                                WebFacet webFacet = WebUtil.getWebFacet(element);
+                                if (null == webFacet) return new ArrayList<PsiFileSystemItem>(0);
 
-							Collection<PsiFileSystemItem> retval = new ArrayList<PsiFileSystemItem>();
-							for (WebRoot webRoot : webFacet.getWebRoots(true)) {
-								retval.add(WebDirectoryUtil.getWebDirectoryUtil(element.getProject()).findWebDirectoryElementByPath(webRoot.getRelativePath(),
-									webFacet
-								));
-							}
-							return retval;
-						}
-					});
+                                Collection<PsiFileSystemItem> retval = new ArrayList<PsiFileSystemItem>(8);
+                                for (WebRoot webRoot : webFacet.getWebRoots(true)) {
+                                    retval.add(WebDirectoryUtil.getWebDirectoryUtil(element.getProject()).findWebDirectoryElementByPath(webRoot.getRelativePath(),
+                                            webFacet
+                                    ));
+                                }
+                                return retval;
+                            }
+                        });
 
 //TODO add references to servlets declared in web.xml
-					return set.getAllReferences();
+                        return set.getAllReferences();
 
 //				PsiDynaReference retval = new PsiDynaReference(element, false);
 //
@@ -160,58 +160,58 @@ public class StripesReferencesComponent implements ProjectComponent {
 //				PsiReference[] rrr = super.getReferencesByElement(element, context);
 //
 //				return new PsiReference[]{retval};
-				}
-			}
-			);
+                    }
+                }
+                );
 
 
-	}
+    }
 
-	public void disposeComponent() {
-		StripesReferenceUtil.URL_BINDING_SEARCHER = null;
-		StripesUtil.PSI_CLASS_MAP.clear();
-	}
+    public void disposeComponent() {
+        StripesReferenceUtil.URL_BINDING_SEARCHER = null;
+        StripesUtil.PSI_CLASS_MAP.clear();
+    }
 
 // --------------------- Interface ProjectComponent ---------------------
 
-	public void projectOpened() {
-	}
+    public void projectOpened() {
+    }
 
-	public void projectClosed() {
-	}
+    public void projectClosed() {
+    }
 
 // -------------------------- OTHER METHODS --------------------------
 
-	private void registerSpringBeanReference() {
-		//Register Provider
-		registry.registerReferenceProvider(new ParentElementFilter(new SpringBeanAnnotationFilter()),//Our Filter
-			PsiLiteralExpression.class,// Only in Strings
-			new SpringBeanNamesReferenceProvider()
-		);
-	}
+    private void registerSpringBeanReference() {
+        //Register Provider
+        registry.registerReferenceProvider(new ParentElementFilter(new SpringBeanAnnotationFilter()),//Our Filter
+                PsiLiteralExpression.class,// Only in Strings
+                new SpringBeanNamesReferenceProvider()
+        );
+    }
 
-	private void registerSubclass(String tagName) {
+    private void registerSubclass(String tagName) {
 //TODO if ActionResolver.Packages is configured in web.xml pass it as GlobalSearchScope instead of whole project scope
-		JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project), this.project) {
-			public PsiReference[] getReferencesByElement(@NotNull PsiElement psiElement) {
-				if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) {
-					return PsiReference.EMPTY_ARRAY;
-				}
-				return super.getReferencesByElement(psiElement);
-			}
-		};
+        JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project), this.project) {
+            public PsiReference[] getReferencesByElement(@NotNull PsiElement psiElement) {
+                if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) {
+                    return PsiReference.EMPTY_ARRAY;
+                }
+                return super.getReferencesByElement(psiElement);
+            }
+        };
 
-		provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{StripesConstants.ACTION_BEAN});
-		provider.setOption(JavaClassReferenceProvider.INSTANTIATABLE, true);
-		registerXmlAttributeReferenceProvider(registry, provider, StripesConstants.BEANCLASS_ATTR, tagName);
-	}
+        provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{StripesConstants.ACTION_BEAN});
+        provider.setOption(JavaClassReferenceProvider.INSTANTIATABLE, true);
+        registerXmlAttributeReferenceProvider(registry, provider, StripesConstants.BEANCLASS_ATTR, tagName);
+    }
 
-	public static void registerXmlAttributeReferenceProvider(PsiReferenceRegistrar psiReferenceRegistrar, PsiReferenceProvider provider, String attributeName, String... tagNames) {
-		XmlUtil.registerXmlAttributeValueReferenceProvider(
-			psiReferenceRegistrar,
-			new String[]{attributeName},
-			new ScopeFilter(new ParentElementFilter(new AndFilter(STRIPES_NAMESPACE_FILTER, new ClassFilter(XmlTag.class), new TextFilter(tagNames)), 2)),
-			provider
-		);
-	}
+    public static void registerXmlAttributeReferenceProvider(PsiReferenceRegistrar psiReferenceRegistrar, PsiReferenceProvider provider, String attributeName, String... tagNames) {
+        XmlUtil.registerXmlAttributeValueReferenceProvider(
+                psiReferenceRegistrar,
+                new String[]{attributeName},
+                new ScopeFilter(new ParentElementFilter(new AndFilter(STRIPES_NAMESPACE_FILTER, new ClassFilter(XmlTag.class), new TextFilter(tagNames)), 2)),
+                provider
+        );
+    }
 }

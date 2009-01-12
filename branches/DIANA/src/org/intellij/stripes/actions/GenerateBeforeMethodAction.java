@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,34 +28,34 @@ import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 
 public class GenerateBeforeMethodAction extends BaseGenerateAction {
-	public GenerateBeforeMethodAction() {
-		super(new GenerateResolutionActionHandler());
-		getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
-	}
+    public GenerateBeforeMethodAction() {
+        super(new GenerateResolutionActionHandler());
+        getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
+    }
 
-	protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
-		return super.isValidForFile(project, editor, file) && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, getTargetClass(editor, file));
-	}
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
+        return super.isValidForFile(project, editor, file) && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, getTargetClass(editor, file));
+    }
 
-	private static class GenerateResolutionActionHandler implements CodeInsightActionHandler {
-		public void invoke(Project project, Editor editor, PsiFile file) {
-			Template t = TemplateManager.getInstance(project).createTemplate("", "");
-			t.setToReformat(true);
-			t.setToShortenLongNames(true);
-			t.setToIndent(true);
-			
-			t.addTextSegment("@net.sourceforge.stripes.action.Before public void preProcess() {\n\t");
-			t.addEndVariable();
-			t.addSelectionStartVariable();
-			t.addTextSegment("//	put pre process actions here");
-			t.addSelectionEndVariable();
-			t.addTextSegment("\n}");
+    private static class GenerateResolutionActionHandler implements CodeInsightActionHandler {
+        public void invoke(Project project, Editor editor, PsiFile file) {
+            Template t = TemplateManager.getInstance(project).createTemplate("", "");
+            t.setToReformat(true);
+            t.setToShortenLongNames(true);
+            t.setToIndent(true);
 
-			TemplateManager.getInstance(project).startTemplate(editor, t);
-		}
+            t.addTextSegment("@net.sourceforge.stripes.action.Before public void preProcess() {\n\t");
+            t.addEndVariable();
+            t.addSelectionStartVariable();
+            t.addTextSegment("//	put pre process actions here");
+            t.addSelectionEndVariable();
+            t.addTextSegment("\n}");
 
-		public boolean startInWriteAction() {
-			return true;
-		}
-	}
+            TemplateManager.getInstance(project).startTemplate(editor, t);
+        }
+
+        public boolean startInWriteAction() {
+            return true;
+        }
+    }
 }
