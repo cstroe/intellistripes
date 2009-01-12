@@ -56,4 +56,4 @@ Initial version. Port of version 1.0.Final to Diana
   * Complete Support for {{{@StrictBinding}}}
   * Clean URL in {{{@UrlBinding}}} now support nested properties
   * Stripes Icons return
-  * Minor BugFixes  
+  * Minor Bug Fixes  
