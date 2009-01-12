@@ -46,3 +46,14 @@ Initial version. Port of version 1.0.Final to Diana
   * fixed registration of {{{actionBean}}} as implicit EL variable
   * More valid {{{actionBean}}} EL implicit variable proessing
   * fixed duplicate property names in auto-complete for {{{ActionBean}}} setters
+
+===Version 2.0.RC3.164===
+  * Actions to Create Stripes Classes:
+    * {{{ActionBeanContext}}} 
+    * {{{ActionBeanContextFactory}}} 
+    * {{{Interceptor}}} 
+  * Complete Support for {{{@Wizard}}}
+  * Complete Support for {{{@StrictBinding}}}
+  * Clean URL in {{{@UrlBinding}}} now support nested properties
+  * Stripes Icons return
+  * Minor BugFixes  
