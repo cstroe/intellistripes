@@ -57,3 +57,4 @@ Initial version. Port of version 1.0.Final to Diana
   * Clean URL in {{{@UrlBinding}}} now support nested properties
   * Stripes Icons return
   * Minor Bug Fixes  
+  * Auto-complete of {{{init-param}}} names within Stripes Filter in {{{web.xml}}} are updated to Stripes 1.5 
