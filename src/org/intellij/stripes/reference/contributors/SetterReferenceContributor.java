@@ -19,6 +19,7 @@ package org.intellij.stripes.reference.contributors;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.patterns.PsiJavaPatterns;
+import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.*;
 import com.intellij.psi.filters.AndFilter;
 import com.intellij.psi.filters.AnnotationParameterFilter;
@@ -218,7 +219,7 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
                             braceStack++;
                             lBraceInd = i;
                             eqInd = -1;
-                        } else if (str.charAt(i) == '}') {// we found closing brace and need to retrreive references if possible
+                        } else if (str.charAt(i) == '}') {// we found closing brace and need to retrieve references if possible
                             braceStack--;
                             if (braceStack != 0) continue;// braces are unbalanced - we should not try to parse
 
@@ -246,5 +247,20 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
                 return PsiReference.EMPTY_ARRAY;
             }
         });
+
+	    registrar.registerReferenceProvider(PsiJavaPatterns.literalExpression().methodCallParameter(0,
+		    PsiJavaPatterns
+			    .psiMethod()
+			    .definedInClass(StripesConstants.VALIDATION_ERRORS)
+			    .withName(StandardPatterns.string().oneOf(
+			            StripesConstants.ADD_METHOD, StripesConstants.ADD_ALL_METHOD, StripesConstants.PUT_METHOD, StripesConstants.PUT_ALL_METHOD))
+	    ), new PsiReferenceProviderBase() {
+		    @NotNull
+		    @Override
+		    public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+				PsiClass cls = PsiTreeUtil.getParentOfType(element, PsiClass.class);
+			    return null == cls ? PsiReference.EMPTY_ARRAY : new SetterReferenceExSet(element, 1, '.', cls, true).getPsiReferences();
+		    }
+	    });
     }
 }
