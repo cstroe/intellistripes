@@ -73,6 +73,12 @@ public interface StripesConstants {
     String REQUIRED_ATTR = "required";
     String START_EVENTS_ATTR = "startEvents";
 
+	//stripes classes' method names
+	String ADD_METHOD = "add";
+	String ADD_ALL_METHOD = "addAll";
+	String PUT_METHOD = "put";
+	String PUT_ALL_METHOD = "putAll";
+
     //various stripes configuration related
     String STRIPES_SERVLET_NAME = "StripesDispatcher";
     String DEFAULT_STRIPES_MAPPING = "*.action";
