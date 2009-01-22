@@ -117,7 +117,7 @@ public final class StripesUtil {
     public static boolean isStripesPage(PsiElement psiFile) {
         if (!(psiFile instanceof JspFile)) return false;
 
-        for (XmlTag tag : ((JspFile) psiFile).getDirectiveTags(JspDirectiveKind.TAGLIB, true)) {
+        for (XmlTag tag : ((JspFile) psiFile).getDirectiveTagsInContext(JspDirectiveKind.TAGLIB)) {
             if (tag.getAttributeValue(StripesConstants.URI_ATTR) != null
                     && tag.getAttributeValue(StripesConstants.URI_ATTR).startsWith(StripesConstants.TAGLIB_PREFIX)) {
                 return true;

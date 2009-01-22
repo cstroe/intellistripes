@@ -51,10 +51,12 @@ public class LayoutComponentReferenceProvider extends PsiReferenceProvider {
 
         XmlTag layoutRenderTag = StripesUtil.findParent(xmlTag, LAYOUT_RENDER_FILTER, StripesReferenceUtil.NAME_ATTR_FILTER);
         if (layoutRenderTag != null) {
-            PsiReference[] refs = layoutRenderTag.getAttribute("name").getValueElement().getReferences();
+            PsiReference[] refs = layoutRenderTag.getAttribute(StripesConstants.NAME_ATTR).getValueElement().getReferences();
             for (PsiReference ref : refs) {
                 PsiElement el = ref.resolve();
-                return StripesUtil.isStripesPage(el) ? (JspFile) el : null;
+	            if (StripesUtil.isStripesPage(el)) {
+					return (JspFile) el;
+	            }
             }
         }
 
