@@ -17,6 +17,7 @@
 
 package org.intellij.stripes.reference;
 
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
@@ -61,7 +62,11 @@ public class UrlBindingSearcher extends AnnotatedMembersSearcher {
         UrlBindingProcessor proc = new UrlBindingProcessor();
         try {
             super.execute(params, proc);
-        } catch (Exception e) {
+        } catch (ProcessCanceledException e) {
+            //Do nothig, this exception is very common and can be throw for intellij
+            //Logger don't be reported or just raise an ugly error
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return proc.getBindings();

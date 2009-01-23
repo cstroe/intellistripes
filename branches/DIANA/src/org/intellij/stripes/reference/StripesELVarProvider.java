@@ -17,6 +17,7 @@
 
 package org.intellij.stripes.reference;
 
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
@@ -95,6 +96,9 @@ public class StripesELVarProvider extends ElVariablesProvider {
             for (String actionBeanName : actionBeans.keySet()) {
                 processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile, ACTION_BEAN, actionBeans.get(actionBeanName));
             }
+        } catch (ProcessCanceledException e) {
+            //Do nothig, this exception is very common and can be throw for intellij
+            //Logger don't be reported or just raise an ugly error
         } catch (Exception e) {
             e.printStackTrace();
         }
