@@ -125,7 +125,7 @@ public final class StripesReferenceUtil {
 		PsiAnnotation a = method.getModifierList().findAnnotation(StripesConstants.HANDLES_EVENT_ANNOTATION);
 		try {
 			if (a != null) {
-				PsiAnnotationMemberValue psvm = a.findAttributeValue("value");
+				PsiAnnotationMemberValue psvm = a.findAttributeValue(StripesConstants.VALUE_ATTR);
 				if (psvm instanceof PsiLiteralExpression) {
 					retval = StringUtil.stripQuotesAroundValue(psvm.getText());
 				} else if (psvm instanceof PsiReferenceExpression) {
@@ -161,7 +161,7 @@ public final class StripesReferenceUtil {
 			if (PropertyUtil.isSimplePropertySetter(psiMethod)
 				&& (name = PropertyUtil.getPropertyNameBySetter(psiMethod)) != null
 				&& !methodNames.contains(name)) {
-				
+
 				PsiType propertyType = psiMethod.getParameterList().getParameters()[0].getType();
 				PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
 
