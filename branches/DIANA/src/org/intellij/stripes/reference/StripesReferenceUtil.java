@@ -155,9 +155,13 @@ public final class StripesReferenceUtil {
 		if (null == psiClass) return EMPTY_STRING_LIST;
 
 		List<String> methodNames = new ArrayList<String>(16);
+		String name = null;
+
 		for (PsiMethod psiMethod : psiClass.getAllMethods()) {
-			String name = PropertyUtil.getPropertyNameBySetter(psiMethod);
-			if (PropertyUtil.isSimplePropertySetter(psiMethod) && !methodNames.contains(name)) {
+			if (PropertyUtil.isSimplePropertySetter(psiMethod)
+				&& (name = PropertyUtil.getPropertyNameBySetter(psiMethod)) != null
+				&& !methodNames.contains(name)) {
+				
 				PsiType propertyType = psiMethod.getParameterList().getParameters()[0].getType();
 				PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
 
