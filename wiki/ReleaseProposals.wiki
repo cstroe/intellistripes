@@ -18,6 +18,7 @@
     * ~~{{{Resolution}}}~~
     * ~~{{{@ValidationMethod}}}~~
     * ~~{{{@Before}}}/{{{@After}}} methods~~
+    * correct @SpringBean injection method (prefixed with inject)
   * Actions for creating various Stripes extension classses from source tree
     * ~~{{{ActionBeanContext}}}~~
     * ~~{{{ActionBeanContextFactory}}}~~
@@ -30,3 +31,4 @@
   * ~~Provide autocomplete support for {{{@Wizard(startEvents = "")}}}~~
   * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{option-xxx}}} tags
   * include variable names declared with {{{var}}} attribute of Stripes tags into implicit EL variable list within IDEA JSP editor
+  * correct handling of search and rename of refernces to {{{Action Bean}}} setters.
