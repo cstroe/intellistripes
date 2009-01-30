@@ -91,14 +91,6 @@ public class SetterReference<T extends PsiElement> extends PsiReferenceBase<T> {
     public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
         final String name = PropertyUtil.getPropertyName(newElementName);
         return super.handleElementRename(name == null ? newElementName : name);
-
-//TODO research and implement handle of renaming properties from annotaion attributes
-//            if (getElement() instanceof PsiLiteralExpression) {
-//                BeanProperty bProp = BeanProperty.createBeanProperty((PsiMethod) resolve());
-//                bProp.setName(name);
-//                return bProp.getPsiElement();
-//            }
-//        return retval;
     }
 
     protected static List<String> EMPTY_VARIANTS = Arrays.asList();
