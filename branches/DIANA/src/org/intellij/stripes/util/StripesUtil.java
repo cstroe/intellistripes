@@ -238,9 +238,9 @@ public final class StripesUtil {
      * @param full   flag indicating full (stripes-specific and JavaBean) or partial (only stripes-specific) validation
      * @return true if method is valid, false otherwise
      */
-    public static Boolean isActionBeanPropertySetter(PsiMethod method, Boolean full) {
+    public static Boolean isActionBeanPropertySetter(PsiMethod method, boolean full) {
         if (method == null
-                || (full && PropertyUtil.isSimplePropertySetter(method))) return false;
+                || (full && !PropertyUtil.isSimplePropertySetter(method))) return false;
 
         PsiClass propertyClass = PsiUtil.resolveClassInType(method.getParameterList().getParameters()[0].getType());
         return method.hasModifierProperty(PsiModifier.PUBLIC)

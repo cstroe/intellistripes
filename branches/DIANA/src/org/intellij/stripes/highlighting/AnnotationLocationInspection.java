@@ -141,7 +141,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
                     );
                 } else if (StripesConstants.SPRING_BEAN_ANNOTATION.equals(annotation.getQualifiedName())) {
                     PsiElement m = annotation.getParent().getParent();
-                    if (m instanceof PsiMethod && !StripesUtil.isActionBeanPropertySetter((PsiMethod) m, true)) {
+                    if (m instanceof PsiMethod && StripesUtil.isActionBeanPropertySetter((PsiMethod) m, true)) {
                         holder.registerProblem(annotation, StripesUtil.message("inspection.appliedToPubSetter"),
                                 new RemoveAnnotationQuickFix(annotation, (PsiModifierListOwner) m)
                         );
