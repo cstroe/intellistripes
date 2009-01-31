@@ -14,6 +14,7 @@
   * If {{{ActionResolver.Packages}}} is configured auto-complete variants of {{{beanclass}}} attributes in stripes custom tags should be limited only by those packages
   * ~~Provide autocomplete support for {{{@UrlBinding}}} Ex: {{{@UrlBinding("/myAction/{myProperty}/{myAnotherProperty=defaultValue}/{$event}")}}}~~
   * ~~new inspection for {{{@Validate}}}. Should check {{{on}}} attribute and raise warning if there's no {{{required}}} attribute~~
+  * ~~Quick fix for inspection "@SpringBean applied to public setter"~~
   * ~~Actions for generating elements within {{{ActionBean}}} classes~~
     * ~~{{{Resolution}}}~~
     * ~~{{{@ValidationMethod}}}~~
