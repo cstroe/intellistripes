@@ -18,19 +18,33 @@ package org.intellij.stripes.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.generation.actions.BaseGenerateAction;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiWhiteSpace;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 
 public abstract class StripesBaseGenerateAction extends BaseGenerateAction {
 
-    public StripesBaseGenerateAction(CodeInsightActionHandler handler) {
-        super(handler);
-        getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
-    }
+	public StripesBaseGenerateAction(CodeInsightActionHandler handler) {
+		super(handler);
+		getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
+	}
 
-    @Override
-    protected boolean isValidForClass(PsiClass targetClass) {
-        return super.isValidForClass(targetClass) && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, targetClass);
-    }
+	@Override
+	protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
+		if (super.isValidForFile(project, editor, file)) {
+			PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
+			return element instanceof PsiWhiteSpace && element.getParent() instanceof PsiClass;
+		}
+		return false;
+	}
+
+	@Override
+	protected boolean isValidForClass(PsiClass targetClass) {
+		return super.isValidForClass(targetClass) && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, targetClass);
+	}
 }
