@@ -19,7 +19,7 @@
     * ~~{{{Resolution}}}~~
     * ~~{{{@ValidationMethod}}}~~
     * ~~{{{@Before}}}/{{{@After}}} methods~~
-    * correct @SpringBean injection method (prefixed with inject)
+    * ~~correct @SpringBean injection method (prefixed with inject)~~
   * Actions for creating various Stripes extension classses from source tree
     * ~~{{{ActionBeanContext}}}~~
     * ~~{{{ActionBeanContextFactory}}}~~
