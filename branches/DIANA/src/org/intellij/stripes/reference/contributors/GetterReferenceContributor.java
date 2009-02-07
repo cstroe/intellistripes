@@ -19,6 +19,7 @@ package org.intellij.stripes.reference.contributors;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
 import org.intellij.stripes.components.project.StripesReferencesComponent;
@@ -29,29 +30,30 @@ import org.jetbrains.annotations.NotNull;
 
 public class GetterReferenceContributor extends PsiReferenceContributor {
 
-    private PsiReferenceProvider REFERENCE_PROVIDER = new PsiReferenceProviderBase() {
-        @NotNull
-        @Override
-        public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-            if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder)
-                return PsiReference.EMPTY_ARRAY;
+	private PsiReferenceProvider REFERENCE_PROVIDER = new PsiReferenceProviderBase() {
+		@NotNull
+		@Override
+		public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+			if (PsiTreeUtil.getChildOfType(element, ELExpressionHolder.class) != null) {
+				return PsiReference.EMPTY_ARRAY;
+			}
 
-            XmlTag tag = (XmlTag) element.getParent().getParent();
-            final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.ENUM_ATTR), element.getProject());
+			XmlTag tag = (XmlTag) element.getParent().getParent();
+			final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.ENUM_ATTR), element.getProject());
 
-            return actionBeanPsiClass == null
-                    ? PsiReference.EMPTY_ARRAY
-                    : new PsiReference[]{new GetterReference(element, actionBeanPsiClass)};
-        }
-    };
+			return actionBeanPsiClass == null
+				? PsiReference.EMPTY_ARRAY
+				: new PsiReference[]{new GetterReference(element, actionBeanPsiClass)};
+		}
+	};
 
-    public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
-        StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, REFERENCE_PROVIDER,
-                StripesConstants.LABEL_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG);
+	public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
+		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, REFERENCE_PROVIDER,
+			StripesConstants.LABEL_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG);
 
 //        StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, REFERENCE_PROVIDER,
 //                StripesConstants.LABEL_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG, StripesConstants.OPTIONS_COLLECTION_TAG, StripesConstants.OPTIONS_MAP_TAG);
 //        StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, REFERENCE_PROVIDER,
 //                StripesConstants.VALUE_ATTR, StripesConstants.OPTIONS_COLLECTION_TAG, StripesConstants.OPTIONS_MAP_TAG);
-    }
+	}
 }

@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
@@ -31,14 +32,15 @@ import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.NotNull;
 
 public class FileBeanSetterMethodsReferenceProvider extends PsiReferenceProvider {
-    @NotNull
-    public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-        if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder)
-            return PsiReference.EMPTY_ARRAY;
+	@NotNull
+	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+		if (PsiTreeUtil.getChildOfType(element, ELExpressionHolder.class) != null) {
+			return PsiReference.EMPTY_ARRAY;
+		}
 
-        final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) element.getParent().getParent(), StripesConstants.FORM_TAG);
-        return actionBeanPsiClass == null
-                ? PsiReference.EMPTY_ARRAY
-                : new PsiReference[]{new FileBeanSetterReference((XmlAttributeValue) element, actionBeanPsiClass)};
-    }
+		final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) element.getParent().getParent(), StripesConstants.FORM_TAG);
+		return actionBeanPsiClass == null
+			? PsiReference.EMPTY_ARRAY
+			: new PsiReference[]{new FileBeanSetterReference((XmlAttributeValue) element, actionBeanPsiClass)};
+	}
 }

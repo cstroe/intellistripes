@@ -106,7 +106,7 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
 
 		@NotNull
 		public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-			if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) {
+			if (PsiTreeUtil.getChildOfType(element, ELExpressionHolder.class) != null) {
 				return PsiReference.EMPTY_ARRAY;
 			}
 
@@ -138,7 +138,7 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
 			registrar, new PsiReferenceProviderBase() {
 				@NotNull
 				public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-					if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder) {
+					if (PsiTreeUtil.getChildOfType(element, ELExpressionHolder.class) != null) {
 						return PsiReference.EMPTY_ARRAY;
 					}
 
