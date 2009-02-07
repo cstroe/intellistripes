@@ -30,69 +30,70 @@ import org.jetbrains.annotations.Nullable;
 public class JavaStringResolutionMethodsReference extends JavaStringReference {
 // ------------------------------ FIELDS ------------------------------
 
-    private PsiClass actionBeanPsiClass;
+	private PsiClass actionBeanPsiClass;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    public JavaStringResolutionMethodsReference(PsiLiteralExpression expression, PsiClass actionBeanPsiClass) {
-        super(expression);
-        this.actionBeanPsiClass = actionBeanPsiClass;
-    }
+	public JavaStringResolutionMethodsReference(PsiLiteralExpression expression, PsiClass actionBeanPsiClass) {
+		super(expression);
+		this.actionBeanPsiClass = actionBeanPsiClass;
+	}
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
-    /**
-     * Get all Posible Resolution Methods for an ActionBean Class
-     *
-     * @return an Array with References to Resolution Methods
-     */
-    @Override
-    public Object[] getVariants() {
-        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass), StripesConstants.RESOLUTION_ICON);
-    }
+	/**
+	 * Get all Posible Resolution Methods for an ActionBean Class
+	 *
+	 * @return an Array with References to Resolution Methods
+	 */
+	@Override
+	public Object[] getVariants() {
+		return StripesReferenceUtil.getVariants(StripesReferenceUtil.getResolutionMethodsNames(actionBeanPsiClass), StripesConstants.RESOLUTION_ICON);
+	}
 
 // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface PsiReference ---------------------
 
-    /**
-     * Ctrl + Click in the attribute name will be resolved
-     *
-     * @return Element
-     */
-    @Nullable
-    @Override
-    public PsiElement resolve() {
-        for (PsiMethod method : StripesReferenceUtil.getResolutionMethods(actionBeanPsiClass).values()) {
-            if (getCanonicalText().equals(method.getName())
-                    || getCanonicalText().equals(StripesReferenceUtil.resolveHandlesEventAnnotation(method))) {
-                return method;
-            }
-        }
-        return null;
-    }
+	/**
+	 * Ctrl + Click in the attribute name will be resolved
+	 *
+	 * @return Element
+	 */
+	@Nullable
+	@Override
+	public PsiElement resolve() {
+		for (PsiMethod method : StripesReferenceUtil.getResolutionMethods(actionBeanPsiClass).values()) {
+			if (getCanonicalText().equals(method.getName())
+				|| getCanonicalText().equals(StripesReferenceUtil.resolveHandlesEventAnnotation(method))) {
+				return method;
+			}
+		}
+		return null;
+	}
 
-    /**
-     * When Method will renamed
-     *
-     * @param newElementName the new methodName
-     * @return Element
-     * @throws com.intellij.util.IncorrectOperationException
-     *
-     */
-    @Override
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        return ElementManipulators.getManipulator(expression).handleContentChange(expression, newElementName);
-    }
+	/**
+	 * When Method will renamed
+	 *
+	 * @param newElementName the new methodName
+	 * @return Element
+	 * @throws com.intellij.util.IncorrectOperationException
+	 *
+	 */
+	@Override
+	public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+		return ElementManipulators.getManipulator(expression).handleContentChange(expression, newElementName);
+	}
 
-    @Override
-    public String getCanonicalText() {
-        return StringUtil.stripQuotesAroundValue(
-                expression.getText().charAt(1) == '!' ? expression.getText().replaceFirst("!", "") : expression.getText()
-        );
-    }
+	@Override
+	public String getCanonicalText() {
+		return StringUtil.stripQuotesAroundValue(
+			expression.getText().charAt(1) == '!' ? expression.getText().replaceFirst("!", "") : expression.getText()
+		);
+	}
 
-    public TextRange getRangeInElement() {
-        return new TextRange(expression.getText().charAt(1) == '!' ? 2 : 1, expression.getText().length() - 1);
-    }
+	public TextRange getRangeInElement() {
+		String txt = expression.getText();
+		return new TextRange(txt.length() > 1 && txt.charAt(1) == '!' ? 2 : 1, txt.length() - 1);
+	}
 }
