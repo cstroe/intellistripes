@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
@@ -35,16 +36,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EventAttrResolutionMethodsReferenceProvider extends PsiReferenceProvider {
 
-    @NotNull
-    public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-        if (element.getChildren().length > 1 && element.getChildren()[1] instanceof ELExpressionHolder)
-            return PsiReference.EMPTY_ARRAY;
+	@NotNull
+	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+		if (PsiTreeUtil.getChildOfType(element, ELExpressionHolder.class) != null) {
+			return PsiReference.EMPTY_ARRAY;
+		}
 
-        XmlTag tag = (XmlTag) element.getParent().getParent();
-        final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), element.getProject());
-        return actionBeanPsiClass == null
-                ? PsiReference.EMPTY_ARRAY
-                : new PsiReference[]{new JspTagAttrResolutionMethodsReference((XmlAttributeValue) element, actionBeanPsiClass)};
+		XmlTag tag = (XmlTag) element.getParent().getParent();
+		final PsiClass actionBeanPsiClass = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), element.getProject());
+		return actionBeanPsiClass == null
+			? PsiReference.EMPTY_ARRAY
+			: new PsiReference[]{new JspTagAttrResolutionMethodsReference((XmlAttributeValue) element, actionBeanPsiClass)};
 
-    }
+	}
 }
