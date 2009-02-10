@@ -112,7 +112,7 @@ public class StripesReferencesComponent implements ProjectComponent {
 			@NotNull
 			@Override
 			public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-				return super.getReferencesByElement(element, context);    //To change body of overridden methods use File | Settings | File Templates.
+				return super.getReferencesByElement(element, context);
 			}
 		};
 		provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{Enum.class.getName()});
