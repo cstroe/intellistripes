@@ -106,7 +106,7 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
 
 		@NotNull
 		public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-			if (PsiTreeUtil.getChildOfType(element, ELExpressionHolder.class) != null) {
+			if ("_eventName".equals(ElementManipulators.getValueText(element)) || PsiTreeUtil.getChildOfType(element, ELExpressionHolder.class) != null) {
 				return PsiReference.EMPTY_ARRAY;
 			}
 
