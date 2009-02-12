@@ -33,4 +33,4 @@
   * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{option-xxx}}} tags
   * include variable names declared with {{{var}}} attribute of Stripes tags into implicit EL variable list within IDEA JSP editor
   * ~~correct handling of search and rename of references to {{{Action Bean}}} setters~~
-  * Implicit usages of interceptor methods. Now they are marked as unused.
+  * Implicit usages of interceptor methods in {{{Action Beans}}}. Now they are marked as unused.
