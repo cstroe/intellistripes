@@ -48,12 +48,10 @@ public class GetterReferenceContributor extends PsiReferenceContributor {
 	};
 
 	public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
-		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, REFERENCE_PROVIDER,
-			StripesConstants.LABEL_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG);
+		StripesReferencesComponent.registerXmlAttributeReferenceProviderAttr(registrar, REFERENCE_PROVIDER,
+			StripesConstants.OPTIONS_ENUMERATION_TAG, StripesConstants.SORT_ATTR, StripesConstants.LABEL_ATTR);
 
-//        StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, REFERENCE_PROVIDER,
-//                StripesConstants.LABEL_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG, StripesConstants.OPTIONS_COLLECTION_TAG, StripesConstants.OPTIONS_MAP_TAG);
-//        StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, REFERENCE_PROVIDER,
-//                StripesConstants.VALUE_ATTR, StripesConstants.OPTIONS_COLLECTION_TAG, StripesConstants.OPTIONS_MAP_TAG);
+		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, REFERENCE_PROVIDER,
+			StripesConstants.LABEL_ATTR, StripesConstants.OPTIONS_COLLECTION_TAG);
 	}
 }

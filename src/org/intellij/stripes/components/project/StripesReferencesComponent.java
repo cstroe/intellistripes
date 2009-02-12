@@ -215,4 +215,13 @@ public class StripesReferencesComponent implements ProjectComponent {
 			provider
 		);
 	}
+
+	public static void registerXmlAttributeReferenceProviderAttr(PsiReferenceRegistrar psiReferenceRegistrar, PsiReferenceProvider provider, String tagName, String... attributeNames) {
+		XmlUtil.registerXmlAttributeValueReferenceProvider(
+			psiReferenceRegistrar,
+			attributeNames,
+			new ScopeFilter(new ParentElementFilter(new AndFilter(STRIPES_NAMESPACE_FILTER, new ClassFilter(XmlTag.class), new TextFilter(tagName)), 2)),
+			provider
+		);
+	}
 }
