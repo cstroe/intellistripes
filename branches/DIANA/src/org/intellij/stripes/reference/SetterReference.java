@@ -32,74 +32,74 @@ import java.util.Map;
 
 public class SetterReference<T extends PsiElement> extends PsiReferenceBase<T> {
 
-    private PsiClass actionBeanPsiClass;
-    protected Boolean supportBraces;
-    protected Boolean hasBraces = false;
+	private PsiClass actionBeanPsiClass;
+	protected Boolean supportBraces;
+	protected Boolean hasBraces = false;
 
-    public PsiClass getActionBeanPsiClass() {
-        return actionBeanPsiClass;
-    }
+	public PsiClass getActionBeanPsiClass() {
+		return actionBeanPsiClass;
+	}
 
-    public SetterReference(T element, TextRange range, Boolean supportBraces) {
-        super(element, range);
-        this.supportBraces = supportBraces;
-    }
+	public SetterReference(T element, TextRange range, Boolean supportBraces) {
+		super(element, range);
+		this.supportBraces = supportBraces;
+	}
 
-    public SetterReference(T element, TextRange range, PsiClass actionBeanPsiClass, Boolean supportBraces) {
-        super(element, range);
-        this.actionBeanPsiClass = actionBeanPsiClass;
-        this.supportBraces = supportBraces;
-    }
+	public SetterReference(T element, TextRange range, PsiClass actionBeanPsiClass, Boolean supportBraces) {
+		super(element, range);
+		this.actionBeanPsiClass = actionBeanPsiClass;
+		this.supportBraces = supportBraces;
+	}
 
-    /**
-     * Resolves reference to method
-     * Must return only valid Stripes setter.
-     */
-    public PsiElement resolve() {
-        if (getVariantsEx().contains(getValue())) {
-            return resolveEx();
-        }
+	/**
+	 * Resolves reference to method
+	 * Must return only valid Stripes setter.
+	 */
+	public PsiElement resolve() {
+		if (getVariantsEx().contains(getValue())) {
+			return resolveEx();
+		}
 
-        PsiMethod method = PropertyUtil.findPropertySetter(getActionBeanPsiClass(), getValue(), false, true);
-        if (!StripesUtil.isActionBeanPropertySetter(method, false)) return null;
+		PsiMethod method = PropertyUtil.findPropertySetter(getActionBeanPsiClass(), getValue(), false, true);
+		if (!StripesUtil.isActionBeanPropertySetter(method, false)) return null;
 
-        if (this.supportBraces) {
-            PsiType propertyType = method.getParameterList().getParameters()[0].getType();
-            PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
-            Boolean isIndexedType = StripesUtil.isSubclass(List.class.getName(), propertyClass)
-                    || propertyType instanceof PsiArrayType
-                    || StripesUtil.isSubclass(Map.class.getName(), propertyClass);
+		if (this.supportBraces) {
+			PsiType propertyType = method.getParameterList().getParameters()[0].getType();
+			PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
+			Boolean isIndexedType = StripesUtil.isSubclass(List.class.getName(), propertyClass)
+				|| propertyType instanceof PsiArrayType
+				|| StripesUtil.isSubclass(Map.class.getName(), propertyClass);
 
-            method = (hasBraces() && !isIndexedType) || (isIndexedType && !hasBraces()) ? null : method;
-        }
+			method = hasBraces() && !isIndexedType ? null : method;
+		}
 
-        return method;
-    }
+		return method;
+	}
 
-    private Boolean hasBraces() {
-        return this.hasBraces;
-    }
+	private Boolean hasBraces() {
+		return this.hasBraces;
+	}
 
-    public Object[] getVariants() {
-        List<String> retval = new LinkedList<String>();
-        retval.addAll(StripesReferenceUtil.getWritableProperties(getActionBeanPsiClass(), supportBraces));
-        retval.addAll(0, getVariantsEx());
+	public Object[] getVariants() {
+		List<String> retval = new LinkedList<String>();
+		retval.addAll(StripesReferenceUtil.getWritableProperties(getActionBeanPsiClass(), supportBraces));
+		retval.addAll(0, getVariantsEx());
 
-        return StripesReferenceUtil.getVariants(retval, StripesConstants.FIELD_ICON);
-    }
+		return StripesReferenceUtil.getVariants(retval, StripesConstants.FIELD_ICON);
+	}
 
-    public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
-        final String name = PropertyUtil.getPropertyName(newElementName);
-        return super.handleElementRename(name == null ? newElementName : name);
-    }
+	public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
+		final String name = PropertyUtil.getPropertyName(newElementName);
+		return super.handleElementRename(name == null ? newElementName : name);
+	}
 
-    protected static List<String> EMPTY_VARIANTS = Arrays.asList();
+	protected static List<String> EMPTY_VARIANTS = Arrays.asList();
 
-    protected PsiElement resolveEx() {
-        return null;
-    }
+	protected PsiElement resolveEx() {
+		return null;
+	}
 
-    protected List<String> getVariantsEx() {
-        return EMPTY_VARIANTS;
-    }
+	protected List<String> getVariantsEx() {
+		return EMPTY_VARIANTS;
+	}
 }
