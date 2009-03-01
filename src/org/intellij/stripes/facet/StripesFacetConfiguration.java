@@ -26,6 +26,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.intellij.stripes.facet.tabs.FacetConfigurationTab;
+import org.intellij.stripes.facet.tabs.FileUploadImpl;
 import org.intellij.stripes.facet.tabs.StripesConfigurationTab;
 import org.jdom.Element;
 
@@ -42,8 +43,11 @@ public class StripesFacetConfiguration implements FacetConfiguration, Persistent
 	private boolean stripesResources = true;
 	private boolean defaultBundle = true;
 
+	private FileUploadImpl fileUploadImpl = FileUploadImpl.NONE;
+
 	private boolean changeIcons = false;
 	private boolean neverModifyWebXml = false;
+
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
@@ -109,6 +113,14 @@ public class StripesFacetConfiguration implements FacetConfiguration, Persistent
 
 	public void setDefaultBundle(boolean defaultBundle) {
 		this.defaultBundle = defaultBundle;
+	}
+
+	public FileUploadImpl getFileUploadImpl() {
+		return fileUploadImpl;
+	}
+
+	public void setFileUploadImpl(FileUploadImpl fileUploadImpl) {
+		this.fileUploadImpl = fileUploadImpl;
 	}
 
 	// ------------------------ CANONICAL METHODS ------------------------
