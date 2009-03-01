@@ -31,7 +31,7 @@
   * ~~Implement {{{mime-types}}} autocomplete in {{{StreamingResolution}}} constructor when its is serves as anonymous class constructor~~
   * ~~option to prevent web.xml modifications~~
   * ~~Provide autocomplete support for {{{@Wizard(startEvents = "")}}}~~
-  * auto-complete of {{{label}}} and {{{sort}}} attributes in {{{option-enumeration}}} tags
+  * ~~auto-complete of {{{label}}} and {{{sort}}} attributes in {{{option-enumeration}}} tags~~
   * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-collection}}} tags
   * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-map}}} tags
   * include variable names declared with {{{var}}} attribute of Stripes tags into implicit EL variable list within IDEA JSP editor
