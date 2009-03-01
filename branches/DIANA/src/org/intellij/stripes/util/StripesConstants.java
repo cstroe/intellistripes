@@ -177,7 +177,10 @@ public interface StripesConstants {
 
 
 	String STRIPES = "Stripes";
-	LibraryInfo[] STRIPES_LIBRARY_INFO = {MavenLibraryUtil.createSubMavenJarInfo("net/sourceforge/stripes", "stripes", "1.5", "net.sourceforge.stripes.action.ActionBean"),
-		MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.1.1", "org.apache.commons.logging.Log"),
-		MavenLibraryUtil.createMavenJarInfo("cos", "1.3.1", "com.oreilly.servlet.multipart.FilePart")};
+
+	LibraryInfo[] STRIPES_CORE_LIBRARY_INFO = {
+		MavenLibraryUtil.createSubMavenJarInfo("net/sourceforge/stripes", "stripes", "1.5", "net.sourceforge.stripes.action.ActionBean"),
+		MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.1.1", "org.apache.commons.logging.Log")
+	};
+
 }
