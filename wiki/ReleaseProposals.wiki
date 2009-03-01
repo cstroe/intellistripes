@@ -27,14 +27,14 @@
     * ~~{{{Interpector}}}~~
   * ~~support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag~~
   * ~~remove (make optional ?) creating of {{{context-param}}} and Spring Context Listener when adding Spring Support from facet~~
-  * detect if spring support is configured from web.xml not from facet setting
+  * detect if spring support is configured from web.xml not from facet setting. _i suppose this shoudl be removed as useless_
   * ~~Implement {{{mime-types}}} autocomplete in {{{StreamingResolution}}} constructor when its is serves as anonymous class constructor~~
   * ~~option to prevent web.xml modifications~~
   * ~~Provide autocomplete support for {{{@Wizard(startEvents = "")}}}~~
   * ~~auto-complete of {{{label}}} and {{{sort}}} attributes in {{{option-enumeration}}} tags~~
-  * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-collection}}} tags
-  * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-map}}} tags
-  * include variable names declared with {{{var}}} attribute of Stripes tags into implicit EL variable list within IDEA JSP editor
+  * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-collection}}} tags. _this need resolve of EL variable class to get its methods_
+  * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-map}}} tags. _this need resolve of EL variable class to get its methods_
+  * include variable names declared with {{{var}}} attribute of Stripes tags into implicit EL variable list within IDEA JSP editor. _seems working too in 8.1_
   * ~~correct handling of search and rename of references to {{{Action Bean}}} setters~~
-  * Implicit usages of interceptor methods in {{{Action Beans}}}. Now they are marked as unused.
+  * Implicit usages of interceptor methods in {{{Action Beans}}}. Now they are marked as unused. _seems fixed in 8.1.maybe no action needed_
   * ~~Optionally select file upload support library from plugin facet setting.~~
