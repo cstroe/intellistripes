@@ -285,11 +285,12 @@ public class StripesConfigurationTab extends FacetEditorTab {
 		useAsDefaultBundleCheckBox = new JCheckBox();
 		useAsDefaultBundleCheckBox.setSelected(true);
 		useAsDefaultBundleCheckBox.setText("Use as default bundle");
+		useAsDefaultBundleCheckBox.setToolTipText("Creates entry in web.xml to make StripesResources \nbe used as default localization bundle. \n\n<context-param>\n  <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>\n  <param-value>StripesResources</param-value>\n</context-param>");
 		panel2.add(useAsDefaultBundleCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		addStripesResourcesCheckBox = new JCheckBox();
 		addStripesResourcesCheckBox.setSelected(true);
 		addStripesResourcesCheckBox.setText("Add Stripes Resources");
-		addStripesResourcesCheckBox.setToolTipText("Add StripesResources.properties ");
+		addStripesResourcesCheckBox.setToolTipText("Add StripesResources.properties into src directory ");
 		panel2.add(addStripesResourcesCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 	}
 
