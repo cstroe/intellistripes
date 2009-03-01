@@ -17,15 +17,23 @@
 
 package org.intellij.stripes.actions;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 
 public class StripesNewActionBeanContextFactoryAction extends StripesBaseNewClassAction {
 
-    protected String getClassName() {
-        return "ActionBeanContextFactory";
-    }
+	protected String getClassName() {
+		return "ActionBeanContextFactory";
+	}
 
-    protected String getTemplateName() {
-        return StripesConstants.ACTION_BEAN_CONTEXT_FACTORY_TEMPLATE;
-    }
+	protected String getTemplateName() {
+		return StripesConstants.ACTION_BEAN_CONTEXT_FACTORY_TEMPLATE;
+	}
+
+	@Override
+	public void update(AnActionEvent e) {
+		e.getPresentation().setText(StripesUtil.message("action.new.actionBeanContextFactory"));
+		super.update(e);
+	}
 }

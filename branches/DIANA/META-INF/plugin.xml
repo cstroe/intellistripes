@@ -80,41 +80,13 @@
 	</project-components>
 	<actions>
 
-		<action id="Stripes.Generate.Resolution" class="org.intellij.stripes.actions.GenerateResolutionMethodAction"
-		        text="Resolution method">
-			<add-to-group group-id="GenerateGroup" anchor="first"/>
-		</action>
-		<action id="Stripes.Generate.SpringBean" class="org.intellij.stripes.actions.GenerateSpringBeanAction"
-		        text="@SpringBean">
-			<add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.Resolution"/>
-		</action>
-		<action id="Stripes.Generate.ValidationMethod"
-		        class="org.intellij.stripes.actions.GenerateValidationMethodAction"
-		        text="@ValidationMethod">
-			<add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.SpringBean"/>
-		</action>
-		<action id="Stripes.Generate.BeforeMethod" class="org.intellij.stripes.actions.GenerateBeforeMethodAction"
-		        text="@Before">
-			<add-to-group group-id="GenerateGroup" anchor="after"
-			              relative-to-action="Stripes.Generate.ValidationMethod"/>
-		</action>
-		<action id="Stripes.Generate.AfterMethod" class="org.intellij.stripes.actions.GenerateAfterMethodAction"
-		        text="@After">
-			<add-to-group group-id="GenerateGroup" anchor="after" relative-to-action="Stripes.Generate.BeforeMethod"/>
+		<action id="StripesGenerateGroup" class="org.intellij.stripes.actions.StripesGenerateGroup" text="Stripes">
+			<add-to-group anchor="first" group-id="GenerateGroup"/>
 		</action>
 
-		<group id="Stripes" class="org.intellij.stripes.actions.StripesGroup" text="Stripes">
-			<action id="Stripes.New.ActionBean" class="org.intellij.stripes.actions.StripesNewActionBeanAction"
-			        text="ActionBean"/>
-			<action id="Stripes.New.ActionBeanContext"
-			        class="org.intellij.stripes.actions.StripesNewActionBeanContextAction" text="ActionBeanContext"/>
-			<action id="Stripes.New.ActionBeanContextFactory"
-			        class="org.intellij.stripes.actions.StripesNewActionBeanContextFactoryAction"
-			        text="ActionBeanContextFactory"/>
-			<action id="Stripes.New.Interceptor"
-			        class="org.intellij.stripes.actions.StripesNewInterceptorAction"
-			        text="Interceptor"/>
+		<action id="StripesNewGroup" class="org.intellij.stripes.actions.StripesNewGroup" text="Stripes">
 			<add-to-group anchor="last" group-id="NewGroup"/>
-		</group>
+		</action>
+
 	</actions>
 </idea-plugin>

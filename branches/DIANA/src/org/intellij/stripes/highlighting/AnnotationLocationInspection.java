@@ -70,7 +70,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
 			public void visitAnnotation(PsiAnnotation annotation) {
 				if (StripesConstants.VALIDATE_ANNOTATION.equals(annotation.getQualifiedName())) {
 					if (annotation.getParameterList().getAttributes().length == 0) {
-						holder.registerProblem(annotation, StripesUtil.message("inspection.noAttributes"), ProblemHighlightType.J2EE_PROBLEM);
+						holder.registerProblem(annotation, StripesUtil.message("inspection.noAttributes"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
 					}
 
 					PsiAnnotationMemberValue onAttr = annotation.findDeclaredAttributeValue(StripesConstants.ON_ATTR);
@@ -148,7 +148,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
 						if (PropertyUtil.isSimplePropertySetter((PsiMethod) m)) {
 							holder.registerProblem(annotation,
 								StripesUtil.message("inspection.appliedToPubSetter"),
-								new MyLocalQuickFix2((PsiMethod)m));
+								new MyLocalQuickFix2((PsiMethod) m));
 						}
 						return;
 					}

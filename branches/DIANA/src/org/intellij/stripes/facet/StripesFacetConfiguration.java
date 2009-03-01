@@ -32,110 +32,123 @@ import org.jdom.Element;
 public class StripesFacetConfiguration implements FacetConfiguration, PersistentStateComponent<StripesFacetConfiguration> {
 // ------------------------------ FIELDS ------------------------------
 
-    private boolean springIntegration = false;
-    private boolean logging = false;
-    private boolean stripesResources;
-    private String log4jFile;
-    private boolean changeIcons = false;
-    private boolean neverModifyWebXml = false;
-    private String actionResolverPackages = "";
+	private boolean springIntegration = false;
+
+	private boolean logging = false;
+	private String log4jFile;
+
+	private String actionResolverPackages = "";
+
+	private boolean stripesResources = true;
+	private boolean defaultBundle = true;
+
+	private boolean changeIcons = false;
+	private boolean neverModifyWebXml = false;
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
-    public String getLog4jFile() {
-        return log4jFile;
-    }
+	public String getLog4jFile() {
+		return log4jFile;
+	}
 
-    public void setLog4jFile(String log4jFile) {
-        this.log4jFile = log4jFile;
-    }
+	public void setLog4jFile(String log4jFile) {
+		this.log4jFile = log4jFile;
+	}
 
-    public boolean isChangeIcons() {
-        return changeIcons;
-    }
+	public boolean isChangeIcons() {
+		return changeIcons;
+	}
 
-    public void setChangeIcons(boolean changeIcons) {
-        this.changeIcons = changeIcons;
-    }
+	public void setChangeIcons(boolean changeIcons) {
+		this.changeIcons = changeIcons;
+	}
 
-    public boolean isLogging() {
-        return logging;
-    }
+	public boolean isLogging() {
+		return logging;
+	}
 
-    public void setLogging(boolean logging) {
-        this.logging = logging;
-    }
+	public void setLogging(boolean logging) {
+		this.logging = logging;
+	}
 
-    public boolean isSpringIntegration() {
-        return springIntegration;
-    }
+	public boolean isSpringIntegration() {
+		return springIntegration;
+	}
 
-    public void setSpringIntegration(boolean springIntegration) {
-        this.springIntegration = springIntegration;
-    }
+	public void setSpringIntegration(boolean springIntegration) {
+		this.springIntegration = springIntegration;
+	}
 
-    public boolean isStripesResources() {
-        return stripesResources;
-    }
+	public boolean isStripesResources() {
+		return stripesResources;
+	}
 
-    public void setStripesResources(boolean stripesResources) {
-        this.stripesResources = stripesResources;
-    }
+	public void setStripesResources(boolean stripesResources) {
+		this.stripesResources = stripesResources;
+	}
 
-    public String getActionResolverPackages() {
-        return actionResolverPackages;
-    }
+	public String getActionResolverPackages() {
+		return actionResolverPackages;
+	}
 
-    public void setActionResolverPackages(String actionResolverPackages) {
-        this.actionResolverPackages = actionResolverPackages;
-    }
+	public void setActionResolverPackages(String actionResolverPackages) {
+		this.actionResolverPackages = actionResolverPackages;
+	}
 
-    public boolean isNeverModifyWebXml() {
-        return neverModifyWebXml;
-    }
+	public boolean isNeverModifyWebXml() {
+		return neverModifyWebXml;
+	}
 
-    public void setNeverModifyWebXml(boolean neverModifyWebXml) {
-        this.neverModifyWebXml = neverModifyWebXml;
-    }
+	public void setNeverModifyWebXml(boolean neverModifyWebXml) {
+		this.neverModifyWebXml = neverModifyWebXml;
+	}
 
-    // ------------------------ CANONICAL METHODS ------------------------
+	public boolean isDefaultBundle() {
+		return defaultBundle;
+	}
 
-    @Override
-    public String toString() {
-        return "StripesFacetConfiguration{" +
-                ", springIntegration=" + springIntegration +
-                ", logging=" + logging +
-                ", stripesResources=" + stripesResources +
-                ", log4jFile='" + log4jFile + '\'' +
-                ", changeIcons=" + changeIcons +
-                '}';
-    }
+	public void setDefaultBundle(boolean defaultBundle) {
+		this.defaultBundle = defaultBundle;
+	}
+
+	// ------------------------ CANONICAL METHODS ------------------------
+
+	@Override
+	public String toString() {
+		return "StripesFacetConfiguration{" +
+			", springIntegration=" + springIntegration +
+			", logging=" + logging +
+			", stripesResources=" + stripesResources +
+			", log4jFile='" + log4jFile + '\'' +
+			", changeIcons=" + changeIcons +
+			'}';
+	}
 
 // ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface FacetConfiguration ---------------------
 
-    public FacetEditorTab[] createEditorTabs(final FacetEditorContext editorContext, final FacetValidatorsManager validatorsManager) {
-        return new FacetEditorTab[]{
-                new StripesConfigurationTab(editorContext, this, validatorsManager),
-                new FacetConfigurationTab(this)
-        };
-    }
+	public FacetEditorTab[] createEditorTabs(final FacetEditorContext editorContext, final FacetValidatorsManager validatorsManager) {
+		return new FacetEditorTab[]{
+			new StripesConfigurationTab(editorContext, this, validatorsManager),
+			new FacetConfigurationTab(this)
+		};
+	}
 
-    // --------------------- Interface JDOMExternalizable ---------------------
-    @Deprecated
-    public void readExternal(Element element) throws InvalidDataException {
-    }
+	// --------------------- Interface JDOMExternalizable ---------------------
+	@Deprecated
+	public void readExternal(Element element) throws InvalidDataException {
+	}
 
-    @Deprecated
-    public void writeExternal(Element element) throws WriteExternalException {
-    }
+	@Deprecated
+	public void writeExternal(Element element) throws WriteExternalException {
+	}
 
-    public StripesFacetConfiguration getState() {
-        return this;
-    }
+	public StripesFacetConfiguration getState() {
+		return this;
+	}
 
-    public void loadState(StripesFacetConfiguration state) {
-        XmlSerializerUtil.copyBean(state, this);
-    }
+	public void loadState(StripesFacetConfiguration state) {
+		XmlSerializerUtil.copyBean(state, this);
+	}
 }

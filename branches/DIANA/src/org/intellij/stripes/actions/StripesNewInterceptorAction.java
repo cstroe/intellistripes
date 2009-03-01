@@ -16,20 +16,22 @@
  */
 package org.intellij.stripes.actions;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Mario Arias
- * Date: 4/01/2009
- * Time: 11:25:44 AM
- */
 public class StripesNewInterceptorAction extends StripesBaseNewClassAction {
-    protected String getClassName() {
-        return "Interceptor";
-    }
+	protected String getClassName() {
+		return "Interceptor";
+	}
 
-    protected String getTemplateName() {
-        return StripesConstants.INTERCEPTOR_TEMPLATE;
-    }
+	protected String getTemplateName() {
+		return StripesConstants.INTERCEPTOR_TEMPLATE;
+	}
+
+	@Override
+	public void update(AnActionEvent e) {
+		e.getPresentation().setText(StripesUtil.message("action.new.interceptor"));
+		super.update(e);
+	}
 }

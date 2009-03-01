@@ -28,21 +28,22 @@ import org.jetbrains.annotations.NotNull;
 public class StripesFacet extends Facet<StripesFacetConfiguration> {
 // ------------------------------ FIELDS ------------------------------
 
-    public final static FacetTypeId<StripesFacet> FACET_TYPE_ID = new FacetTypeId<StripesFacet>();
+	public final static FacetTypeId<StripesFacet> FACET_TYPE_ID = new FacetTypeId<StripesFacet>();
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    public StripesFacet(@NotNull FacetType facetType, @NotNull Module module, String name, @NotNull StripesFacetConfiguration configuration, Facet underlyingFacet) {
-        super(facetType, module, name, configuration, underlyingFacet);
-    }
+	public StripesFacet(@NotNull FacetType facetType, @NotNull Module module, String name, @NotNull StripesFacetConfiguration configuration, Facet underlyingFacet) {
+		super(facetType, module, name, configuration, underlyingFacet);
+	}
 
 // -------------------------- OTHER METHODS --------------------------
 
-    public PsiFile getWebXmlPsiFile() {
-        return getWebFacet().getWebXmlDescriptor().getPsiFile();
-    }
+	public PsiFile getWebXmlPsiFile() {
+		return getWebFacet().getWebXmlDescriptor().getPsiFile();
+	}
 
-    public WebFacet getWebFacet() {
-        return (WebFacet) getUnderlyingFacet();
-    }
+	public WebFacet getWebFacet() {
+		return (WebFacet) getUnderlyingFacet();
+	}
+
 }

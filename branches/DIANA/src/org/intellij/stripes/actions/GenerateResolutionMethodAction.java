@@ -20,31 +20,38 @@ package org.intellij.stripes.actions;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.TemplateManager;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import org.intellij.stripes.util.StripesUtil;
 
 public class GenerateResolutionMethodAction extends StripesBaseGenerateAction {
-    public GenerateResolutionMethodAction() {
-        super(new GenerateResolutionMethodHandler());
-    }
+	public GenerateResolutionMethodAction() {
+		super(new GenerateResolutionMethodHandler());
+	}
 
-    private static class GenerateResolutionMethodHandler implements CodeInsightActionHandler {
-        public void invoke(Project project, Editor editor, PsiFile file) {
+	@Override
+	public void update(AnActionEvent event) {
+		super.update(event);
+		event.getPresentation().setText(StripesUtil.message("action.generate.resolutionMethod"));
+	}
 
-            Template t = TemplateManager.getInstance(project).createTemplate("", "", "public net.sourceforge.stripes.action.Resolution $RESOLUTION_NAME$() {\n return new $TYPE$($END$);\n}");
-            t.setToReformat(true);
-            t.setToShortenLongNames(true);
-            t.setToIndent(true);
-            t.addVariable("RESOLUTION_NAME", "", "\"action\"", true);
-            t.addVariable("TYPE", "completeSmart()", "", true);
-//			t.addVariable("TYPE", "descendantClassEnum(\"net.sourceforge.stripes.action.Resolution\")", "", true);
-            TemplateManager.getInstance(project).startTemplate(editor, t);
+	private static class GenerateResolutionMethodHandler implements CodeInsightActionHandler {
+		public void invoke(Project project, Editor editor, PsiFile file) {
 
-        }
+			Template t = TemplateManager.getInstance(project).createTemplate("", "", "public net.sourceforge.stripes.action.Resolution $RESOLUTION_NAME$() {\n return new $TYPE$($END$);\n}");
+			t.setToReformat(true);
+			t.setToShortenLongNames(true);
+			t.setToIndent(true);
+			t.addVariable("RESOLUTION_NAME", "", "\"action\"", true);
+			t.addVariable("TYPE", "completeSmart()", "", true);
+			TemplateManager.getInstance(project).startTemplate(editor, t);
 
-        public boolean startInWriteAction() {
-            return true;
-        }
-    }
+		}
+
+		public boolean startInWriteAction() {
+			return true;
+		}
+	}
 }

@@ -26,15 +26,6 @@
           <toolTipText value="Add commons-logging.properties and log4j.properties or xml"/>
         </properties>
       </component>
-      <component id="10383" class="javax.swing.JCheckBox" binding="addStripesResourcesCheckBox" default-binding="true">
-        <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Add Stripes Resources"/>
-          <toolTipText value="Add StripesResources.properties "/>
-        </properties>
-      </component>
       <component id="931dc" class="javax.swing.JComboBox" binding="log4jComboBox">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
@@ -78,7 +69,7 @@
       <grid id="ac894" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="2" bottom="2" right="2"/>
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="346" height="66"/>
           </grid>
         </constraints>
@@ -129,6 +120,36 @@
           <text value="/Spring web context must be configured/"/>
         </properties>
       </component>
+      <grid id="da142" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none" title="I18N"/>
+        <children>
+          <component id="824a2" class="javax.swing.JCheckBox" binding="useAsDefaultBundleCheckBox" default-binding="true">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <selected value="true"/>
+              <text value="Use as default bundle"/>
+              <toolTipText value="Creates entry in web.xml to make StripesResources &#10;be used as default localization bundle. &#10;&#10;&lt;context-param&gt;&#10;  &lt;param-name&gt;javax.servlet.jsp.jstl.fmt.localizationContext&lt;/param-name&gt;&#10;  &lt;param-value&gt;StripesResources&lt;/param-value&gt;&#10;&lt;/context-param&gt;"/>
+            </properties>
+          </component>
+          <component id="10383" class="javax.swing.JCheckBox" binding="addStripesResourcesCheckBox" default-binding="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <selected value="true"/>
+              <text value="Add Stripes Resources"/>
+              <toolTipText value="Add StripesResources.properties into src directory "/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>
