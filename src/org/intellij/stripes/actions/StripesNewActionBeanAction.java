@@ -17,15 +17,23 @@
 
 package org.intellij.stripes.actions;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 
 public class StripesNewActionBeanAction extends StripesBaseNewClassAction {
 
-    protected String getClassName() {
-        return "ActionBean";
-    }
+	protected String getClassName() {
+		return "ActionBean";
+	}
 
-    protected String getTemplateName() {
-        return StripesConstants.ACTION_BEAN_TEMPLATE;
-    }
+	protected String getTemplateName() {
+		return StripesConstants.ACTION_BEAN_TEMPLATE;
+	}
+
+	@Override
+	public void update(AnActionEvent e) {
+		e.getPresentation().setText(StripesUtil.message("action.new.actionBean"));
+		super.update(e);
+	}
 }

@@ -11,6 +11,7 @@ import com.intellij.codeInsight.template.impl.MacroCallNode;
 import com.intellij.codeInsight.template.macro.SuggestVariableNameMacro;
 import com.intellij.ide.util.MemberChooser;
 import com.intellij.ide.util.MemberChooserBuilder;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -22,6 +23,7 @@ import com.intellij.spring.SpringModel;
 import com.intellij.spring.model.SpringUtils;
 import com.intellij.spring.model.actions.generate.SpringBeanClassMember;
 import com.intellij.spring.model.xml.beans.SpringBeanPointer;
+import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.Introspector;
@@ -30,6 +32,12 @@ import java.util.*;
 public class GenerateSpringBeanAction extends StripesBaseGenerateAction {
 	public GenerateSpringBeanAction() {
 		super(new GenerateSpringBeanHandler());
+	}
+
+	@Override
+	public void update(AnActionEvent event) {
+		super.update(event);
+		event.getPresentation().setText(StripesUtil.message("action.generate.springBean"));
 	}
 
 	private static class GenerateSpringBeanHandler implements CodeInsightActionHandler {

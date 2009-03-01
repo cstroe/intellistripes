@@ -20,13 +20,22 @@ package org.intellij.stripes.actions;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.TemplateManager;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import org.intellij.stripes.util.StripesUtil;
 
 public class GenerateAfterMethodAction extends StripesBaseGenerateAction {
 	public GenerateAfterMethodAction() {
 		super(new GenerateResolutionActionHandler());
+	}
+
+
+	@Override
+	public void update(AnActionEvent event) {
+		super.update(event);
+		event.getPresentation().setText(StripesUtil.message("action.generate.after"));
 	}
 
 	private static class GenerateResolutionActionHandler implements CodeInsightActionHandler {

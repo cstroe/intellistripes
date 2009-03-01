@@ -20,36 +20,44 @@ package org.intellij.stripes.actions;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.TemplateManager;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import org.intellij.stripes.util.StripesUtil;
 
 public class GenerateValidationMethodAction extends StripesBaseGenerateAction {
 
-    public GenerateValidationMethodAction() {
-        super(new GenerateValidationMethodHandler());
-    }
+	public GenerateValidationMethodAction() {
+		super(new GenerateValidationMethodHandler());
+	}
 
-    private static class GenerateValidationMethodHandler implements CodeInsightActionHandler {
-        public void invoke(Project project, Editor editor, PsiFile file) {
+	@Override
+	public void update(AnActionEvent event) {
+		super.update(event);
+		event.getPresentation().setText(StripesUtil.message("action.generate.validationMethod"));
+	}
 
-            Template t = TemplateManager.getInstance(project).createTemplate("", "");
-            t.setToReformat(true);
-            t.setToShortenLongNames(true);
-            t.setToIndent(true);
+	private static class GenerateValidationMethodHandler implements CodeInsightActionHandler {
+		public void invoke(Project project, Editor editor, PsiFile file) {
 
-            t.addTextSegment("@net.sourceforge.stripes.validation.ValidationMethod public void validate(net.sourceforge.stripes.validation.ValidationErrors errors) {\n\t");
-            t.addEndVariable();
-            t.addSelectionStartVariable();
-            t.addTextSegment("//	put validation actions here");
-            t.addSelectionEndVariable();
-            t.addTextSegment("\n}");
+			Template t = TemplateManager.getInstance(project).createTemplate("", "");
+			t.setToReformat(true);
+			t.setToShortenLongNames(true);
+			t.setToIndent(true);
 
-            TemplateManager.getInstance(project).startTemplate(editor, t);
-        }
+			t.addTextSegment("@net.sourceforge.stripes.validation.ValidationMethod public void validate(net.sourceforge.stripes.validation.ValidationErrors errors) {\n\t");
+			t.addEndVariable();
+			t.addSelectionStartVariable();
+			t.addTextSegment("//	put validation actions here");
+			t.addSelectionEndVariable();
+			t.addTextSegment("\n}");
 
-        public boolean startInWriteAction() {
-            return true;
-        }
-    }
+			TemplateManager.getInstance(project).startTemplate(editor, t);
+		}
+
+		public boolean startInWriteAction() {
+			return true;
+		}
+	}
 }

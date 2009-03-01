@@ -45,82 +45,83 @@ import java.util.Iterator;
 public class StripesFacetType extends FacetType<StripesFacet, StripesFacetConfiguration> {
 // ------------------------------ FIELDS ------------------------------
 
-    public final static StripesFacetType INSTANCE = new StripesFacetType();
+	public final static StripesFacetType INSTANCE = new StripesFacetType();
 // --------------------------- CONSTRUCTORS ---------------------------
 
-    private StripesFacetType() {
-        super(StripesFacet.FACET_TYPE_ID, "Stripes", "Stripes", WebFacet.ID);
-    }
+	private StripesFacetType() {
+		super(StripesFacet.FACET_TYPE_ID, "Stripes", "Stripes", WebFacet.ID);
+	}
 
 // -------------------------- OTHER METHODS --------------------------
 
-    @Override
-    public boolean isOnlyOneFacetAllowed() {
-        return true;
-    }
+	@Override
+	public boolean isOnlyOneFacetAllowed() {
+		return true;
+	}
 
-    @Override
-    public boolean isSuitableModuleType(ModuleType moduleType) {
-        return moduleType == StdModuleTypes.JAVA;
-    }
+	@Override
+	public boolean isSuitableModuleType(ModuleType moduleType) {
+		return moduleType == StdModuleTypes.JAVA;
+	}
 
-    @Override
-    public Icon getIcon() {
-        return StripesConstants.STRIPES_ICON;
-    }
+	@Override
+	public Icon getIcon() {
+		return StripesConstants.STRIPES_ICON;
+	}
 
-    public StripesFacet createFacet(@NotNull Module module, String name, @NotNull StripesFacetConfiguration configuration, @Nullable Facet underlyingFacet) {
-        return new StripesFacet(this, module, name, configuration, underlyingFacet);
-    }
+	public StripesFacet createFacet(@NotNull Module module, String name, @NotNull StripesFacetConfiguration configuration, @Nullable Facet underlyingFacet) {
+		return new StripesFacet(this, module, name, configuration, underlyingFacet);
+	}
 
-    public StripesFacetConfiguration createDefaultConfiguration() {
-        return new StripesFacetConfiguration();
-    }
+	public StripesFacetConfiguration createDefaultConfiguration() {
+		return new StripesFacetConfiguration();
+	}
 
-    public void registerDetectors(FacetDetectorRegistry<StripesFacetConfiguration> facetDetectorRegistry) {
-        ((FacetDetectorRegistryEx) facetDetectorRegistry).registerUniversalDetectorByFileNameAndRootTag("web.xml", JavaeeCommonConstants.WEB_XML_ROOT_TAG,
-                new StripesFacetDetector("stripes-detector"), WebUtilImpl.BY_PARENT_WEB_ROOT_SELECTOR
-        );
-    }
+	@Override
+	public void registerDetectors(FacetDetectorRegistry<StripesFacetConfiguration> stripesFacetConfigurationFacetDetectorRegistry) {
+		((FacetDetectorRegistryEx) stripesFacetConfigurationFacetDetectorRegistry).registerUniversalDetectorByFileNameAndRootTag("web.xml", JavaeeCommonConstants.WEB_XML_ROOT_TAG,
+			new StripesFacetDetector("stripes-detector"), WebUtilImpl.BY_PARENT_WEB_ROOT_SELECTOR
+		);
+	}
 
-    private final static class StripesFacetDetectorHelper extends NanoXmlUtil.BaseXmlBuilder {
-        private Boolean isFilterConfigured = null;
+	private final static class StripesFacetDetectorHelper extends NanoXmlUtil.BaseXmlBuilder {
+		private Boolean isFilterConfigured = null;
 
-        public void addPCData(Reader reader, String systemID, int lineNr) throws Exception {
-            if (getLocation().endsWith("filter-class")
-                    && StripesConstants.STRIPES_FILTER_CLASS.equals(StreamUtil.readTextFrom(reader))) {
-                isFilterConfigured = true;
-                stop();
-            }
-        }
+		public void addPCData(Reader reader, String systemID, int lineNr) throws Exception {
+			if (getLocation().endsWith("filter-class")
+				&& StripesConstants.STRIPES_FILTER_CLASS.equals(StreamUtil.readTextFrom(reader))) {
+				isFilterConfigured = true;
+				stop();
+			}
+		}
 
-        @Nullable
-        public Object getResult() throws Exception {
-            return isFilterConfigured;
-        }
-    }
+		@Nullable
+		public Object getResult() throws Exception {
+			return isFilterConfigured;
+		}
+	}
 
 
-    private final static class StripesFacetDetector extends FacetDetector<VirtualFile, StripesFacetConfiguration> {
+	private final static class StripesFacetDetector extends FacetDetector<VirtualFile, StripesFacetConfiguration> {
 
-        private StripesFacetDetector(@NotNull String id) {
-            super(id);
-        }
+		private StripesFacetDetector(@NotNull String id) {
+			super(id);
+		}
 
-        public StripesFacetConfiguration detectFacet(VirtualFile source, Collection<StripesFacetConfiguration> existentFacetConfigurations) {
-            final Iterator<StripesFacetConfiguration> iterator = existentFacetConfigurations.iterator();
-            if (iterator.hasNext()) return iterator.next();
+		public StripesFacetConfiguration detectFacet(VirtualFile source, Collection<StripesFacetConfiguration> existentFacetConfigurations) {
+			final Iterator<StripesFacetConfiguration> iterator = existentFacetConfigurations.iterator();
+			if (iterator.hasNext()) return iterator.next();
 
-            IXMLBuilder builder = new StripesFacetDetectorHelper();
-            try {
-                NanoXmlUtil.parse(source.getInputStream(), builder);
-                return builder.getResult() != null ? new StripesFacetConfiguration() : null;
-            } catch (Exception e) {
-                e.printStackTrace(System.err);
-            }
+			IXMLBuilder builder = new StripesFacetDetectorHelper();
+			try {
+				NanoXmlUtil.parse(source.getInputStream(), builder);
+				return builder.getResult() != null ? new StripesFacetConfiguration() : null;
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+			}
 
-            return null;
-        }
-    }
+			return null;
+		}
+	}
 
 }
