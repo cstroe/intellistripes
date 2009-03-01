@@ -10,6 +10,7 @@
   * ~~Drop support for {{{<s:link-param>}}}~~
   * ~~Provide option of adding {{{context-param}}} to {{{web.xml}}} indicating usage of Stripes resource as default bundle for web application~~
   * Provide option to allow installation of {{{Stripes Reload}}} extension
+(now only possibility is take it from maven repository, but there's no artifacts)
   * Provide auto-complete of proper class names within {{{param-values}}} sub tags of Stripes filter configuraiton parameters in {{{web.xml}}}
   * If {{{ActionResolver.Packages}}} is configured auto-complete variants of {{{beanclass}}} attributes in stripes custom tags should be limited only by those packages
   * ~~Provide autocomplete support for {{{@UrlBinding}}} Ex: {{{@UrlBinding("/myAction/{myProperty}/{myAnotherProperty=defaultValue}/{$event}")}}}~~
