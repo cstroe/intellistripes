@@ -9,10 +9,9 @@
   * ~~Autocomplete on {{{<s:param name="">}}} inside {{{<s:form>}}}~~
   * ~~Drop support for {{{<s:link-param>}}}~~
   * ~~Provide option of adding {{{context-param}}} to {{{web.xml}}} indicating usage of Stripes resource as default bundle for web application~~
-  * Provide option to allow installation of {{{Stripes Reload}}} extension
-(now only possibility is take it from maven repository, but there's no artifacts)
-  * Provide auto-complete of proper class names within {{{param-values}}} sub tags of Stripes filter configuraiton parameters in {{{web.xml}}}
-  * If {{{ActionResolver.Packages}}} is configured auto-complete variants of {{{beanclass}}} attributes in stripes custom tags should be limited only by those packages
+  * Provide option to allow installation of {{{Stripes Reload}}} extension. _now only possibility is take it from maven repository, but there's no artifacts provided by author_
+  * Provide auto-complete of proper class names within {{{param-values}}} sub tags of Stripes filter configuraiton parameters in {{{web.xml}}} _is is really important ? :)_
+  * If {{{ActionResolver.Packages}}} is configured auto-complete variants of {{{beanclass}}} attributes in stripes custom tags should be limited only by those packages. _kinda important feature but supposedly needs a lot of work_
   * ~~Provide autocomplete support for {{{@UrlBinding}}} Ex: {{{@UrlBinding("/myAction/{myProperty}/{myAnotherProperty=defaultValue}/{$event}")}}}~~
   * ~~new inspection for {{{@Validate}}}. Should check {{{on}}} attribute and raise warning if there's no {{{required}}} attribute~~
   * ~~Quick fix for inspection "@SpringBean applied to public setter"~~
@@ -27,7 +26,7 @@
     * ~~{{{Interpector}}}~~
   * ~~support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag~~
   * ~~remove (make optional ?) creating of {{{context-param}}} and Spring Context Listener when adding Spring Support from facet~~
-  * detect if spring support is configured from web.xml not from facet setting. _i suppose this shoudl be removed as useless_
+  * detect if spring support is configured from web.xml not from facet setting. _i suppose this should be removed as useless_
   * ~~Implement {{{mime-types}}} autocomplete in {{{StreamingResolution}}} constructor when its is serves as anonymous class constructor~~
   * ~~option to prevent web.xml modifications~~
   * ~~Provide autocomplete support for {{{@Wizard(startEvents = "")}}}~~
