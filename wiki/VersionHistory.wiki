@@ -1,5 +1,5 @@
 #summary Version History for IntelliStripes (Selena version)
-#labels Featured,Selena
+#labels Deprecated,Selena,Unsupported
 
 =Note=
 Unfortunately we do no have much spare time to maintain both branches stimultaneuosly.
