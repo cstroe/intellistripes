@@ -63,7 +63,6 @@ Initial version. Port of version 1.0.Final to Diana
   * Autocomplete on {{{<s:param name="">}}} inside {{{<s:form>}}}
   * Drop support for {{{<s:link-param>}}}
   * Provide option of adding {{{context-param}}} to {{{web.xml}}} indicating usage of Stripes resource as default bundle for web application
-  * Full support for {{{@UrlBinding}}}
   * Quick fix for inspection "{{{@SpringBean}}} applied to public setter"
   * Actions for generating elements within {{{ActionBean}}} classes
     * correct {{{@SpringBean}}} injection method (prefixed with inject)
