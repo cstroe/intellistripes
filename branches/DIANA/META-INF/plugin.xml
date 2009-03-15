@@ -19,18 +19,19 @@
 <idea-plugin url="http://code.google.com/p/intellistripes" version="2">
 	<name>IntelliStripes</name>
 	<description>Stripes even more easy !!!</description>
-	<version>2.0.RC3.164</version>
+	<version>2.0</version>
 	<vendor email="intellistripes@gmail.com" logo="/resources/icons/StripesIcon.png"
 	        url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
 	</vendor>
 	<change-notes>
 		<![CDATA[
 <p>
-    New features, improvements and engine refactoring.
+    Final version. Many improvements and bug fixes.
+	Dians compatible only.
 </p>
 	<br/>
 	<br/>
-	Recent Changes : <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">http://code.google.com/p/intellistripes/wiki/VersionHistory2</a>
+	Changelog : <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">http://code.google.com/p/intellistripes/wiki/VersionHistory2</a>
 			]]>
 	</change-notes>
 	<idea-version since-build="9013" until-build="9999"/>

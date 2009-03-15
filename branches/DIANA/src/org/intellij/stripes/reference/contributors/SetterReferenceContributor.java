@@ -98,10 +98,10 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
 	 */
 	private static class SetterMethodsReferenceProvider extends PsiReferenceProvider {
 
-		private String parentTag;
+		private String parentTagName;
 
-		public SetterMethodsReferenceProvider(String parentTag) {
-			this.parentTag = parentTag;
+		public SetterMethodsReferenceProvider(String parentTagName) {
+			this.parentTagName = parentTagName;
 		}
 
 		@NotNull
@@ -110,9 +110,8 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
 				return PsiReference.EMPTY_ARRAY;
 			}
 
-			final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag(
-				(XmlTag) element.getParent().getParent(), parentTag
-			);
+			XmlTag tag = (XmlTag) element.getParent().getParent();
+			final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag(tag, parentTagName);
 
 			return actionBeanPsiClass == null
 				? PsiReference.EMPTY_ARRAY
@@ -125,9 +124,11 @@ public class SetterReferenceContributor extends PsiReferenceContributor {
 //errors tag add Reference Provider for Setters Method on parameter field
 		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.FORM_TAG),
 			StripesConstants.FIELD_ATTR, StripesConstants.ERRORS_TAG);
+
 //all stripes tags for input form add Reference Provider for Setters Method
 		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.FORM_TAG),
 			StripesConstants.NAME_ATTR, StripesConstants.INPUT_TAGS);
+
 //param tag add Reference Provider for Setter Methods
 		StripesReferencesComponent.registerXmlAttributeReferenceProvider(registrar, new SetterMethodsReferenceProvider(StripesConstants.LINK_TAG),
 			StripesConstants.NAME_ATTR, StripesConstants.PARAM_TAG);
