@@ -1,39 +1,10 @@
-#summary Feature proposals for 1.2 release.
+#summary Feature proposals for 2.1 release.
 
 = Features =
 
-  * ~~Stripes facet auto-detection~~
-  * ~~{{{ActionResolver.Packages}}} configuration from GUI~~
-  * ~~Create {{{ActionResolver.Packages}}} when adding new Stripes Facet~~
-  * ~~Auto-complete of {{{init-param}}} names/values within Stripes Filter in {{{web.xml}}}~~
-  * ~~Autocomplete on {{{<s:param name="">}}} inside {{{<s:form>}}}~~
-  * ~~Drop support for {{{<s:link-param>}}}~~
-  * ~~Provide option of adding {{{context-param}}} to {{{web.xml}}} indicating usage of Stripes resource as default bundle for web application~~
   * Provide option to allow installation of {{{Stripes Reload}}} extension. _now only possibility is take it from maven repository, but there's no artifacts provided by author_
   * Provide auto-complete of proper class names within {{{param-values}}} sub tags of Stripes filter configuraiton parameters in {{{web.xml}}} _is is really important ? :)_
   * If {{{ActionResolver.Packages}}} is configured auto-complete variants of {{{beanclass}}} attributes in stripes custom tags should be limited only by those packages. _kinda important feature but supposedly needs a lot of work_
-  * ~~Provide autocomplete support for {{{@UrlBinding}}} Ex: {{{@UrlBinding("/myAction/{myProperty}/{myAnotherProperty=defaultValue}/{$event}")}}}~~
-  * ~~new inspection for {{{@Validate}}}. Should check {{{on}}} attribute and raise warning if there's no {{{required}}} attribute~~
-  * ~~Quick fix for inspection "@SpringBean applied to public setter"~~
-  * ~~Actions for generating elements within {{{ActionBean}}} classes~~
-    * ~~{{{Resolution}}}~~
-    * ~~{{{@ValidationMethod}}}~~
-    * ~~{{{@Before}}}/{{{@After}}} methods~~
-    * ~~correct @SpringBean injection method (prefixed with inject)~~
-  * Actions for creating various Stripes extension classses from source tree
-    * ~~{{{ActionBeanContext}}}~~
-    * ~~{{{ActionBeanContextFactory}}}~~
-    * ~~{{{Interpector}}}~~
-  * ~~support for {{{beanclass}}} and {{{fields}}} attribute in {{{stripes:field-metadata}}} tag~~
-  * ~~remove (make optional ?) creating of {{{context-param}}} and Spring Context Listener when adding Spring Support from facet~~
   * detect if spring support is configured from web.xml not from facet setting. _i suppose this should be removed as useless_
-  * ~~Implement {{{mime-types}}} autocomplete in {{{StreamingResolution}}} constructor when its is serves as anonymous class constructor~~
-  * ~~option to prevent web.xml modifications~~
-  * ~~Provide autocomplete support for {{{@Wizard(startEvents = "")}}}~~
-  * ~~auto-complete of {{{label}}} and {{{sort}}} attributes in {{{option-enumeration}}} tags~~
   * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-collection}}} tags. _this need resolve of EL variable class to get its methods_
   * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-map}}} tags. _this need resolve of EL variable class to get its methods_
-  * include variable names declared with {{{var}}} attribute of Stripes tags into implicit EL variable list within IDEA JSP editor. _seems working too in 8.1_
-  * ~~correct handling of search and rename of references to {{{Action Bean}}} setters~~
-  * Implicit usages of interceptor methods in {{{Action Beans}}}. Now they are marked as unused. _seems fixed in 8.1.maybe no action needed_
-  * ~~Optionally select file upload support library from plugin facet setting.~~
