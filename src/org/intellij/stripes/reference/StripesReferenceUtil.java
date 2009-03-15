@@ -28,6 +28,7 @@ import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.xml.XmlTag;
+import org.apache.commons.lang.ArrayUtils;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesTagFilter;
 import org.intellij.stripes.util.StripesUtil;
@@ -77,6 +78,7 @@ public final class StripesReferenceUtil {
 			if (returnType != null
 				&& returnType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS)
 				&& method.getParameterList().getParametersCount() == 0
+				&& method.hasModifierProperty(PsiModifier.PUBLIC)
 				&& !retval.containsKey(method.getName())) {
 				retval.put(method.getName(), method);
 			}
@@ -111,7 +113,9 @@ public final class StripesReferenceUtil {
 //method return Resolution and have 0 parameters
 			PsiType returnType = method.getReturnType();
 			if (returnType != null) {
-				if (returnType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS) && method.getParameterList().getParametersCount() == 0) {
+				if (returnType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS)
+					&& method.getParameterList().getParametersCount() == 0
+					&& method.hasModifierProperty(PsiModifier.PUBLIC)) {
 					psiMethods.put(method.getName(), method);
 				}
 			}
@@ -252,22 +256,27 @@ public final class StripesReferenceUtil {
 		return StripesUtil.findPsiClassByName(className, list.getProject());
 	}
 
+	private static final String[] CONTAINER_TAGS = {StripesConstants.FORM_TAG, StripesConstants.LINK_TAG, StripesConstants.URL_TAG};
+
 	/**
-	 * Get an ActionBean PsiClass from a given tag parent
+	 * Get an ActionBean PsiClass from a given tag parent.
+	 * Parent can be one of : s:form, s:link, s:url
+	 * Method returns only those parents who is 'direct' to xmlTag.
 	 *
-	 * @param xmlTag xml tag
-	 * @param parent parent's name
+	 * @param xmlTag        xml tag whose parent is being searched for
+	 * @param parentTagName parent's name
 	 * @return An ActionBean PsiClass
 	 */
-	public static PsiClass getBeanClassFromParentTag(@NotNull XmlTag xmlTag, @NotNull String parent) {
+	public static PsiClass getBeanClassFromParentTag(@NotNull XmlTag xmlTag, @NotNull String parentTagName) {
 		for (XmlTag tag = xmlTag.getParentTag(); tag != null; tag = tag.getParentTag()) {
-			if (tag.getNamespace().startsWith(StripesConstants.TAGLIB_PREFIX)
-				&& parent.equals(tag.getLocalName())) {
-				PsiClass cls = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), tag.getProject());
-				return StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, cls) ? cls : null;
+			if (tag.getNamespace().startsWith(StripesConstants.TAGLIB_PREFIX) && ArrayUtils.contains(CONTAINER_TAGS, tag.getLocalName())) {
+				if (parentTagName.equals(tag.getLocalName())) {
+					PsiClass cls = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), tag.getProject());
+					return StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, cls) ? cls : null;
+				}
+				return null;
 			}
 		}
-
 		return null;
 	}
 
