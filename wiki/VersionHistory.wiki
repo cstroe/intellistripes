@@ -1,6 +1,11 @@
 #summary Version History for IntelliStripes (Selena version)
 #labels Featured,Selena
 
+=Note=
+Unfortunately we do no have much spare time to maintain both branches stimultaneuosly.
+Therefore although there's still much users that usign IDEA 7.0 and still downloads latest build we're announcing that support for 1.x branhc of IntelliStripes is closed.
+But this project is opened for volunteers who wanna join our team and apply decelopment skills to support 1.x branch.
+
 =History=
 
 ===Version 0.1.0.097 (2007-07-29)===
