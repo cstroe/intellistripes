@@ -68,12 +68,14 @@ public class StripesPropertyScopeProvider implements CustomPropertyScopeProvider
 
 	private static Set<VirtualFile> getActionBeanVirtualFiles(Project project) {
 		Set<VirtualFile> retval = new HashSet<VirtualFile>();
-		Collection<PsiClass> actionBeans = ClassInheritorsSearch.search(
-			StripesUtil.findPsiClassByName(StripesConstants.ACTION_BEAN, project),
-			GlobalSearchScope.projectProductionScope(project), true).findAll();
+		PsiClass actionBeanClass = StripesUtil.findPsiClassByName(StripesConstants.ACTION_BEAN, project);
+		if (null != actionBeanClass) {
+			Collection<PsiClass> actionBeans = ClassInheritorsSearch.search(
+				actionBeanClass, GlobalSearchScope.projectProductionScope(project), true).findAll();
 
-		for (PsiClass actionBean : actionBeans) {
-			retval.add(actionBean.getContainingFile().getVirtualFile());
+			for (PsiClass actionBean : actionBeans) {
+				retval.add(actionBean.getContainingFile().getVirtualFile());
+			}
 		}
 		return retval;
 	}
