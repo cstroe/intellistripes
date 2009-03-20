@@ -9,3 +9,4 @@
   * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-collection}}} tags. _this need resolve of EL variable class to get its methods_
   * auto-complete of {{{label}}}, {{{value}}} and {{{sort}}} attributes in {{{options-map}}} tags. _this need resolve of EL variable class to get its methods_
   * improve support for {{{sort}}}, {{{label}}} attributes in {{{stripes:options-enumeration}}} by nested properties support
+  * improve support of setter references. now only setter methods are resolved in HTML tags etc, but Stripes actually allows getters and even properties.
