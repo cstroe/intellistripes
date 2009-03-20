@@ -3,7 +3,7 @@
 
 =Note=
 Unfortunately we do no have much spare time to maintain both branches stimultaneuosly.
-Therefore although there's still much users that usign IDEA 7.0 and still downloads latest build we're announcing that support for 1.x branhc of IntelliStripes is closed.
+Therefore although there's still many users that use IDEA 7.0 and still download 1.0 version we're announcing that support for 1.x branch of IntelliStripes is closed.
 But this project is opened for volunteers who wanna join our team and apply decelopment skills to support 1.x branch.
 
 =History=
