@@ -69,6 +69,7 @@ Initial version. Port of version 1.0.Final to Diana
   * Correct handling of search and rename of references to {{{Action Bean}}} setters
   * Optionally select file upload support library from plugin facet setting
   * Issue #48, Issue #51, Issue #46, Issue #47, Issue #49, Issue #54, Issue #56, Issue #57, Issue #50, Issue #55, Issue #58, Issue #60, Issue #61, Issue #59
+  * Plugin code dependency on Apache Commons Lang is introduced
 
 ===Version 2.0.1 (2009-03-19)===
   * Issue #62
