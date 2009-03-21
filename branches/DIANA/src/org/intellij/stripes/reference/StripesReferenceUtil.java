@@ -169,12 +169,13 @@ public final class StripesReferenceUtil {
 				PsiType propertyType = psiMethod.getParameterList().getParameters()[0].getType();
 				PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
 
-				if (StripesUtil.isSubclass(StripesConstants.ACTION_BEAN_CONTEXT, propertyClass)
-					|| StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass)) continue;
+				if (StripesUtil.isSubclass(psiClass.getProject(), StripesConstants.ACTION_BEAN_CONTEXT, propertyClass)
+					|| StripesUtil.isSubclass(psiClass.getProject(), StripesConstants.FILE_BEAN, propertyClass))
+					continue;
 
 				if (propertyType instanceof PsiArrayType
-					|| StripesUtil.isSubclass(List.class.getName(), propertyClass)
-					|| StripesUtil.isSubclass(Map.class.getName(), propertyClass)) {
+					|| StripesUtil.isSubclass(psiClass.getProject(), List.class.getName(), propertyClass)
+					|| StripesUtil.isSubclass(psiClass.getProject(), Map.class.getName(), propertyClass)) {
 					name += (braces ? "[]" : "");
 				}
 				methodNames.add(name);
@@ -199,13 +200,13 @@ public final class StripesReferenceUtil {
 				PsiType propertyType = psiMethod.getParameterList().getParameters()[0].getType();
 				PsiClass propertyClass = StripesReferenceUtil.resolveClassInType(propertyType, psiClass.getProject());
 
-				if (StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass)) {
+				if (StripesUtil.isSubclass(psiClass.getProject(), StripesConstants.FILE_BEAN, propertyClass)) {
 					String methodName = PropertyUtil.getPropertyNameBySetter(psiMethod);
 
 					propertyClass = PsiUtil.resolveClassInType(propertyType);
-					if (StripesUtil.isSubclass(List.class.getName(), propertyClass)
+					if (StripesUtil.isSubclass(psiClass.getProject(), List.class.getName(), propertyClass)
 						|| propertyType instanceof PsiArrayType
-						|| StripesUtil.isSubclass(Map.class.getName(), propertyClass)) {
+						|| StripesUtil.isSubclass(psiClass.getProject(), Map.class.getName(), propertyClass)) {
 						methodName += "[]";
 					}
 					methodNames.add(methodName);
@@ -220,13 +221,13 @@ public final class StripesReferenceUtil {
 		PsiClass cls;
 		try {
 			PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
-			if (StripesUtil.isSubclass(List.class.getName(), propertyClass)) {
+			if (StripesUtil.isSubclass(project, List.class.getName(), propertyClass)) {
 				if (((PsiClassReferenceType) propertyType).getParameters().length == 1) {
 					cls = PsiUtil.resolveClassInType(((PsiClassReferenceType) propertyType).getParameters()[0]);
 				} else {
 					cls = StripesUtil.findPsiClassByName(Object.class.getName(), project);
 				}
-			} else if (StripesUtil.isSubclass(Map.class.getName(), propertyClass)) {
+			} else if (StripesUtil.isSubclass(project, Map.class.getName(), propertyClass)) {
 				if (((PsiClassReferenceType) propertyType).getParameters().length == 2) {
 					cls = PsiUtil.resolveClassInType(((PsiClassReferenceType) propertyType).getParameters()[1]);
 				} else {
@@ -272,7 +273,7 @@ public final class StripesReferenceUtil {
 			if (tag.getNamespace().startsWith(StripesConstants.TAGLIB_PREFIX) && ArrayUtils.contains(CONTAINER_TAGS, tag.getLocalName())) {
 				if (parentTagName.equals(tag.getLocalName())) {
 					PsiClass cls = StripesUtil.findPsiClassByName(tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR), tag.getProject());
-					return StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, cls) ? cls : null;
+					return StripesUtil.isSubclass(xmlTag.getProject(), StripesConstants.ACTION_BEAN, cls) ? cls : null;
 				}
 				return null;
 			}
