@@ -40,61 +40,61 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 public class ActionBeanUsageAnnotator implements Annotator {
-    private static PsiElementFilter FILTER_TAG = new StripesTagFilter() {
-        protected boolean isDetailsAccepted(XmlTag tag) {
-            return true;
-        }
-    };
+	private static PsiElementFilter FILTER_TAG = new StripesTagFilter() {
+		protected boolean isDetailsAccepted(XmlTag tag) {
+			return true;
+		}
+	};
 
-    private static PsiElementFilter FILTER_ATTR = new PsiElementFilter() {
-        public boolean isAccepted(PsiElement element) {
-            return element instanceof XmlAttributeValue
-                    && StripesConstants.BEANCLASS_ATTR.equals(((XmlAttribute) element.getParent()).getName());
-        }
-    };
+	private static PsiElementFilter FILTER_ATTR = new PsiElementFilter() {
+		public boolean isAccepted(PsiElement element) {
+			return element instanceof XmlAttributeValue
+				&& StripesConstants.BEANCLASS_ATTR.equals(((XmlAttribute) element.getParent()).getName());
+		}
+	};
 
-    private static class XmlTagProcessor implements Processor<PsiReference> {
-        private Collection<XmlTag> tags = new LinkedList<XmlTag>();
+	private static class XmlTagProcessor implements Processor<PsiReference> {
+		private Collection<XmlTag> tags = new LinkedList<XmlTag>();
 
-        public boolean process(PsiReference ref) {
-            PsiElement el = ref.getElement();
-            if (ActionBeanUsageAnnotator.FILTER_ATTR.isAccepted(el) && ActionBeanUsageAnnotator.FILTER_TAG.isAccepted(el.getParent().getParent())) {
-                tags.add((XmlTag) el.getParent().getParent());
-            }
-            return true;
-        }
+		public boolean process(PsiReference ref) {
+			PsiElement el = ref.getElement();
+			if (ActionBeanUsageAnnotator.FILTER_ATTR.isAccepted(el) && ActionBeanUsageAnnotator.FILTER_TAG.isAccepted(el.getParent().getParent())) {
+				tags.add((XmlTag) el.getParent().getParent());
+			}
+			return true;
+		}
 
-        public Collection<XmlTag> getTags() {
-            return tags;
-        }
-    }
+		public Collection<XmlTag> getTags() {
+			return tags;
+		}
+	}
 
-    public void annotate(PsiElement psiElement, AnnotationHolder holder) {
-        if (psiElement instanceof PsiClass && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, (PsiClass) psiElement)) {
-            XmlTagProcessor proc = new XmlTagProcessor();
-            ReferencesSearch.search(psiElement).forEach(proc);
+	public void annotate(PsiElement psiElement, AnnotationHolder holder) {
+		if (psiElement instanceof PsiClass && StripesUtil.isSubclass(psiElement.getProject(), StripesConstants.ACTION_BEAN, (PsiClass) psiElement)) {
+			XmlTagProcessor proc = new XmlTagProcessor();
+			ReferencesSearch.search(psiElement).forEach(proc);
 
-            NavigationGutterIconBuilder.create(StripesConstants.ACTION_BEAN_GUTTER_ICON)
-                    .setTargets(proc.getTags()).setTooltipText(StripesUtil.message("annotator.actionBeanUsages"))
-                    .setPopupTitle(StripesUtil.message("annotator.actionBeanUsages"))
-                    .setAlignment(GutterIconRenderer.Alignment.LEFT)
-                    .setCellRenderer(new PsiElementListCellRenderer<XmlTag>() {
-                        protected String getContainerText(XmlTag xmlTag, String s) {
-                            return "in " + xmlTag.getContainingFile().getName();
-                        }
+			NavigationGutterIconBuilder.create(StripesConstants.ACTION_BEAN_GUTTER_ICON)
+				.setTargets(proc.getTags()).setTooltipText(StripesUtil.message("annotator.actionBeanUsages"))
+				.setPopupTitle(StripesUtil.message("annotator.actionBeanUsages"))
+				.setAlignment(GutterIconRenderer.Alignment.LEFT)
+				.setCellRenderer(new PsiElementListCellRenderer<XmlTag>() {
+					protected String getContainerText(XmlTag xmlTag, String s) {
+						return "in " + xmlTag.getContainingFile().getName();
+					}
 
-                        public String getElementText(XmlTag psiElement) {
-                            return psiElement.getName();
-                        }
+					public String getElementText(XmlTag psiElement) {
+						return psiElement.getName();
+					}
 
-                        protected int getIconFlags() {
-                            return 0;
-                        }
+					protected int getIconFlags() {
+						return 0;
+					}
 
-                        protected Icon getIcon(PsiElement psiElement) {
-                            return null;
-                        }
-                    }).install(holder, ((PsiClass) psiElement).getNameIdentifier());
-        }
-    }
+					protected Icon getIcon(PsiElement psiElement) {
+						return null;
+					}
+				}).install(holder, ((PsiClass) psiElement).getNameIdentifier());
+		}
+	}
 }

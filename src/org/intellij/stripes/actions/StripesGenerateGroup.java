@@ -54,7 +54,7 @@ public class StripesGenerateGroup extends DefaultActionGroup {
 		if (StripesUtil.getStripesFacet(module) != null
 			&& element instanceof PsiWhiteSpace
 			&& element.getParent() instanceof PsiClass
-			&& StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, (PsiClass) element.getParent())) {
+			&& StripesUtil.isSubclass(LangDataKeys.PROJECT.getData(e.getDataContext()), StripesConstants.ACTION_BEAN, (PsiClass) element.getParent())) {
 			e.getPresentation().setVisible(true);
 			e.getPresentation().setEnabled(true);
 			return;

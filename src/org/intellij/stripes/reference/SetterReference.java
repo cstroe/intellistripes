@@ -66,9 +66,9 @@ public class SetterReference<T extends PsiElement> extends PsiReferenceBase<T> {
 		if (this.supportBraces) {
 			PsiType propertyType = method.getParameterList().getParameters()[0].getType();
 			PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
-			Boolean isIndexedType = StripesUtil.isSubclass(List.class.getName(), propertyClass)
+			Boolean isIndexedType = StripesUtil.isSubclass(getElement().getProject(), List.class.getName(), propertyClass)
 				|| propertyType instanceof PsiArrayType
-				|| StripesUtil.isSubclass(Map.class.getName(), propertyClass);
+				|| StripesUtil.isSubclass(getElement().getProject(), Map.class.getName(), propertyClass);
 
 			method = hasBraces() && !isIndexedType ? null : method;
 		}

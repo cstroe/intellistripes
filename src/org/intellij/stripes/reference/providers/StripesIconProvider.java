@@ -39,35 +39,35 @@ import javax.swing.*;
 public class StripesIconProvider extends IconProvider {
 // -------------------------- OTHER METHODS --------------------------
 
-    @Nullable
-    public Icon getIcon(@NotNull PsiElement element, int flags) {
-        StripesFacet facet = StripesUtil.getStripesFacet(StripesUtil.getModule(element));
-        if (facet == null) {
-            return null;
-        }
-        //Change Icons?
-        if (facet.getConfiguration().isChangeIcons()) {
-            //is JSP's?
-            if (element instanceof JspFile && StripesUtil.isStripesPage(element)) {//get tags like page, taglib...
-                return StripesConstants.STRIPES_JSP_ICON;
-            } else if (element instanceof PsiClass) { //is class?
-                PsiClass clazz = (PsiClass) element;
-                boolean isActionBean = false;
-                try {
-                    //is abstract?
-                    if (!clazz.getModifierList().hasExplicitModifier(PsiModifier.ABSTRACT)) {
-                        //Is an implementation of ActionBean?
-                        isActionBean = StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, clazz);
-                    }
-                } catch (Exception e) {
-                    //
-                }
-                return isActionBean ? StripesConstants.ACTION_BEAN_ICON : null;
-            } else {
-                return null;
-            }
-        }
+	@Nullable
+	public Icon getIcon(@NotNull PsiElement element, int flags) {
+		StripesFacet facet = StripesUtil.getStripesFacet(StripesUtil.getModule(element));
+		if (facet == null) {
+			return null;
+		}
+		//Change Icons?
+		if (facet.getConfiguration().isChangeIcons()) {
+			//is JSP's?
+			if (element instanceof JspFile && StripesUtil.isStripesPage(element)) {//get tags like page, taglib...
+				return StripesConstants.STRIPES_JSP_ICON;
+			} else if (element instanceof PsiClass) { //is class?
+				PsiClass clazz = (PsiClass) element;
+				boolean isActionBean = false;
+				try {
+					//is abstract?
+					if (!clazz.getModifierList().hasExplicitModifier(PsiModifier.ABSTRACT)) {
+						//Is an implementation of ActionBean?
+						isActionBean = StripesUtil.isSubclass(element.getProject(), StripesConstants.ACTION_BEAN, clazz);
+					}
+				} catch (Exception e) {
+					//
+				}
+				return isActionBean ? StripesConstants.ACTION_BEAN_ICON : null;
+			} else {
+				return null;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 }
