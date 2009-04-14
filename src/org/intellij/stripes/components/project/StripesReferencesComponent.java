@@ -37,7 +37,6 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassRe
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.WebPathReferenceProvider;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.ClassKind;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.spring.references.SpringBeanNamesReferenceProvider;
@@ -108,16 +107,10 @@ public class StripesReferencesComponent implements ProjectComponent {
 //src on stripes:image
 		registerXmlAttributeReferenceProvider(registry, new WebPathReferenceProvider(), StripesConstants.SRC_ATTR, StripesConstants.IMAGE_TAG);
 
-		JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.projectScope(this.project), this.project) {
-			@NotNull
-			@Override
-			public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-				return super.getReferencesByElement(element, context);
-			}
-		};
+		JavaClassReferenceProvider provider = new JavaClassReferenceProvider(GlobalSearchScope.allScope(this.project), this.project);
 		provider.setOption(JavaClassReferenceProvider.EXTEND_CLASS_NAMES, new String[]{Enum.class.getName()});
-		provider.setOption(JavaClassReferenceProvider.CLASS_KIND, ClassKind.ENUM);
-		provider.setOption(JavaClassReferenceProvider.NOT_ENUM, Boolean.FALSE);
+		provider.setOption(JavaClassReferenceProvider.ADVANCED_RESOLVE, Boolean.TRUE);
+		provider.setOption(JavaClassReferenceProvider.RESOLVE_QUALIFIED_CLASS_NAME, Boolean.TRUE);
 		registerXmlAttributeReferenceProvider(registry, provider, StripesConstants.ENUM_ATTR, StripesConstants.OPTIONS_ENUMERATION_TAG);
 
 		registerSpringBeanReference();
