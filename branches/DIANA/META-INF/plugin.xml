@@ -19,20 +19,17 @@
 <idea-plugin url="http://code.google.com/p/intellistripes" version="2">
 	<name>IntelliStripes</name>
 	<description>Stripes even more easy !!!</description>
-	<version>2.0.3</version>
+	<version>2.0.4</version>
 	<vendor email="intellistripes@gmail.com" logo="/resources/icons/StripesIcon.png"
 	        url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
 	</vendor>
 	<change-notes>
 		<![CDATA[
-<p>
-    Final version. Many improvements and bug fixes.
-	Diana compatible only.
-</p>
-	<br/>
-	<br/>
-	Changelog : <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">http://code.google.com/p/intellistripes/wiki/VersionHistory2</a>
-			]]>
+<p>Final version. Many improvements and bug fixes. Diana compatible only.</p>
+<br/>
+<br/>
+Changelog is <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">HERE</a>
+]]>
 	</change-notes>
 	<idea-version since-build="9013" until-build="9999"/>
 	<depends>com.intellij.css</depends>
@@ -55,7 +52,7 @@
 			implementation="org.intellij.stripes.reference.contributors.GetterReferenceContributor"/>
 
 		<fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
-		<javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.reference.StripesELVarProvider"/>
+		<javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.el.StripesELVarProvider"/>
 		<annotator language="JAVA" implementationClass="org.intellij.stripes.highlighting.ActionBeanUsageAnnotator"/>
 		<pathReferenceProvider
 			implementation="org.intellij.stripes.reference.providers.UrlBindingPathReferenceProvider"/>
