@@ -15,7 +15,7 @@
  *
  */
 
-package org.intellij.stripes.reference;
+package org.intellij.stripes.el;
 
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.project.Project;
@@ -33,6 +33,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.containers.ContainerUtil;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesTagFilter;
 import org.intellij.stripes.util.StripesUtil;
@@ -44,8 +45,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StripesELVarProvider extends ElVariablesProvider {
-	private static String ACTION_BEAN = "actionBean";
-	private static String USE_ACTION_BEAN = "useActionBean";
+	private static String ACTION_BEAN_VAR_NAME = "actionBean";
+
+	private static String FROM_USE_ACTION_BEAN_TAG = "useActionBean";
 
 	private static PsiElementFilter ACTION_BEAN_PROVIDER_FILTER = new StripesTagFilter() {
 		protected boolean isDetailsAccepted(XmlTag tag) {
@@ -66,7 +68,7 @@ public class StripesELVarProvider extends ElVariablesProvider {
 			}
 
 			final PsiFile jspFile = elExpressionHolder.getContainingFile();
-			if (!StripesUtil.isStripesPage(elExpressionHolder.getContainingFile())) return true;
+			if (!StripesUtil.isStripesPage(jspFile)) return true;
 
 			Map<String, String> actionBeans = StripesUtil.collectTags(((JspFile) jspFile).getDocument().getRootTag(),
 				ACTION_BEAN_PROVIDER_FILTER, BEANCLASS_ATTR_FILTER,
@@ -75,7 +77,7 @@ public class StripesELVarProvider extends ElVariablesProvider {
 						String actionBeanClassName = tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR);
 						if (StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())) {
 							if (tag.getAttributeValue(StripesConstants.ID_ATTR) == null && tag.getAttributeValue(StripesConstants.VAR_ATTR) == null) {
-								container.put(USE_ACTION_BEAN, actionBeanClassName);
+								container.put(FROM_USE_ACTION_BEAN_TAG, actionBeanClassName);
 							} else if (tag.getAttributeValue(StripesConstants.ID_ATTR) != null) {
 								processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile, tag.getAttributeValue(StripesConstants.ID_ATTR), actionBeanClassName);
 							} else if (tag.getAttributeValue(StripesConstants.VAR_ATTR) != null) {
@@ -87,14 +89,19 @@ public class StripesELVarProvider extends ElVariablesProvider {
 					}
 				}).getContainer();
 
-			String clsName = actionBeans.remove(USE_ACTION_BEAN);
+// if useActionBean without explicit name is used - it's only one candidate to be EL variable named 'actionBean'
+// we clear all map and add that only bean
+			String clsName = actionBeans.remove(FROM_USE_ACTION_BEAN_TAG);
 			if (null != clsName) {
 				actionBeans.clear();
-				actionBeans.put(ACTION_BEAN, clsName);
+				actionBeans.put(ACTION_BEAN_VAR_NAME, clsName);
 			}
 
-			for (String actionBeanName : actionBeans.keySet()) {
-				processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile, ACTION_BEAN, actionBeans.get(actionBeanName));
+// only one variable named 'actionBean'	can be declared
+			if (actionBeans.size() == 1) {
+				processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile,
+					ACTION_BEAN_VAR_NAME, ContainerUtil.getFirstItem(actionBeans.values(), null)
+				);
 			}
 		} catch (ProcessCanceledException e) {
 			//Do nothig, this exception is very common and can be throw for intellij
@@ -106,7 +113,8 @@ public class StripesELVarProvider extends ElVariablesProvider {
 		return true;
 	}
 
-	private static void processVariable(final Project project, final ELElementProcessor elElementProcessor, final JspFile jspFile, final String actionBeanName, final String actionBeanClassName) {
+	private static void processVariable(final Project project, final ELElementProcessor elElementProcessor, final JspFile jspFile,
+	                                    final String actionBeanName, final String actionBeanClassName) {
 		final PsiClass actionBeanClass = StripesUtil.findPsiClassByName(actionBeanClassName, project);
 		if (actionBeanClass == null) return;
 
@@ -119,6 +127,7 @@ public class StripesELVarProvider extends ElVariablesProvider {
 					return null;
 				}
 
+				//
 				@NotNull
 				public SearchScope getUseScope() {
 					return GlobalSearchScope.fileScope(jspFile);
