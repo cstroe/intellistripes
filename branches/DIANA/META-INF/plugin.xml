@@ -19,13 +19,14 @@
 <idea-plugin url="http://code.google.com/p/intellistripes" version="2">
 	<name>IntelliStripes</name>
 	<description>Stripes even more easy !!!</description>
-	<version>2.0.4</version>
+	<version>2.0.5</version>
 	<vendor email="intellistripes@gmail.com" logo="/resources/icons/StripesIcon.png"
 	        url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
 	</vendor>
 	<change-notes>
 		<![CDATA[
 <p>Final version. Many improvements and bug fixes. Diana compatible only.</p>
+<p>Full support for EL expressions in @Validate annotation2</p>
 <br/>
 <br/>
 Changelog is <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">HERE</a>
