@@ -2,7 +2,7 @@
 
 = Features =
 
-  * Provide option to allow installation of {{{Stripes Reload}}} extension. _now only possibility is take it from maven repository, but there's no artifacts provided by author_
+  * ~~Provide option to allow installation of {{{Stripes Reload}}} extension.~~
   * Provide auto-complete of proper class names within {{{param-values}}} sub tags of Stripes filter configuraiton parameters in {{{web.xml}}} _is is really important ? :)_
   * If {{{ActionResolver.Packages}}} is configured auto-complete variants of {{{beanclass}}} attributes in stripes custom tags should be limited only by those packages. _kinda important feature but supposedly needs a lot of work_
   * detect if spring support is configured from web.xml not from facet setting. _i suppose this should be removed as useless_
