@@ -79,6 +79,8 @@ Initial version. Port of version 1.0.Final to Diana
   * Issue #63
   * Initial support for EL in {{{expression}}} in {{{@Validate}}} annotation. {{{this}}} is added as auto-complete variant
 
-===Version 2.0.5 (2009-04-21)===
+===Version 2.0.6 (2009-04-21)===
   * Improve declaration of implicit actionBean variable basing on useActionBean/form tags
   * Full support for EL in {{{expression}}} in {{{@Validate}}} annotation.
+  * Stripes-Reload extension support
+  * File upload library only supports commons-fileupload. COS is not used anymore
