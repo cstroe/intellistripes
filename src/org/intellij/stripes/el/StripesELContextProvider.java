@@ -26,6 +26,28 @@ public class StripesELContextProvider implements ELContextProvider {
 	public Iterator<? extends PsiVariable> getTopLevelElVariables(@Nullable String s) {
 		List<JspImplicitVariable> retval = new ArrayList<JspImplicitVariable>();
 
+		final PsiType SOMAP = JavaPsiFacade.getInstance(host.getProject()).getElementFactory()
+			.createTypeFromText("java.util.Map<java.lang.String,java.lang.Object>", null);
+
+		final PsiType SSMAP = JavaPsiFacade.getInstance(host.getProject()).getElementFactory()
+			.createTypeFromText("java.util.Map<java.lang.String,java.lang.String>", null);
+
+		final PsiType SSARRMAP = JavaPsiFacade.getInstance(host.getProject()).getElementFactory()
+			.createTypeFromText("java.util.Map<java.lang.String,java.lang.String[]>", null);
+
+		retval.add(new JspImplicitVariableImpl(host, "applicationScope", SOMAP, null));
+		retval.add(new JspImplicitVariableImpl(host, "cookie", JavaPsiFacade.getInstance(host.getProject()).getElementFactory()
+			.createTypeFromText("java.util.Map<java.lang.String,javax.servlet.http.Cookie>", null), null));
+		retval.add(new JspImplicitVariableImpl(host, "header", SSMAP, null));
+		retval.add(new JspImplicitVariableImpl(host, "headerValues", SSARRMAP, null));
+		retval.add(new JspImplicitVariableImpl(host, "initParam", SSMAP, null));
+		retval.add(new JspImplicitVariableImpl(host, "pageContext", "javax.servlet.jsp.PageContext", null));
+		retval.add(new JspImplicitVariableImpl(host, "pageScope", SOMAP, null));
+		retval.add(new JspImplicitVariableImpl(host, "param", SSMAP, null));
+		retval.add(new JspImplicitVariableImpl(host, "paramValues", SSARRMAP, null));
+		retval.add(new JspImplicitVariableImpl(host, "requestScope", SOMAP, null));
+		retval.add(new JspImplicitVariableImpl(host, "sessionScope", SOMAP, null));
+
 		PsiElement fieldTypeHolder = host.getParent().getParent();
 		if (!(fieldTypeHolder instanceof PsiMethod) && !(fieldTypeHolder instanceof PsiField)) {
 			PsiAnnotation p = PsiTreeUtil.getParentOfType(fieldTypeHolder, PsiAnnotation.class);
