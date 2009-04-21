@@ -17,6 +17,7 @@
 
 package org.intellij.stripes.util;
 
+import com.intellij.facet.ui.libraries.LibraryDownloadInfo;
 import com.intellij.facet.ui.libraries.LibraryInfo;
 import com.intellij.facet.ui.libraries.MavenLibraryUtil;
 import com.intellij.openapi.util.IconLoader;
@@ -90,6 +91,7 @@ public interface StripesConstants {
 	//stripes filter configuraiton init parameters
 	String INTERCEPTOR_CLASSES = "Interceptor.Classes";
 	String ACTION_RESOLVER_PACKAGES = "ActionResolver.Packages";
+	String EXTENSION_PACKAGES = "Extension.Packages";
 
 	//stripes taglibs
 	String TAGLIB_PREFIX = "http://stripes.sourceforge.net/stripes";
@@ -183,4 +185,6 @@ public interface StripesConstants {
 		MavenLibraryUtil.createMavenJarInfo("commons-logging", "1.1.1", "org.apache.commons.logging.Log")
 	};
 
+	LibraryInfo COMMONS_FILE_UPLOAD_LIBRARY_INFO = MavenLibraryUtil.createMavenJarInfo("commons-fileupload", "1.2.1", "org.apache.commons.fileupload.FileItem");
+	LibraryInfo STRIPES_RELOAD_LIBRARY_INFO = new LibraryInfo("Stripes-Reload", new LibraryDownloadInfo("http://www.stripesbook.org/stripes-reload.jar", "stripes-reload"), "org.stripesbook.reload.extensions.ReloadActionResolver");
 }
