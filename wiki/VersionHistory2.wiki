@@ -79,6 +79,6 @@ Initial version. Port of version 1.0.Final to Diana
   * Issue #63
   * Initial support for EL in {{{expression}}} in {{{@Validate}}} annotation. {{{this}}} is added as auto-complete variant
 
-===Version 2.0.4 (2009-04-18)===
+===Version 2.0.5 (2009-04-21)===
   * Improve declaration of implicit actionBean variable basing on useActionBean/form tags
-  * Support for EL in {{{expression}}} in {{{@Validate}}} annotation. {{{actionBean}}} setters are added as auto-complete variants
+  * Full support for EL in {{{expression}}} in {{{@Validate}}} annotation.
