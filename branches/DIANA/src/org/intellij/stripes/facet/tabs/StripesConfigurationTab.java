@@ -34,7 +34,6 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.peer.PeerFactory;
 import com.intellij.psi.PsiPackage;
-import com.intellij.ui.EnumComboBoxModel;
 import com.intellij.ui.ListUtil;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -77,7 +76,9 @@ public class StripesConfigurationTab extends FacetEditorTab {
 
 	private JCheckBox addStripesResourcesCheckBox;
 	private JCheckBox useAsDefaultBundleCheckBox;
-	private JComboBox fileUploadComboBox;
+
+	private JCheckBox enableStripesReloadCheckBox;
+	private JCheckBox enableFileUploadCheckBox;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -129,19 +130,30 @@ public class StripesConfigurationTab extends FacetEditorTab {
 			}
 		});
 
-		fileUploadComboBox.setModel(new EnumComboBoxModel<FileUploadImpl>(FileUploadImpl.class));
-		fileUploadComboBox.addActionListener(new ActionListener() {
+		enableFileUploadCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				LibraryInfo li = ((FileUploadImpl) fileUploadComboBox.getSelectedItem()).getLibraryInfo();
+				validator.setRequiredLibraries(getRequiredLibraries());
+			}
+		});
 
-				LibraryInfo[] infos = StripesConstants.STRIPES_CORE_LIBRARY_INFO;
-				if (null != li) infos = (LibraryInfo[]) ArrayUtils.add(infos, li);
-
-				validator.setRequiredLibraries(infos);
+		enableStripesReloadCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				validator.setRequiredLibraries(getRequiredLibraries());
 			}
 		});
 
 		fillData();
+	}
+
+	private LibraryInfo[] getRequiredLibraries() {
+		LibraryInfo[] infos = StripesConstants.STRIPES_CORE_LIBRARY_INFO;
+		if (enableFileUploadCheckBox.isSelected()) {
+			infos = (LibraryInfo[]) ArrayUtils.add(infos, StripesConstants.COMMONS_FILE_UPLOAD_LIBRARY_INFO);
+		}
+		if (enableStripesReloadCheckBox.isSelected()) {
+			infos = (LibraryInfo[]) ArrayUtils.add(infos, StripesConstants.STRIPES_RELOAD_LIBRARY_INFO);
+		}
+		return infos;
 	}
 
 	public void onTabEntering() {
@@ -176,7 +188,9 @@ public class StripesConfigurationTab extends FacetEditorTab {
 			}
 		}
 
-		fileUploadComboBox.setSelectedItem(configuration.getFileUploadImpl());
+		enableFileUploadCheckBox.setSelected(configuration.isFileUpload());
+		enableStripesReloadCheckBox.setSelected(configuration.isStripesReload());
+		validator.setRequiredLibraries(getRequiredLibraries());
 	}
 
 	// ------------------------ INTERFACE METHODS ------------------------
@@ -218,7 +232,8 @@ public class StripesConfigurationTab extends FacetEditorTab {
 					return o.toString();
 				}
 			}, ","));
-		configuration.setFileUploadImpl((FileUploadImpl) fileUploadComboBox.getSelectedItem());
+		configuration.setFileUpload(enableFileUploadCheckBox.isSelected());
+		configuration.setStripesReload(enableStripesReloadCheckBox.isSelected());
 
 		final StripesFacet stripesFacet = (StripesFacet) editorContext.getFacet();
 		new WriteCommandAction.Simple(editorContext.getProject(), stripesFacet.getWebXmlPsiFile()) {
@@ -261,11 +276,11 @@ public class StripesConfigurationTab extends FacetEditorTab {
 		addSpringIntegrationCheckBox = new JCheckBox();
 		addSpringIntegrationCheckBox.setText("Add Spring Integration");
 		addSpringIntegrationCheckBox.setToolTipText("Add necesary configuration in web.xml to enable Spring Integration");
-		mainPanel.add(addSpringIntegrationCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		mainPanel.add(addSpringIntegrationCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(162, 22), null, 0, false));
 		addLoggingCheckBox = new JCheckBox();
 		addLoggingCheckBox.setText("Add Logging");
 		addLoggingCheckBox.setToolTipText("Add commons-logging.properties and log4j.properties or xml");
-		mainPanel.add(addLoggingCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		mainPanel.add(addLoggingCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(162, 22), null, 0, false));
 		log4jComboBox = new JComboBox();
 		log4jComboBox.setEnabled(false);
 		final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
@@ -318,16 +333,13 @@ public class StripesConfigurationTab extends FacetEditorTab {
 		addStripesResourcesCheckBox.setText("Add Stripes Resources");
 		addStripesResourcesCheckBox.setToolTipText("Add StripesResources.properties into src directory ");
 		panel2.add(addStripesResourcesCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, 1, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(154, 22), null, 0, false));
-		final JLabel label3 = new JLabel();
-		label3.setText("File Upload Library");
-		mainPanel.add(label3, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
-		fileUploadComboBox = new JComboBox();
-		final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
-		defaultComboBoxModel2.addElement("None");
-		defaultComboBoxModel2.addElement("Commons FileUpload");
-		defaultComboBoxModel2.addElement("COS");
-		fileUploadComboBox.setModel(defaultComboBoxModel2);
-		mainPanel.add(fileUploadComboBox, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		enableFileUploadCheckBox = new JCheckBox();
+		enableFileUploadCheckBox.setText("Enable File Upload");
+		mainPanel.add(enableFileUploadCheckBox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		enableStripesReloadCheckBox = new JCheckBox();
+		enableStripesReloadCheckBox.setEnabled(true);
+		enableStripesReloadCheckBox.setText("Enable Stripes-Reload");
+		mainPanel.add(enableStripesReloadCheckBox, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 	}
 
 	/**

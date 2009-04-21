@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.intellij.stripes.facet.StripesFacet;
 import org.intellij.stripes.facet.StripesFacetConfiguration;
 import org.intellij.stripes.util.StripesConstants;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -48,9 +49,12 @@ public final class StripesSupportUtil {
 
 		try {
 			if (!facet.getConfiguration().isNeverModifyWebXml()) {
-				installStripes(app, facet.getConfiguration());
+				Filter stripesFilter = installStripes(app, facet.getConfiguration());
 				if (facet.getConfiguration().isSpringIntegration()) {
-					addSpringInterceptor(findStripesFilter(app));
+					addSpringInterceptor(stripesFilter);
+				}
+				if (facet.getConfiguration().isStripesReload()) {
+					installExtension(stripesFilter, "org.stripesbook.reload.extensions");
 				}
 			}
 
@@ -66,13 +70,28 @@ public final class StripesSupportUtil {
 		}
 	}
 
+	private static void installExtension(@NotNull Filter stripesFilter, String extension) {
+		ParamValue initParam = findInitParam(stripesFilter, StripesConstants.EXTENSION_PACKAGES);
+		if (null == initParam) {
+			addInitParam(stripesFilter, StripesConstants.EXTENSION_PACKAGES, extension);
+		} else {
+			String value = initParam.getParamValue().getStringValue();
+			if (!StringUtils.contains(value, extension)) {
+				initParam.getParamValue().setValue(value + ',' + extension);
+			}
+		}
+	}
+
 	/**
-	 * Install Stripes Configuration
+	 * s
 	 *
 	 * @param app      Web Application
 	 * @param facetCfg
+	 * @return instNance of Stripes Fiter, existing or just created
 	 */
-	private static void installStripes(WebApp app, StripesFacetConfiguration facetCfg) {
+	private static
+	@NotNull
+	Filter installStripes(WebApp app, StripesFacetConfiguration facetCfg) {
 		if (!isStripesServletInstalled(app)) {
 			addDispatcherServlet(app);
 		}
@@ -88,6 +107,8 @@ public final class StripesSupportUtil {
 		} else {
 			paramValue.getParamValue().setStringValue(facetCfg.getActionResolverPackages());
 		}
+
+		return filter;
 	}
 
 	/**
@@ -193,9 +214,7 @@ public final class StripesSupportUtil {
 				initParam.getParamValue().setValue(StripesConstants.SPRING_INTERCEPTOR_CLASS + ',' + value);
 			}
 		} else {
-			ParamValue paramValue = filter.addInitParam();
-			paramValue.getParamName().setValue(StripesConstants.INTERCEPTOR_CLASSES);
-			paramValue.getParamValue().setValue(StripesConstants.SPRING_INTERCEPTOR_CLASS);
+			addInitParam(filter, StripesConstants.INTERCEPTOR_CLASSES, StripesConstants.SPRING_INTERCEPTOR_CLASS);
 		}
 	}
 
