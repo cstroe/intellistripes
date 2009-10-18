@@ -47,12 +47,9 @@ import java.util.Map;
 public class StripesELVarProvider extends ElVariablesProvider {
 	private static String ACTION_BEAN_VAR_NAME = "actionBean";
 
-	private static String FROM_USE_ACTION_BEAN_TAG = "useActionBean";
-
 	private static PsiElementFilter ACTION_BEAN_PROVIDER_FILTER = new StripesTagFilter() {
 		protected boolean isDetailsAccepted(XmlTag tag) {
-			return StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())
-				|| StripesConstants.FORM_TAG.equals(tag.getLocalName());
+			return StripesConstants.FORM_TAG.equals(tag.getLocalName());
 		}
 	};
 	public static PsiElementFilter BEANCLASS_ATTR_FILTER = new StripesTagFilter() {
@@ -63,10 +60,6 @@ public class StripesELVarProvider extends ElVariablesProvider {
 
 	public boolean processImplicitVariables(@NotNull final PsiElement psiElement, @NotNull final ELExpressionHolder elExpressionHolder, @NotNull final ELElementProcessor elElementProcessor) {
 		try {
-			if (!(elExpressionHolder.getContainingFile() instanceof JspFile)) {
-				return true;
-			}
-
 			final PsiFile jspFile = elExpressionHolder.getContainingFile();
 			if (!StripesUtil.isStripesPage(jspFile)) return true;
 
@@ -75,34 +68,14 @@ public class StripesELVarProvider extends ElVariablesProvider {
 				new XmlTagContainer<Map<String, String>>(new HashMap<String, String>(8)) {
 					public void add(XmlTag tag) {
 						String actionBeanClassName = tag.getAttributeValue(StripesConstants.BEANCLASS_ATTR);
-						if (StripesConstants.USE_ACTION_BEAN_TAG.equals(tag.getLocalName())) {
-							if (tag.getAttributeValue(StripesConstants.ID_ATTR) == null && tag.getAttributeValue(StripesConstants.VAR_ATTR) == null) {
-								container.put(FROM_USE_ACTION_BEAN_TAG, actionBeanClassName);
-							} else if (tag.getAttributeValue(StripesConstants.ID_ATTR) != null) {
-								processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile, tag.getAttributeValue(StripesConstants.ID_ATTR), actionBeanClassName);
-							} else if (tag.getAttributeValue(StripesConstants.VAR_ATTR) != null) {
-								processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile, tag.getAttributeValue(StripesConstants.VAR_ATTR), actionBeanClassName);
-							}
-						} else if (StripesConstants.FORM_TAG.equals(tag.getLocalName())) {
-							container.put("__" + actionBeanClassName, actionBeanClassName);
-						}
+						container.put("actionBean", actionBeanClassName);
 					}
 				}).getContainer();
 
-// if useActionBean without explicit name is used - it's only one candidate to be EL variable named 'actionBean'
-// we clear all map and add that only bean
-			String clsName = actionBeans.remove(FROM_USE_ACTION_BEAN_TAG);
-			if (null != clsName) {
-				actionBeans.clear();
-				actionBeans.put(ACTION_BEAN_VAR_NAME, clsName);
-			}
-
 // only one variable named 'actionBean'	can be declared
-			if (actionBeans.size() == 1) {
-				processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile,
-					ACTION_BEAN_VAR_NAME, ContainerUtil.getFirstItem(actionBeans.values(), null)
-				);
-			}
+			processVariable(psiElement.getProject(), elElementProcessor, (JspFile) jspFile,
+				ACTION_BEAN_VAR_NAME, ContainerUtil.getFirstItem(actionBeans.values(), null)
+			);
 		} catch (ProcessCanceledException e) {
 			//Do nothig, this exception is very common and can be throw for intellij
 			//Logger don't be reported or just raise an ugly error
@@ -121,13 +94,12 @@ public class StripesELVarProvider extends ElVariablesProvider {
 		elElementProcessor.processVariable(
 			new JspImplicitVariableImpl(actionBeanClass,
 				actionBeanName, JavaPsiFacade.getInstance(project).getElementFactory().createType(actionBeanClass),
-				actionBeanClass, JspImplicitVariableImpl.NESTED_RANGE) {
+				actionBeanClass, JspImplicitVariableImpl.BEGIN_RANGE) {
 
 				public PsiElement getDeclaration() {
 					return null;
 				}
 
-				//
 				@NotNull
 				public SearchScope getUseScope() {
 					return GlobalSearchScope.fileScope(jspFile);

@@ -19,19 +19,18 @@
 <idea-plugin url="http://code.google.com/p/intellistripes" version="2">
 	<name>IntelliStripes</name>
 	<description>Stripes even more easy !!!</description>
-	<version>2.0.6</version>
+	<version>2.0.7</version>
 	<vendor email="intellistripes@gmail.com" logo="/resources/icons/StripesIcon.png"
 	        url="http://www.jroller.com/neuronica/">Mario Arias, Evgeny Shepelyuk
 	</vendor>
 	<change-notes>
 		<![CDATA[
-<p>Final version. Many improvements and bug fixes. Diana compatible only.</p>
+<p>Final version for Diana</p>
 <ul>
-<li>Full support for EL expressions in @Validate annotation2</li>
-<li>Stripes-Reload extension support</li>
+<li>Minor fixes</li>
 </ul>
 <br/>
-Full changelog is <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">HERE</a>
+Full changelog can be found <a href="http://code.google.com/p/intellistripes/wiki/VersionHistory2">HERE</a>
 ]]>
 	</change-notes>
 	<idea-version since-build="9013" until-build="9999"/>
@@ -67,27 +66,27 @@ Full changelog is <a href="http://code.google.com/p/intellistripes/wiki/VersionH
 		<multiHostInjector implementation="org.intellij.stripes.util.StripesCSSInjector"/>
 		<multiHostInjector implementation="org.intellij.stripes.util.StripesELInjector"/>
 	</extensions>
+
 	<application-components>
 		<component>
 			<implementation-class>org.intellij.stripes.components.application.StripesApplicationComponent
 			</implementation-class>
 		</component>
 	</application-components>
+
 	<project-components>
 		<component>
 			<implementation-class>org.intellij.stripes.components.project.StripesReferencesComponent
 			</implementation-class>
 		</component>
 	</project-components>
-	<actions>
 
+	<actions>
 		<action id="StripesGenerateGroup" class="org.intellij.stripes.actions.StripesGenerateGroup" text="Stripes">
 			<add-to-group anchor="first" group-id="GenerateGroup"/>
 		</action>
-
 		<action id="StripesNewGroup" class="org.intellij.stripes.actions.StripesNewGroup" text="Stripes">
 			<add-to-group anchor="last" group-id="NewGroup"/>
 		</action>
-
 	</actions>
 </idea-plugin>
