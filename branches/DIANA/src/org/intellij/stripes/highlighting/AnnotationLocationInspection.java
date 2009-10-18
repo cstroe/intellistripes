@@ -26,6 +26,7 @@ import com.intellij.psi.css.impl.util.RemoveElementAction;
 import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringFactory;
+import org.apache.commons.lang.math.NumberUtils;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.Nls;
@@ -71,6 +72,18 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
 				if (StripesConstants.VALIDATE_ANNOTATION.equals(annotation.getQualifiedName())) {
 					if (annotation.getParameterList().getAttributes().length == 0) {
 						holder.registerProblem(annotation, StripesUtil.message("inspection.noAttributes"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+					}
+
+					double minvalue = NumberUtils.toDouble(annotation.findAttributeValue(StripesConstants.MINVALUE_ATTR).getText());
+					double maxvalue = NumberUtils.toDouble(annotation.findAttributeValue(StripesConstants.MAXVALUE_ATTR).getText());
+					if (minvalue > maxvalue) {
+						holder.registerProblem(annotation, StripesUtil.message("inspection.minMaxMismatch"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+					}
+
+					double minlength = NumberUtils.toDouble(annotation.findAttributeValue(StripesConstants.MINLENGTH_ATTR).getText());
+					double maxlength = NumberUtils.toDouble(annotation.findAttributeValue(StripesConstants.MAXLENGTH_ATTR).getText());
+					if (minlength > maxlength) {
+						holder.registerProblem(annotation, StripesUtil.message("inspection.minMaxMismatch"), ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
 					}
 
 					PsiAnnotationMemberValue onAttr = annotation.findDeclaredAttributeValue(StripesConstants.ON_ATTR);
