@@ -71,6 +71,10 @@ public interface StripesConstants {
 	String DENY_ATTR = "deny";
 	String ALLOW_ATTR = "allow";
 	String ON_ATTR = "on";
+	String MINVALUE_ATTR = "minvalue";
+	String MAXVALUE_ATTR = "maxvalue";
+	String MINLENGTH_ATTR = "minlength";
+	String MAXLENGTH_ATTR = "maxlength";
 	String REQUIRED_ATTR = "required";
 	String START_EVENTS_ATTR = "startEvents";
 
