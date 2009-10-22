@@ -79,6 +79,7 @@ Full changelog can be found <a href="http://code.google.com/p/intellistripes/wik
 			<implementation-class>org.intellij.stripes.components.project.StripesReferencesComponent
 			</implementation-class>
 		</component>
+		<!--<component>-->			<!--<implementation-class>org.intellij.stripes.components.EditorDecorator</implementation-class>-->		<!--</component>-->
 	</project-components>
 
 	<actions>
