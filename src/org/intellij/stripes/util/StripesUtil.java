@@ -22,6 +22,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.jsp.JspDirectiveKind;
 import com.intellij.psi.jsp.JspFile;
@@ -88,6 +89,14 @@ public final class StripesUtil {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public static StripesFacet getStripesFacet(PsiElement psiElement) {
+		return getStripesFacet(getModule(psiElement));
+	}
+
+	public static StripesFacet getStripesFacet(VirtualFile virtualFile, Project project) {
+		return getStripesFacet(ModuleUtil.findModuleForFile(virtualFile, project));
 	}
 
 	/**
