@@ -4,8 +4,12 @@
 =History=
 <wiki:comment>
 ===Version 2.0.20 (2009-xx-xx)===
-  * 1
-  * 2
+  * On project/facet addition following directories are created under web root
+  ** /js
+  ** /css
+  ** /WEB-INF/views
+  * default layout is created on project/facet addtion in /WEB/INF/views/layout directory
+  * commons-fileupload is mandatory dependency now
 </wiki:comment>
 
 ===Version 2.0.8 (2009-10-22)===
