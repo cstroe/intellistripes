@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,21 +19,19 @@ package org.intellij.stripes.reference.providers;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
+import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.ProcessingContext;
 import org.intellij.stripes.reference.JspTagAttrLayoutComponentReference;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 8/11/2007 Time: 11:19:41 PM
- */
-public class LayoutComponentReferenceProvider extends PsiReferenceProviderBase {
+public class LayoutComponentReferenceProvider extends PsiReferenceProvider {
     private static PsiElementFilter LAYOUT_RENDER_FILTER = new PsiElementFilter() {
         public boolean isAccepted(PsiElement element) {
             return element instanceof XmlTag
@@ -49,31 +47,27 @@ public class LayoutComponentReferenceProvider extends PsiReferenceProviderBase {
      * @return JspFile
      */
     private static JspFile getLayoutDefinitionJspFile(@NotNull XmlTag xmlTag) {
-        if (!StripesUtil.isStripesPage((JspFile) xmlTag.getContainingFile())) return null;
+        if (!StripesUtil.isStripesPage(xmlTag.getContainingFile())) return null;
 
         XmlTag layoutRenderTag = StripesUtil.findParent(xmlTag, LAYOUT_RENDER_FILTER, StripesReferenceUtil.NAME_ATTR_FILTER);
         if (layoutRenderTag != null) {
-            PsiReference[] refs = layoutRenderTag.getAttribute("name").getValueElement().getReferences();
+            PsiReference[] refs = layoutRenderTag.getAttribute(StripesConstants.NAME_ATTR).getValueElement().getReferences();
             for (PsiReference ref : refs) {
                 PsiElement el = ref.resolve();
-                if (el instanceof JspFile) {
-                    return StripesUtil.isStripesPage((JspFile) el) ? (JspFile) el : null;
-                }
+	            if (StripesUtil.isStripesPage(el)) {
+					return (JspFile) el;
+	            }
             }
         }
 
         return null;
     }
 
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface PsiReferenceProvider ---------------------
-
     @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-        final JspFile jspFile = getLayoutDefinitionJspFile((XmlTag) psiElement.getParent().getParent());
+    public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+        final JspFile jspFile = getLayoutDefinitionJspFile((XmlTag) element.getParent().getParent());
         return jspFile == null
                 ? PsiReference.EMPTY_ARRAY
-                : new PsiReference[]{new JspTagAttrLayoutComponentReference((XmlAttributeValue) psiElement, jspFile)};
+                : new PsiReference[]{new JspTagAttrLayoutComponentReference((XmlAttributeValue) element, jspFile)};
     }
 }

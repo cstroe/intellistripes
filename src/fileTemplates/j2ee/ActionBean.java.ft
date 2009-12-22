@@ -4,17 +4,14 @@ import net.sourceforge.stripes.action.ActionBeanContext;
 import net.sourceforge.stripes.action.ActionBean;
 
 #parse("File Header.java")
-public class ${NAME}ActionBean implements ActionBean
-{
+public class ${NAME} implements ActionBean {
     private ActionBeanContext context;
 
-    public ActionBeanContext getContext()
-    {
+    public ActionBeanContext getContext() {
         return context;
     }
 
-    public void setContext(ActionBeanContext context)
-    {
+    public void setContext(ActionBeanContext context) {
         this.context = context;
     }
 }

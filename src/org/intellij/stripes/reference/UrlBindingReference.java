@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.xml.XmlAttributeValue;
 import org.intellij.stripes.util.StripesConstants;
 
+//TODO replace with ServletPathProviders (or smth)
 public class UrlBindingReference extends PsiReferenceBase<XmlAttributeValue> {
 
     public UrlBindingReference(XmlAttributeValue element) {

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2000-2007 JetBrains s.r.o.
+  ~ Copyright 2000-2009 JetBrains s.r.o.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -17,13 +17,20 @@
 This inspections indicated incorrect placement of Stripes annotations within action bean class.
 Those cases are:
 <ol>
-    <li>@SpringBean annotation is applied to public setter.
-        (Tip: rename method or make it private, or remove annotation to valid method)</li>
-    <li>@Validate annotation has field attribute, but is located outside of @ValidateNestedProperties.
-        (Tip: enclose annotation inside @ValidateNestedProperties or remove field attribute)</li>
-    <li>@Validate annotation hasn't field attribute and located within@ValidateNestedProperties.
-        (Tip: add field attribute to @ValidateNestedProperties)</li>
-    <li>@Validate, @ValidateNestedProperties, @ValidationMethod, @DefaultHandler, @HandlesEvent annotations are applied
-        to invalid class member.
-        (Tip: remove annotations from member or annotate correct element according to Stripes documentation)</li>
+	<li>@SpringBean annotation is applied to public setter.
+		(Tip: rename method or make it private, or remove annotation to valid method)
+	</li>
+	<li>@Validate annotation has field attribute, but is located outside of @ValidateNestedProperties.
+		(Tip: enclose annotation inside @ValidateNestedProperties or remove field attribute)
+	</li>
+	<li>@Validate annotation hasn't field attribute and located within@ValidateNestedProperties.
+		(Tip: add field attribute to @ValidateNestedProperties)
+	</li>
+	<li>@Validate, @ValidateNestedProperties, @ValidationMethod, @DefaultHandler, @HandlesEvent annotations are applied
+		to invalid class member.
+		(Tip: remove annotations from member or annotate correct element according to Stripes documentation)
+	</li>
+	<li>@Validate annotation has mismatch in such attribute pairs: minvalue/maxvalue or minlength/maxlength
+		(Tip: set correct values for attributes)
+	</li>
 </ol>

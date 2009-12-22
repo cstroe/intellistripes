@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,9 @@ import com.intellij.psi.xml.XmlTag;
 
 /**
  * Container for various containers :).
- *
+ * <p/>
  * Main purpose is hiding certain implementation of backend storage.
  * Customer can create instances of container with various backends and then pass them to same processing algorithm for uniform processing.
- *
  */
 public abstract class XmlTagContainer<T> {
     protected T container;
@@ -39,6 +38,7 @@ public abstract class XmlTagContainer<T> {
 
     /**
      * Override this method to implement container-dependent storage.
+     *
      * @param tag tag to be stored in internal container.
      */
     public abstract void add(XmlTag tag);

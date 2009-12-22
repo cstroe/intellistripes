@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,15 +28,13 @@ import org.jetbrains.annotations.Nls;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by IntelliJ IDEA. User: Mario Arias Date: 11/11/2007 Time: 12:07:39 PM
- */
 public class FacetConfigurationTab extends FacetEditorTab {
 // ------------------------------ FIELDS ------------------------------
 
     private StripesFacetConfiguration configuration;
     private JPanel mainPanel;
     private JCheckBox changeIconsCheckBox;
+    private JCheckBox neverModifyWebXmlCheckBox;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -47,6 +45,7 @@ public class FacetConfigurationTab extends FacetEditorTab {
 
     private void fillData() {
         changeIconsCheckBox.setSelected(configuration.isChangeIcons());
+        neverModifyWebXmlCheckBox.setSelected(configuration.isNeverModifyWebXml());
     }
 
     // ------------------------ INTERFACE METHODS ------------------------
@@ -71,14 +70,15 @@ public class FacetConfigurationTab extends FacetEditorTab {
 
     public void apply() throws ConfigurationException {
         configuration.setChangeIcons(changeIconsCheckBox.isSelected());
+        configuration.setNeverModifyWebXml(neverModifyWebXmlCheckBox.isSelected());
     }
 
     public void reset() {
-
+        //
     }
 
     public void disposeUIResources() {
-
+        //
     }
 
 // -------------------------- OTHER METHODS --------------------------
@@ -99,16 +99,20 @@ public class FacetConfigurationTab extends FacetEditorTab {
      */
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         changeIconsCheckBox = new JCheckBox();
-        changeIconsCheckBox.setSelected(true);
+        changeIconsCheckBox.setSelected(false);
         changeIconsCheckBox.setText("Change Icons");
         changeIconsCheckBox.setToolTipText("Change Icons, Could Improve Performance in Very Large Proyects");
         mainPanel.add(changeIconsCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         mainPanel.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        mainPanel.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mainPanel.add(spacer2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        neverModifyWebXmlCheckBox = new JCheckBox();
+        neverModifyWebXmlCheckBox.setSelected(false);
+        neverModifyWebXmlCheckBox.setText("Never modify web.xml");
+        mainPanel.add(neverModifyWebXmlCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

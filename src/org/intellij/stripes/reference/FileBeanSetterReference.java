@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,41 +31,41 @@ import java.util.Map;
 
 public class FileBeanSetterReference extends PsiReferenceBase<XmlAttributeValue> {
 
-    private PsiClass actionBeanPsiClass;
+	private PsiClass actionBeanPsiClass;
 
-    public FileBeanSetterReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass) {
-        super(xmlAttributeValue);
-        this.actionBeanPsiClass = actionBeanPsiClass;
-    }
+	public FileBeanSetterReference(XmlAttributeValue xmlAttributeValue, PsiClass actionBeanPsiClass) {
+		super(xmlAttributeValue);
+		this.actionBeanPsiClass = actionBeanPsiClass;
+	}
 
-    @Nullable
-    public PsiElement resolve() {
-        PsiMethod[] arr = actionBeanPsiClass.findMethodsByName("set" + StringUtil.capitalize(getValue().replaceAll("\\[.*?\\]", "")), true);
-        if (arr.length > 0) {
-            PsiMethod psiMethod = arr[0];
+	@Nullable
+	public PsiElement resolve() {
+		PsiMethod[] arr = actionBeanPsiClass.findMethodsByName("set" + StringUtil.capitalize(getValue().replaceAll("\\[.*?\\]", "")), true);
+		if (arr.length > 0) {
+			PsiMethod psiMethod = arr[0];
 
-            PsiType propertyType = psiMethod.getParameterList().getParameters()[0].getType();
-            PsiClass propertyClass = StripesReferenceUtil.resolveClassInType(propertyType, actionBeanPsiClass.getProject());
+			PsiType propertyType = psiMethod.getParameterList().getParameters()[0].getType();
+			PsiClass propertyClass = StripesReferenceUtil.resolveClassInType(propertyType, actionBeanPsiClass.getProject());
 
-            if (StripesUtil.isSubclass(StripesConstants.FILE_BEAN, propertyClass)) {
-                if (getValue().indexOf("[") > 0) {
-                    propertyClass = PsiUtil.resolveClassInType(propertyType);
-                    return StripesUtil.isSubclass(List.class.getName(), propertyClass)
-                            || propertyType instanceof PsiArrayType
-                            || StripesUtil.isSubclass(Map.class.getName(), propertyClass) ? psiMethod : null;
-                }
-                return psiMethod;
-            }
-        }
-        return null;
-    }
+			if (StripesUtil.isSubclass(getElement().getProject(), StripesConstants.FILE_BEAN, propertyClass)) {
+				if (getValue().indexOf('[') > 0) {
+					propertyClass = PsiUtil.resolveClassInType(propertyType);
+					return StripesUtil.isSubclass(getElement().getProject(), List.class.getName(), propertyClass)
+						|| propertyType instanceof PsiArrayType
+						|| StripesUtil.isSubclass(getElement().getProject(), Map.class.getName(), propertyClass) ? psiMethod : null;
+				}
+				return psiMethod;
+			}
+		}
+		return null;
+	}
 
-    public Object[] getVariants() {
-        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getFileBeanProperties(actionBeanPsiClass), StripesConstants.FIELD_ICON);
-    }
+	public Object[] getVariants() {
+		return StripesReferenceUtil.getVariants(StripesReferenceUtil.getFileBeanProperties(actionBeanPsiClass), StripesConstants.FIELD_ICON);
+	}
 
-    public TextRange getRangeInElement() {
-        int i = getElement().getText().indexOf("[");
-        return i == -1 ? super.getRangeInElement() : new TextRange(1, i);
-    }
+	public TextRange getRangeInElement() {
+		int i = getElement().getText().indexOf('[');
+		return i == -1 ? super.getRangeInElement() : new TextRange(1, i);
+	}
 }

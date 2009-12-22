@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,64 +36,65 @@ import org.intellij.stripes.util.StripesTagFilter;
 import org.intellij.stripes.util.StripesUtil;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
 public class ActionBeanUsageAnnotator implements Annotator {
-    private static PsiElementFilter FILTER_TAG = new StripesTagFilter() {
-        protected boolean isDetailsAccepted(XmlTag tag) {
-            return true;
-        }
-    };
+	private static PsiElementFilter FILTER_TAG = new StripesTagFilter() {
+		protected boolean isDetailsAccepted(XmlTag tag) {
+			return true;
+		}
+	};
 
-    private static PsiElementFilter FILTER_ATTR = new PsiElementFilter() {
-        public boolean isAccepted(PsiElement element) {
-            return element instanceof XmlAttributeValue
-                    && StripesConstants.BEANCLASS_ATTR.equals(((XmlAttribute) element.getParent()).getName());
-        }
-    };
+	private static PsiElementFilter FILTER_ATTR = new PsiElementFilter() {
+		public boolean isAccepted(PsiElement element) {
+			return element instanceof XmlAttributeValue
+				&& StripesConstants.BEANCLASS_ATTR.equals(((XmlAttribute) element.getParent()).getName());
+		}
+	};
 
-    private static class XmlTagProcessor implements Processor<PsiReference> {
-        private Collection<XmlTag> tags = new LinkedList<XmlTag>();
-        public boolean process(PsiReference ref) {
-            PsiElement el = ref.getElement();
-            if (ActionBeanUsageAnnotator.FILTER_ATTR.isAccepted(el) && ActionBeanUsageAnnotator.FILTER_TAG.isAccepted(el.getParent().getParent())) {
-                tags.add((XmlTag) el.getParent().getParent());
-            }
-            return true;
-        }
-        public Collection<XmlTag> getTags() {
-            return tags;
-        }
-    }
+	private static class XmlTagProcessor implements Processor<PsiReference> {
+		private Collection<XmlTag> tags = new LinkedList<XmlTag>();
 
-    public void annotate(PsiElement psiElement, AnnotationHolder holder) {
-        if (psiElement instanceof PsiClass && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, (PsiClass) psiElement)) {
-            XmlTagProcessor proc = new XmlTagProcessor();
-            ReferencesSearch.search(psiElement).forEach(proc);
+		public boolean process(PsiReference ref) {
+			PsiElement el = ref.getElement();
+			if (ActionBeanUsageAnnotator.FILTER_ATTR.isAccepted(el) && ActionBeanUsageAnnotator.FILTER_TAG.isAccepted(el.getParent().getParent())) {
+				tags.add((XmlTag) el.getParent().getParent());
+			}
+			return true;
+		}
 
-            NavigationGutterIconBuilder.create(StripesConstants.ACTION_BEAN_GUTTER_ICON)
-                .setTargets(proc.getTags()).setTooltipText(StripesUtil.message("annotator.actionBeanUsages"))
-                .setPopupTitle(StripesUtil.message("annotator.actionBeanUsages"))
-                .setAlignment(GutterIconRenderer.Alignment.LEFT)
-                .setCellRenderer(new PsiElementListCellRenderer<XmlTag>() {
-                    public String getElementText(XmlTag psiElement) {
-                        return psiElement.getName();
-                    }
+		public Collection<XmlTag> getTags() {
+			return tags;
+		}
+	}
 
-                    protected String getContainerText(PsiElement psiElement, String s) {
-                        return "in " + psiElement.getContainingFile().getName();
-                    }
+	public void annotate(PsiElement psiElement, AnnotationHolder holder) {
+		if (psiElement instanceof PsiClass && StripesUtil.isSubclass(psiElement.getProject(), StripesConstants.ACTION_BEAN, (PsiClass) psiElement)) {
+			XmlTagProcessor proc = new XmlTagProcessor();
+			ReferencesSearch.search(psiElement).forEach(proc);
 
-                    protected int getIconFlags() {
-                        return 0;
-                    }
+			NavigationGutterIconBuilder.create(StripesConstants.ACTION_BEAN_GUTTER_ICON)
+				.setTargets(proc.getTags()).setTooltipText(StripesUtil.message("annotator.actionBeanUsages"))
+				.setPopupTitle(StripesUtil.message("annotator.actionBeanUsages"))
+				.setAlignment(GutterIconRenderer.Alignment.LEFT)
+				.setCellRenderer(new PsiElementListCellRenderer<XmlTag>() {
+					protected String getContainerText(XmlTag xmlTag, String s) {
+						return "in " + xmlTag.getContainingFile().getName();
+					}
 
-                    protected Icon getIcon(PsiElement psiElement) {
-                        return null;
-                    }
-                }).install(holder, ((PsiClass)psiElement).getNameIdentifier());
-        }
-    }
+					public String getElementText(XmlTag psiElement) {
+						return psiElement.getName();
+					}
+
+					protected int getIconFlags() {
+						return 0;
+					}
+
+					protected Icon getIcon(PsiElement psiElement) {
+						return null;
+					}
+				}).install(holder, ((PsiClass) psiElement).getNameIdentifier());
+		}
+	}
 }

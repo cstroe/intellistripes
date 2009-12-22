@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,16 @@
 
 package org.intellij.stripes.reference;
 
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMember;
-import com.intellij.psi.impl.search.AnnotatedMembersSearcher;
-import com.intellij.psi.search.searches.AnnotatedMembersSearch;
+import com.intellij.psi.search.searches.AnnotatedElementsSearch;
 import com.intellij.util.Processor;
 import org.intellij.stripes.util.StripesConstants;
+import org.jetbrains.plugins.groovy.findUsages.AnnotatedMembersSearcher;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,17 +52,21 @@ public class UrlBindingSearcher extends AnnotatedMembersSearcher {
         }
     }
 
-    private AnnotatedMembersSearch.Parameters params;
+    private AnnotatedElementsSearch.Parameters params;
 
     public UrlBindingSearcher(PsiClass urlBindingCls) {
-        this.params = new AnnotatedMembersSearch.Parameters(urlBindingCls, urlBindingCls.getUseScope());
+        this.params = new AnnotatedElementsSearch.Parameters(urlBindingCls, urlBindingCls.getUseScope());
     }
 
     public Map<String, PsiClass> execute() {
         UrlBindingProcessor proc = new UrlBindingProcessor();
         try {
             super.execute(params, proc);
-        } catch (Exception e) {
+        } catch (ProcessCanceledException e) {
+            //Do nothig, this exception is very common and can be throw for intellij
+            //Logger don't be reported or just raise an ugly error
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return proc.getBindings();
