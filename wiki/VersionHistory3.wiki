@@ -1,1 +1,7 @@
 #summary Version History for IntelliStripes3 (Maia version)
+#labels Featured,Maia
+
+=History=
+===Version 3.0 beta (2009-12-21)===
+
+Initial version. Port of version 2.0.8. Final to Maia
