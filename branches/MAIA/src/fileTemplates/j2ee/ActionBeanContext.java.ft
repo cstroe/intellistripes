@@ -1,0 +1,8 @@
+package ${PACKAGE_NAME};
+
+import net.sourceforge.stripes.action.ActionBeanContext;
+
+#parse("File Header.java")
+public class ${NAME} extends ActionBeanContext{
+
+}

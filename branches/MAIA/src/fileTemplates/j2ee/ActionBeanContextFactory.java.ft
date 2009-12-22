@@ -1,0 +1,21 @@
+package ${PACKAGE_NAME};
+
+import net.sourceforge.stripes.controller.ActionBeanContextFactory;
+import net.sourceforge.stripes.action.ActionBeanContext;
+import net.sourceforge.stripes.config.Configuration;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+
+#parse("File Header.java")
+public class ${NAME} implements ActionBeanContextFactory{
+
+    public ActionBeanContext getContextInstance(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse)throws ServletException{
+        return null;
+    }
+
+    public void init(Configuration configuration)throws Exception{
+
+    }
+}
