@@ -19,22 +19,23 @@
 <idea-plugin url="http://code.google.com/p/intellistripes" version="2">
 	<name>IntelliStripes</name>
 	<description>Stripes even more easy !!!</description>
-	<version>3.0 beta</version>
+	<version>3.0 beta 2</version>
 	<vendor email="intellistripes@gmail.com" logo="/resources/icons/StripesIcon.png"
 	        url="http://code.google.com/p/intellistripes">Mario Arias, Evgeny Shepelyuk
 	</vendor>
 	<change-notes>
 		<![CDATA[
 <p>First version for Maia</p>
+<p><strong>WARNING:</strong>This version is a beta version. Some bugs will be arised and some features will stop working</p>
 ]]>
 	</change-notes>
-	<idea-version since-build="IU-93.13" until-build="IU-93.13"/>    
+	<idea-version since-build="IU-93.13" until-build="IU-93.94"/>    
 	<depends>com.intellij.css</depends>
 	<depends>com.intellij.javaee</depends>
 	<depends>com.intellij.spring</depends>
 	<depends>JavaScript</depends>
     <depends>org.intellij.groovy</depends>
-    <depends>org.intellij.intelliLang</depends>    
+    <depends>org.intellij.intelliLang</depends>
 
 	<extensions xmlns="com.intellij">
 		<customPropertyScopeProvider implementation="org.intellij.stripes.util.StripesPropertyScopeProvider"/>

@@ -76,7 +76,7 @@ public final class StripesReferenceUtil {
 		for (PsiMethod method : psiClass.getAllMethods()) {
 			PsiType returnType = method.getReturnType();
 			if (returnType != null
-				&& returnType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS)
+				&& isResolutionChild(returnType)
 				&& method.getParameterList().getParametersCount() == 0
 				&& method.hasModifierProperty(PsiModifier.PUBLIC)
 				&& !retval.containsKey(method.getName())) {
@@ -112,8 +112,9 @@ public final class StripesReferenceUtil {
 		for (PsiMethod method : psiClass.getMethods()) {
 //method return Resolution and have 0 parameters
 			PsiType returnType = method.getReturnType();
+            
 			if (returnType != null) {
-				if (returnType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS)
+				if (isResolutionChild(returnType)
 					&& method.getParameterList().getParametersCount() == 0
 					&& method.hasModifierProperty(PsiModifier.PUBLIC)) {
 					psiMethods.put(method.getName(), method);
@@ -124,7 +125,22 @@ public final class StripesReferenceUtil {
 		return psiMethods;
 	}
 
-	public static String resolveHandlesEventAnnotation(PsiMethod method) {
+    private static boolean isResolutionChild(PsiType returnType) {
+        boolean isResolution = returnType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS);
+        if (isResolution) {
+            return isResolution;
+        } else {
+            PsiType[] psiTypes = returnType.getSuperTypes();
+            for (PsiType psiType : psiTypes) {
+                if (psiType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public static String resolveHandlesEventAnnotation(PsiMethod method) {
 		String retval = null;
 		PsiAnnotation a = method.getModifierList().findAnnotation(StripesConstants.HANDLES_EVENT_ANNOTATION);
 		try {
@@ -159,7 +175,7 @@ public final class StripesReferenceUtil {
 		if (null == psiClass) return EMPTY_STRING_LIST;
 
 		List<String> methodNames = new ArrayList<String>(16);
-		String name = null;
+		String name;
 
 		for (PsiMethod psiMethod : psiClass.getAllMethods()) {
 			if (PropertyUtil.isSimplePropertySetter(psiMethod)
