@@ -2,6 +2,14 @@
 #labels Featured,Maia
 
 =History=
+
+===Version 3.0 beta 2 (2010-01-31)===
+
+ * Issue #71
+ * Issue #68
+
 ===Version 3.0 beta (2009-12-21)===
 
 Initial version. Port of version 2.0.8. Final to Maia
+
+
