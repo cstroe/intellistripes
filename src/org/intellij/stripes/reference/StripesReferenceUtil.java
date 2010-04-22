@@ -125,7 +125,7 @@ public final class StripesReferenceUtil {
 		return psiMethods;
 	}
 
-    private static boolean isResolutionChild(PsiType returnType) {
+    public static boolean isResolutionChild(PsiType returnType) {
         boolean isResolution = returnType.equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS);
         if (isResolution) {
             return isResolution;

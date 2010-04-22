@@ -27,6 +27,7 @@ import com.intellij.psi.util.PropertyUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringFactory;
 import org.apache.commons.lang.math.NumberUtils;
+import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 import org.jetbrains.annotations.Nls;
@@ -134,7 +135,7 @@ public class AnnotationLocationInspection extends LocalInspectionTool {
 				} else if (StripesConstants.HANDLES_EVENT_ANNOTATION.equals(annotation.getQualifiedName())
 					|| StripesConstants.DEFAULT_HANDLER_ANNOTATION.equals(annotation.getQualifiedName())) {
 					PsiElement m = annotation.getParent().getParent();
-					if (m instanceof PsiMethod && ((PsiMethod) m).getReturnType().equalsToText(StripesConstants.STRIPES_RESOLUTION_CLASS)) {
+					if (m instanceof PsiMethod && StripesReferenceUtil.isResolutionChild(((PsiMethod) m).getReturnType())) {
 						return;
 					}
 					holder.registerProblem(annotation, StripesUtil.message("inspection.appliedToNonResolution"), m instanceof PsiModifierListOwner
