@@ -1,0 +1,91 @@
+<!--
+	~ Copyright 2000-2009 JetBrains s.r.o.
+	~
+	~ Licensed under the Apache License, Version 2.0 (the "License");
+	~ you may not use this file except in compliance with the License.
+	~ You may obtain a copy of the License at
+	~
+	~ 	http://www.apache.org/licenses/LICENSE-2.0
+	~
+	~ Unless required by applicable law or agreed to in writing, software
+	~ distributed under the License is distributed on an "AS IS" BASIS,
+	~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	~ See the License for the specific language governing permissions and
+	~ limitations under the License.
+	~
+	-->
+
+<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
+<idea-plugin url="http://code.google.com/p/intellistripes" version="2">
+    <name>IntelliStripes</name>
+    <description>Stripes even more easy !!!</description>
+    <version>3.0 beta 4</version>
+    <vendor email="intellistripes@gmail.com" logo="/resources/icons/StripesIcon.png"
+            url="http://code.google.com/p/intellistripes">Mario Arias, Evgeny Shepelyuk
+    </vendor>
+    <change-notes>
+        <![CDATA[
+<p>Third version for Maia</p>
+<p><strong>WARNING:</strong>This version is a beta version. Some bugs will be arised and some features will stop working</p>
+]]>
+    </change-notes>
+    <idea-version since-build="IU-95.66" until-build="IU-95.627"/>
+    <depends>com.intellij.css</depends>
+    <depends>com.intellij.javaee</depends>
+    <depends>com.intellij.spring</depends>
+    <depends>JavaScript</depends>
+    <depends>org.intellij.groovy</depends>
+    <depends>org.intellij.intelliLang</depends>
+    <depends>com.intellij.modules.ultimate</depends>
+
+    <extensions xmlns="com.intellij">
+        <customPropertyScopeProvider implementation="org.intellij.stripes.util.StripesPropertyScopeProvider"/>
+        <!--<findUsagesHandlerFactory implementation="org.intellij.stripes.util.StripesFindUsagesHandlerFactory"/>-->
+
+        <psi.referenceContributor
+                implementation="org.intellij.stripes.reference.contributors.SetterReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="org.intellij.stripes.reference.contributors.ResolutionReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="org.intellij.stripes.reference.contributors.StaticReferenceContributor"/>
+        <psi.referenceContributor
+                implementation="org.intellij.stripes.reference.contributors.GetterReferenceContributor"/>
+
+        <fileTemplateGroup implementation="org.intellij.stripes.support.StripesFileTemplateGroupFactory"/>
+        <javaee.jsp.elImplicitVariablesProvider implementation="org.intellij.stripes.el.StripesELVarProvider"/>
+        <annotator language="JAVA" implementationClass="org.intellij.stripes.highlighting.ActionBeanUsageAnnotator"/>
+        <pathReferenceProvider
+                implementation="org.intellij.stripes.reference.providers.UrlBindingPathReferenceProvider"/>
+        <inspectionToolProvider implementation="org.intellij.stripes.highlighting.StripesInspectionToolProvider"/>
+        <projectService serviceInterface="org.intellij.stripes.facet.StripesFacetConfiguration"
+                        serviceImplementation="org.intellij.stripes.facet.StripesFacetConfiguration"/>
+        <iconProvider implementation="org.intellij.stripes.reference.providers.StripesIconProvider"/>
+        <multiHostInjector implementation="org.intellij.stripes.util.StripesJSInjector"/>
+        <multiHostInjector implementation="org.intellij.stripes.util.StripesCSSInjector"/>
+        <multiHostInjector implementation="org.intellij.stripes.util.StripesELInjector"/>
+    </extensions>
+
+    <application-components>
+        <component>
+            <implementation-class>org.intellij.stripes.components.application.StripesApplicationComponent
+            </implementation-class>
+        </component>
+    </application-components>
+
+    <project-components>
+        <component>
+            <implementation-class>org.intellij.stripes.components.project.StripesReferencesComponent
+            </implementation-class>
+        </component>
+        <!--<component>-->            <!--<implementation-class>org.intellij.stripes.components.EditorDecorator</implementation-class>-->        <!--</component>-->
+    </project-components>
+
+    <actions>
+        <action id="StripesGenerateGroup" class="org.intellij.stripes.actions.StripesGenerateGroup" text="Stripes">
+            <add-to-group anchor="first" group-id="GenerateGroup"/>
+        </action>
+        <action id="StripesNewGroup" class="org.intellij.stripes.actions.StripesNewGroup" text="Stripes">
+            <add-to-group anchor="last" group-id="NewGroup"/>
+        </action>
+    </actions>
+</idea-plugin>
