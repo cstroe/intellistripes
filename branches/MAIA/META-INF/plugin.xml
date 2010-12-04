@@ -29,7 +29,7 @@
 <p><strong>WARNING:</strong>This version is a beta version. Some bugs will be arised and some features will stop working</p>
 ]]>
     </change-notes>
-    <idea-version since-build="IU-95.66" until-build="IU-95.429"/>
+    <idea-version since-build="IU-95.66" until-build="IU-95.627"/>
     <depends>com.intellij.css</depends>
     <depends>com.intellij.javaee</depends>
     <depends>com.intellij.spring</depends>
