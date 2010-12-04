@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,88 @@
 package org.intellij.stripes.reference;
 
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PropertyUtil;
-import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.util.PsiUtil;
+import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
-import org.jetbrains.annotations.Nullable;
 
-public class SetterReference extends PsiReferenceBase<XmlAttributeValue> {
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-    private PsiClass actionBeanPsiClass;
+public class SetterReference<T extends PsiElement> extends PsiReferenceBase<T> {
 
-    public SetterReference(XmlAttributeValue xmlAttributeValue, TextRange textRange, PsiClass actionBeanPsiClass) {
-        super(xmlAttributeValue, textRange);
-        this.actionBeanPsiClass = actionBeanPsiClass;
-    }
+	private PsiClass actionBeanPsiClass;
+	protected Boolean supportBraces;
+	protected Boolean hasBraces = false;
 
-    @Nullable
-    public PsiElement resolve() {
-        PsiMethod method = PropertyUtil.findPropertySetter(actionBeanPsiClass, getValue(), false, true);
-        return StripesUtil.isActionBeanPropertySetter(method, false) ? method : null;
-    }
+	public PsiClass getActionBeanPsiClass() {
+		return actionBeanPsiClass;
+	}
 
-    public Object[] getVariants() {
-        return StripesReferenceUtil.getVariants(StripesReferenceUtil.getWritableProperties(actionBeanPsiClass, false), StripesConstants.FIELD_ICON);
-    }
+	public SetterReference(T element, TextRange range, Boolean supportBraces) {
+		super(element, range);
+		this.supportBraces = supportBraces;
+	}
+
+	public SetterReference(T element, TextRange range, PsiClass actionBeanPsiClass, Boolean supportBraces) {
+		super(element, range);
+		this.actionBeanPsiClass = actionBeanPsiClass;
+		this.supportBraces = supportBraces;
+	}
+
+	/**
+	 * Resolves reference to method
+	 * Must return only valid Stripes setter.
+	 */
+	public PsiElement resolve() {
+		if (getVariantsEx().contains(getValue())) {
+			return resolveEx();
+		}
+
+		PsiMethod method = PropertyUtil.findPropertySetter(getActionBeanPsiClass(), getValue(), false, true);
+		if (!StripesUtil.isActionBeanPropertySetter(method, false)) return null;
+
+		if (this.supportBraces) {
+			PsiType propertyType = method.getParameterList().getParameters()[0].getType();
+			PsiClass propertyClass = PsiUtil.resolveClassInType(propertyType);
+			Boolean isIndexedType = StripesUtil.isSubclass(getElement().getProject(), List.class.getName(), propertyClass)
+				|| propertyType instanceof PsiArrayType
+				|| StripesUtil.isSubclass(getElement().getProject(), Map.class.getName(), propertyClass);
+
+			method = hasBraces() && !isIndexedType ? null : method;
+		}
+
+		return method;
+	}
+
+	private Boolean hasBraces() {
+		return this.hasBraces;
+	}
+
+	public Object[] getVariants() {
+		List<String> retval = new LinkedList<String>();
+		retval.addAll(StripesReferenceUtil.getWritableProperties(getActionBeanPsiClass(), supportBraces));
+		retval.addAll(0, getVariantsEx());
+
+		return StripesReferenceUtil.getVariants(retval, StripesConstants.FIELD_ICON);
+	}
+
+	public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
+		final String name = PropertyUtil.getPropertyName(newElementName);
+		return super.handleElementRename(name == null ? newElementName : name);
+	}
+
+	protected static List<String> EMPTY_VARIANTS = Arrays.asList();
+
+	protected PsiElement resolveEx() {
+		return null;
+	}
+
+	protected List<String> getVariantsEx() {
+		return EMPTY_VARIANTS;
+	}
 }

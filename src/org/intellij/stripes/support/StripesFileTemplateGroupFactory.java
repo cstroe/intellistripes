@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,9 @@ public class StripesFileTemplateGroupFactory implements FileTemplateGroupDescrip
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.STRIPES_RESOURCES_PROPERTIES));
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.LOG4J_XML_TEMPLATE));
         descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.ACTION_BEAN_TEMPLATE, StripesConstants.ACTION_BEAN_ICON));
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.ACTION_BEAN_CONTEXT_TEMPLATE));
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.ACTION_BEAN_CONTEXT_FACTORY_TEMPLATE));
+        descriptor.addTemplate(new FileTemplateDescriptor(StripesConstants.INTERCEPTOR_TEMPLATE));
         return descriptor;
     }
 }

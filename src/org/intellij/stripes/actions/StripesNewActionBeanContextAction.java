@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,23 @@
 
 package org.intellij.stripes.actions;
 
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.intellij.stripes.util.StripesConstants;
+import org.intellij.stripes.util.StripesUtil;
 
-public class StripesGroup extends DefaultActionGroup {
-// --------------------------- CONSTRUCTORS ---------------------------
+public class StripesNewActionBeanContextAction extends StripesBaseNewClassAction {
 
-    public StripesGroup() {
-        super(StripesConstants.STRIPES, true);
-        getTemplatePresentation().setDescription(StripesConstants.STRIPES);
-        getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
-    }
+	protected String getClassName() {
+		return "ActionBeanContext";
+	}
+
+	protected String getTemplateName() {
+		return StripesConstants.ACTION_BEAN_CONTEXT_TEMPLATE;
+	}
+
+	@Override
+	public void update(AnActionEvent e) {
+		e.getPresentation().setText(StripesUtil.message("action.new.actionBeanContext"));
+		super.update(e);
+	}
 }

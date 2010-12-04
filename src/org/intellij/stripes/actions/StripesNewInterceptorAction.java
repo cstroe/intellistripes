@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,24 @@
  * limitations under the License.
  *
  */
-
 package org.intellij.stripes.actions;
 
-import com.intellij.codeInsight.generation.actions.BaseGenerateAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.intellij.stripes.util.StripesConstants;
 import org.intellij.stripes.util.StripesUtil;
 
-public class GenerateResolutionAction extends BaseGenerateAction {
-    public GenerateResolutionAction() {
-        super(new GenerateResolutionActionHandler());
-        getTemplatePresentation().setIcon(StripesConstants.STRIPES_ICON);
-    }
+public class StripesNewInterceptorAction extends StripesBaseNewClassAction {
+	protected String getClassName() {
+		return "Interceptor";
+	}
 
-    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
-        return super.isValidForFile(project, editor, file) && StripesUtil.isSubclass(StripesConstants.ACTION_BEAN, getTargetClass(editor, file));
-    }
+	protected String getTemplateName() {
+		return StripesConstants.INTERCEPTOR_TEMPLATE;
+	}
+
+	@Override
+	public void update(AnActionEvent e) {
+		e.getPresentation().setText(StripesUtil.message("action.new.interceptor"));
+		super.update(e);
+	}
 }

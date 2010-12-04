@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,12 @@ package org.intellij.stripes.reference.providers;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.PsiReferenceProviderBase;
+import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.jsp.el.ELExpressionHolder;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.ProcessingContext;
 import org.intellij.stripes.reference.JspTagAttrResolutionMethodsReference;
 import org.intellij.stripes.reference.StripesReferenceUtil;
 import org.intellij.stripes.util.StripesConstants;
@@ -31,21 +33,18 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * This class Provide References to Resolution Methods in stripes:submmit, image or button tags
- * <p/>
- * Created by IntelliJ IDEA. User: Mario Arias Date: 14/07/2007 Time: 10:34:11 PM
  */
-public class TagResolutionMethodsReferenceProvider extends PsiReferenceProviderBase {
-// ------------------------ INTERFACE METHODS ------------------------
+public class TagResolutionMethodsReferenceProvider extends PsiReferenceProvider {
 
-// --------------------- Interface PsiReferenceProvider ---------------------
+	@NotNull
+	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
+		if (PsiTreeUtil.getChildOfType(element, ELExpressionHolder.class) != null) {
+			return PsiReference.EMPTY_ARRAY;
+		}
 
-    @NotNull
-    public PsiReference[] getReferencesByElement(PsiElement psiElement) {
-        if (psiElement.getChildren().length > 1 && psiElement.getChildren()[1] instanceof ELExpressionHolder) return PsiReference.EMPTY_ARRAY;
-
-        final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) psiElement.getParent().getParent(), StripesConstants.FORM_TAG);
-        return actionBeanPsiClass == null
-                ? PsiReference.EMPTY_ARRAY
-                : new PsiReference[]{new JspTagAttrResolutionMethodsReference((XmlAttributeValue) psiElement, actionBeanPsiClass)};
-    }
+		final PsiClass actionBeanPsiClass = StripesReferenceUtil.getBeanClassFromParentTag((XmlTag) element.getParent().getParent(), StripesConstants.FORM_TAG);
+		return actionBeanPsiClass == null
+			? PsiReference.EMPTY_ARRAY
+			: new PsiReference[]{new JspTagAttrResolutionMethodsReference((XmlAttributeValue) element, actionBeanPsiClass)};
+	}
 }

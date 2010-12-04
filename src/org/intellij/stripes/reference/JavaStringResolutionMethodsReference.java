@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2007 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,12 @@ package org.intellij.stripes.reference;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLiteralExpression;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import org.intellij.stripes.util.StripesConstants;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA. User: Mario Arias Date: 21/09/2007 Time: 01:28:16 AM
@@ -34,6 +33,7 @@ public class JavaStringResolutionMethodsReference extends JavaStringReference {
 // ------------------------------ FIELDS ------------------------------
 
     private PsiClass actionBeanPsiClass;
+    private static final Pattern PATTERN = Pattern.compile("!");
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -85,17 +85,18 @@ public class JavaStringResolutionMethodsReference extends JavaStringReference {
      */
     @Override
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        return StripesReferenceUtil.getManipulator(expression).handleContentChange(expression, newElementName);
+        return ElementManipulators.getManipulator(expression).handleContentChange(expression, newElementName);
     }
 
     @Override
     public String getCanonicalText() {
         return StringUtil.stripQuotesAroundValue(
-                expression.getText().charAt(1) == '!' ? expression.getText().replaceFirst("!", "") : expression.getText()
+                expression.getText().charAt(1) == '!' ? PATTERN.matcher(expression.getText()).replaceFirst("") : expression.getText()
         );
     }
 
     public TextRange getRangeInElement() {
-        return new TextRange(expression.getText().charAt(1) == '!' ? 2 : 1, expression.getText().length() - 1);
+        String txt = expression.getText();
+        return new TextRange(txt.length() > 1 && txt.charAt(1) == '!' ? 2 : 1, txt.length() - 1);
     }
 }
