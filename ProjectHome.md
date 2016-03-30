@@ -1,0 +1,1 @@
+[IntelliStripes](http://plugins.intellij.net/plugin/?id=1528) adds [Stripes](http://stripesframework.org) Integration into IntelliJ IDEA, in the same IntelliJ style: Wizardless but Code Centric Approach
